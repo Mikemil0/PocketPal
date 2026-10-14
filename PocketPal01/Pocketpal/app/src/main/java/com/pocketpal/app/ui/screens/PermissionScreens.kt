@@ -2,6 +2,7 @@ package com.pocketpal.app.ui.screens
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pocketpal.app.R
 import com.pocketpal.app.navigation.AppPermissions
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
@@ -33,10 +36,10 @@ private fun PermissionScreen(
     icon: ImageVector,
     iconTint: Color,
     iconBg: Color,
-    title: String,
-    question: String,
-    description: String,
-    primaryText: String,
+    @StringRes title: Int,
+    @StringRes question: Int,
+    @StringRes description: Int,
+    @StringRes primaryText: Int,
     permission: String?,
     onDone: () -> Unit,
 ) {
@@ -51,16 +54,16 @@ private fun PermissionScreen(
                 Icon(icon, null, tint = iconTint, modifier = Modifier.size(32.dp))
             }
             Spacer(Modifier.height(16.dp))
-            Text(title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink, textAlign = TextAlign.Center)
-            Text(question, fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(title), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink, textAlign = TextAlign.Center)
+            Text(stringResource(question), fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(description, fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(description), fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
             Spacer(Modifier.height(16.dp))
-            PocketPrimaryButton(primaryText, { if (permission == null) onDone() else launcher.launch(permission) })
+            PocketPrimaryButton(stringResource(primaryText), { if (permission == null) onDone() else launcher.launch(permission) })
             Spacer(Modifier.height(16.dp))
-            Text("Ahora no", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Muted,
+            Text(stringResource(R.string.perm_not_now), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Muted,
                 modifier = Modifier.clickable(onClick = onDone))
             Spacer(Modifier.height(8.dp))
         }
@@ -70,9 +73,8 @@ private fun PermissionScreen(
 @Composable
 fun NotificationPermissionScreen(onDone: () -> Unit) = PermissionScreen(
     step = 1, icon = Icons.Outlined.NotificationsActive, iconTint = PocketColors.Coral, iconBg = Color(0xFFFFD9D9),
-    title = "Recibe alertas de tus límites", question = "¿Quieres recibir tus avisos a tiempo?",
-    description = "Te avisamos apenas estés cerca de superar el presupuesto de una categoría, para que decidas a tiempo.",
-    primaryText = "Activar notificaciones",
+    title = R.string.perm_notif_title, question = R.string.perm_notif_question,
+    description = R.string.perm_notif_description, primaryText = R.string.perm_notif_primary,
     permission = AppPermissions.notifications,
     onDone = onDone,
 )
@@ -80,15 +82,15 @@ fun NotificationPermissionScreen(onDone: () -> Unit) = PermissionScreen(
 @Composable
 fun CameraPermissionScreen(onDone: () -> Unit) = PermissionScreen(
     step = 2, icon = Icons.Outlined.CameraAlt, iconTint = PocketColors.Ink, iconBg = Color(0xFFD1D5DB),
-    title = "Escanea tus recibos", question = "¿Quieres activar la cámara?",
-    description = "Usa la cámara para fotografiar un recibo y registramos el gasto por ti, sin escribir nada.",
-    primaryText = "Permitir el uso de cámara", permission = AppPermissions.camera, onDone = onDone,
+    title = R.string.perm_camera_title, question = R.string.perm_camera_question,
+    description = R.string.perm_camera_description, primaryText = R.string.perm_camera_primary,
+    permission = AppPermissions.camera, onDone = onDone,
 )
 
 @Composable
 fun MicrophonePermissionScreen(onDone: () -> Unit) = PermissionScreen(
     step = 3, icon = Icons.Outlined.Mic, iconTint = PocketColors.Teal, iconBg = Color(0xFFCDEFE6),
-    title = "Registra gastos por voz", question = "¿Quieres permitir el uso del micrófono?",
-    description = "Di cuánto gastaste y en qué categoría, y nosotros lo agregamos a tu registro al instante.",
-    primaryText = "Permitir el uso del micrófono", permission = AppPermissions.microphone, onDone = onDone,
+    title = R.string.perm_mic_title, question = R.string.perm_mic_question,
+    description = R.string.perm_mic_description, primaryText = R.string.perm_mic_primary,
+    permission = AppPermissions.microphone, onDone = onDone,
 )

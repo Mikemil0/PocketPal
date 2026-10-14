@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RF-A3: traducción completa al inglés. Debe tener las mismas claves que values/strings.xml. -->
+<resources>
+    <!-- app_name, brand_*, tutorial_add_symbol son translatable="false": solo van en values/. -->
+
+    <!-- Common / accessibility -->
+    <string name="a11y_back">Back</string>
+    <string name="a11y_show_password">Show password</string>
+    <string name="a11y_hide_password">Hide password</string>
+    <string name="a11y_previous">Previous</string>
+    <string name="common_or">or</string>
+    <string name="common_sign_in">Sign in</string>
+
+    <!-- Form fields -->
+    <string name="field_email">Email address</string>
+    <string name="field_password">Password</string>
+    <string name="field_full_name">Full name</string>
+    <string name="field_password_confirm">Confirm your password</string>
+    <string name="field_new_password">New password</string>
+    <string name="field_new_password_confirm">Confirm password</string>
+
+    <!-- Password strength meter -->
+    <string name="strength_enter_password">Enter your password</string>
+    <string name="strength_insecure">Weak</string>
+    <string name="strength_low">Fair</string>
+    <string name="strength_high">Very secure</string>
+    <string name="rule_min_8">At least 8 characters</string>
+    <string name="rule_upper_digit">Include an uppercase letter and a number</string>
+    <string name="rule_match">Passwords match</string>
+
+    <!-- Welcome -->
+    <string name="welcome_google">Continue with Google</string>
+    <string name="welcome_create_account">Create account</string>
+    <string name="welcome_have_account">I already have an account</string>
+    <string name="welcome_terms">By continuing you accept our Terms and Privacy Policy.</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to your account to keep managing your money.</string>
+    <string name="login_wrong_combo">This combination doesn\'t match any account.</string>
+    <string name="login_remember">Remember me</string>
+    <string name="login_forgot_password">Forgot your password?</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_retry">Try again</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_signup">Sign up</string>
+    <string name="login_signin_link">Sign in</string>
+
+    <!-- Register -->
+    <string name="register_title">Create your account</string>
+    <string name="register_subtitle">Start taking real control of your spending in minutes.</string>
+    <!-- Quoted strings: Android trims leading/trailing whitespace in resources. -->
+    <string name="register_terms_prefix">"I accept the "</string>
+    <string name="register_terms_terms">Terms and Conditions</string>
+    <string name="register_terms_middle">" and the "</string>
+    <string name="register_terms_privacy">Privacy Policy</string>
+    <string name="register_button">Create account</string>
+    <string name="email_taken_action">Sign in or use another email.</string>
+
+    <!-- OTP code (signup and recovery) -->
+    <string name="otp_title_signup">Verify your email</string>
+    <string name="otp_title_recovery">Enter the code</string>
+    <string name="otp_sent_to">We sent a 6-digit code to %1$s</string>
+    <string name="otp_incorrect_message">Incorrect code. Try again.</string>
+    <string name="otp_expired_title">The code expired</string>
+    <string name="otp_expired_message">Expired code</string>
+    <string name="otp_verify">Verify</string>
+    <string name="otp_no_received">Didn\'t receive the code?</string>
+    <string name="otp_resend">Resend</string>
+    <string name="otp_not_your_email">Not your email?</string>
+    <plurals name="otp_expires_in">
+        <item quantity="one">The code expires in %1$d minute</item>
+        <item quantity="other">The code expires in %1$d minutes</item>
+    </plurals>
+
+    <!-- Password recovery -->
+    <string name="forgot_title">Forgot your password?</string>
+    <string name="forgot_subtitle">No problem. Enter your email and we\'ll send you a code to recover it.</string>
+    <string name="forgot_send">Send code</string>
+    <string name="forgot_remember">Remembered your password?</string>
+    <string name="new_password_title">Create a new password</string>
+    <string name="new_password_save">Save and continue</string>
+    <string name="password_updated_title">Password updated</string>
+    <string name="password_updated_body">Your password was changed successfully. You can now sign in with your new password.</string>
+    <string name="password_updated_note">For your security, we signed you out on every device where it was active.</string>
+
+    <!-- Status screens -->
+    <string name="status_no_wifi_title">No internet connection</string>
+    <string name="status_no_wifi_body">We couldn\'t connect. Check your wifi or mobile data and try again.</string>
+    <string name="status_no_wifi_note">Don\'t worry: you can continue with the form once you connect to a network.</string>
+    <string name="status_retry">Retry</string>
+    <string name="session_expired_title">Your session has expired</string>
+    <string name="session_expired_body">For your security, we signed you out after a period of inactivity. Sign in again to continue.</string>
+    <string name="session_sign_in_again">Sign in again</string>
+    <string name="session_use_other">Use another account</string>
+    <string name="google_success_title">Account connected successfully</string>
+    <string name="google_continue">Continue</string>
+    <string name="google_error_title">We couldn\'t connect your account.</string>
+    <string name="google_error_body">We couldn\'t connect to your Google account. Check your connection and try again.</string>
+    <string name="google_retry">Try again</string>
+    <string name="google_use_email">Use email and password</string>
+    <string name="google_loading_title">Connecting to Google</string>
+    <string name="google_loading_body">This will take a moment, don\'t close the app.</string>
+
+    <!-- Account created -->
+    <string name="account_created_title">Your account has been created</string>
+    <string name="account_created_body">You can now sign in with your new details.</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_title_1">Track every expense in seconds</string>
+    <string name="tutorial_body_1">Tap the "+" button, pick a category and you\'re done. That\'s how easy it is to manage your money.</string>
+    <string name="tutorial_title_2">Organize your limits</string>
+    <string name="tutorial_body_2">Set a budget for each category and we\'ll warn you before you go over it.</string>
+    <string name="tutorial_title_3">Understand where your money goes</string>
+    <string name="tutorial_body_3">Every expense you record turns into clear charts, so you can make better decisions every month.</string>
+    <string name="tutorial_next">Next</string>
+    <string name="tutorial_start">Start saving</string>
+    <string name="tutorial_skip">skip</string>
+    <string name="tutorial_food">Food</string>
+    <string name="tutorial_transport">Transport</string>
+    <string name="tutorial_income">Salary</string>
+    <string name="tutorial_entertainment">Entertainment</string>
+    <string name="tutorial_budget_header">THIS MONTH\'S BUDGET</string>
+    <string name="tutorial_total_month">Month total</string>
+    <string name="tutorial_total_amount">$1,120,000</string>
+
+    <!-- Language selector on the Welcome screen (Figma deviation, §14).
+         lang_name_es / lang_name_en are translatable="false": they only live in values/. -->
+    <string name="language_change">Change language</string>
+    <string name="language_option_system">Automatic</string>
+    <string name="language_option_system_subtitle">System language</string>
+
+    <!-- Permissions -->
+    <string name="perm_notif_title">Get alerts about your limits</string>
+    <string name="perm_notif_question">Want to receive your notifications on time?</string>
+    <string name="perm_notif_description">We\'ll tell you as soon as you get close to a category budget, so you can decide in time.</string>
+    <string name="perm_notif_primary">Turn on notifications</string>
+    <string name="perm_camera_title">Scan your receipts</string>
+    <string name="perm_camera_question">Want to enable the camera?</string>
+    <string name="perm_camera_description">Use the camera to photograph a receipt and we\'ll record the expense for you, without typing anything.</string>
+    <string name="perm_camera_primary">Allow camera access</string>
+    <string name="perm_mic_title">Record expenses by voice</string>
+    <string name="perm_mic_question">Allow microphone access?</string>
+    <string name="perm_mic_description">Say how much you spent and in which category, and we\'ll add it to your records instantly.</string>
+    <string name="perm_mic_primary">Allow microphone access</string>
+    <string name="perm_not_now">Not now</string>
+
+    <!-- Home -->
+    <string name="home_welcome">Welcome!</string>
+    <string name="home_welcome_name">Welcome, %1$s!</string>
+    <string name="home_subtitle">More areas to discover soon.</string>
+    <string name="home_sign_out">Sign out</string>
+
+    <!-- Errors: ViewModels emit ErrorType; the UI translates it with these texts (RF-A3) -->
+    <string name="error_invalid_credentials">Wrong email or password. Check your details.</string>
+    <string name="error_empty_password">Enter your password</string>
+    <string name="error_email_taken">This email already has a PocketPal account.</string>
+    <string name="error_no_network">No internet connection</string>
+    <string name="error_session_expired">Your session has expired</string>
+    <string name="error_google_failed">We couldn\'t connect your account</string>
+    <string name="error_invalid_otp">Incorrect code. Try again.</string>
+    <string name="error_expired_otp">The code you entered has expired. Request a new one for %1$s</string>
+    <string name="error_otp_incomplete">Enter the 6 digits</string>
+    <string name="error_invalid_email">Invalid email address</string>
+    <string name="error_invalid_name">Enter your full name</string>
+    <string name="error_password_too_short">At least 8 characters</string>
+    <string name="error_password_upper_digit">Include an uppercase letter and a number</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_terms_not_accepted">You must accept the Terms and Conditions and the Privacy Policy.</string>
+    <string name="error_unknown">Something went wrong. Try again</string>
+</resources>

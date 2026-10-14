@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Pocketpal" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+      El parent debe ser un tema AppCompat (o hijo) desde que MainActivity extiende
+      AppCompatActivity, necesario para cambiar el idioma en ejecución con
+      AppCompatDelegate.setApplicationLocales en API < 33 (RF-A3, riesgo de la §11.2).
+      "Light" (y no "DayNight") porque el Módulo 1 solo tiene tema claro.
+    -->
+    <style name="Theme.Pocketpal" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>

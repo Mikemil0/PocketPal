@@ -1,3 +1,180 @@
-<resources>
-    <string name="app_name">Pocketpal</string>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF-A3: español es el idioma por defecto (values/). Ningún texto visible puede
+  quedar escrito en el código. Convención de claves: pantalla_elemento.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">PocketPal</string>
+    <string name="brand_name" translatable="false">PocketPal</string>
+    <string name="brand_pocket" translatable="false">Pocket</string>
+    <string name="brand_pal" translatable="false">Pal</string>
+
+    <!-- Comunes / accesibilidad -->
+    <string name="a11y_back">Volver</string>
+    <string name="a11y_show_password">Mostrar contraseña</string>
+    <string name="a11y_hide_password">Ocultar contraseña</string>
+    <string name="a11y_previous">Anterior</string>
+    <string name="common_or">ó</string>
+    <string name="common_sign_in">Iniciar sesión</string>
+
+    <!-- Campos de formulario -->
+    <string name="field_email">Correo electrónico</string>
+    <string name="field_password">Contraseña</string>
+    <string name="field_full_name">Nombre completo</string>
+    <string name="field_password_confirm">Verifica la contraseña</string>
+    <string name="field_new_password">Nueva contraseña</string>
+    <string name="field_new_password_confirm">Confirmar contraseña</string>
+
+    <!-- Medidor de fuerza de contraseña -->
+    <string name="strength_enter_password">Ingresa tu contraseña</string>
+    <string name="strength_insecure">Insegura</string>
+    <string name="strength_low">Poco segura</string>
+    <string name="strength_high">Muy segura</string>
+    <string name="rule_min_8">Mínimo 8 caracteres</string>
+    <string name="rule_upper_digit">Incluye una mayúscula y un número</string>
+    <string name="rule_match">Las contraseñas coinciden</string>
+
+    <!-- Bienvenida -->
+    <string name="welcome_google">Continuar con Google</string>
+    <string name="welcome_create_account">Crear cuenta</string>
+    <string name="welcome_have_account">Ya tengo una cuenta</string>
+    <string name="welcome_terms">Al continuar aceptas nuestros Términos y Política de privacidad.</string>
+
+    <!-- Inicio de sesión -->
+    <string name="login_title">Bienvenido de nuevo</string>
+    <string name="login_subtitle">Ingresa a tu cuenta para seguir controlando tu dinero.</string>
+    <string name="login_wrong_combo">Esta combinación no coincide con ninguna cuenta.</string>
+    <string name="login_remember">Recordarme</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="login_retry">Intentar de nuevo</string>
+    <string name="login_no_account">¿No tienes cuenta?</string>
+    <string name="login_signup">Regístrate</string>
+    <string name="login_signin_link">Inicia sesión</string>
+
+    <!-- Registro -->
+    <string name="register_title">Crea tu cuenta</string>
+    <string name="register_subtitle">Empieza a llevar el control real de tus gastos en minutos.</string>
+    <!-- Las comillas obligatorias preservan el espacio inicial/final: Android los recorta por defecto. -->
+    <string name="register_terms_prefix">"Acepto los "</string>
+    <string name="register_terms_terms">Términos y condiciones</string>
+    <string name="register_terms_middle">" y la "</string>
+    <string name="register_terms_privacy">Política de privacidad</string>
+    <string name="register_button">Crear cuenta</string>
+    <string name="email_taken_action">Inicia sesión o usa otro correo.</string>
+
+    <!-- Código OTP (registro y recuperación) -->
+    <string name="otp_title_signup">Verifica tu correo</string>
+    <string name="otp_title_recovery">Ingresa el código</string>
+    <string name="otp_sent_to">Enviamos un código de 6 dígitos a %1$s</string>
+    <string name="otp_incorrect_message">Código incorrecto. Intente de nuevo.</string>
+    <string name="otp_expired_title">El código venció</string>
+    <string name="otp_expired_message">Código expirado</string>
+    <string name="otp_verify">Verificar</string>
+    <string name="otp_no_received">¿No recibiste el código?</string>
+    <string name="otp_resend">Reenviar</string>
+    <string name="otp_not_your_email">¿Ese no es tu correo?</string>
+    <plurals name="otp_expires_in">
+        <item quantity="one">El código expira en %1$d minuto</item>
+        <item quantity="other">El código expira en %1$d minutos</item>
+    </plurals>
+
+    <!-- Recuperación de contraseña -->
+    <string name="forgot_title">¿Olvidaste tu contraseña?</string>
+    <string name="forgot_subtitle">No hay problema. Ingresa tu correo y te enviaremos un código para recuperarla.</string>
+    <string name="forgot_send">Enviar código</string>
+    <string name="forgot_remember">¿Recordaste tu contraseña?</string>
+    <string name="new_password_title">Crea una nueva contraseña</string>
+    <string name="new_password_save">Guardar y continuar</string>
+    <string name="password_updated_title">Contraseña actualizada</string>
+    <string name="password_updated_body">Tu contraseña se cambió con éxito. Ya puedes iniciar sesión con tu nueva clave.</string>
+    <string name="password_updated_note">Por seguridad, cerramos tu sesión en todos los dispositivos en los que estuviera activa.</string>
+
+    <!-- Estados -->
+    <string name="status_no_wifi_title">Sin conexión a internet</string>
+    <string name="status_no_wifi_body">No pudimos conectarnos. Revisa tu wifi o datos móviles e inténtalo de nuevo.</string>
+    <string name="status_no_wifi_note">Tranquilo: puedes continuar con el formulario una vez te conectes a una red.</string>
+    <string name="status_retry">Reintentar</string>
+    <string name="session_expired_title">Tu sesión expiró</string>
+    <string name="session_expired_body">Por seguridad, cerramos tu sesión tras un tiempo de inactividad. Vuelve a ingresar para continuar.</string>
+    <string name="session_sign_in_again">Iniciar sesión de nuevo</string>
+    <string name="session_use_other">Usar otra cuenta</string>
+    <string name="google_success_title">Cuenta conectada correctamente</string>
+    <string name="google_continue">Continuar</string>
+    <string name="google_error_title">No pudimos conectar tu cuenta.</string>
+    <string name="google_error_body">No pudimos conectar con tu cuenta de Google. Revisa tu conexión e intenta de nuevo.</string>
+    <string name="google_retry">Intentar de nuevo</string>
+    <string name="google_use_email">Usar correo y contraseña</string>
+    <string name="google_loading_title">Conectando con Google</string>
+    <!-- "momento" es correcto en español; el diccionario de lint lo confunde con "memento". -->
+    <string name="google_loading_body" tools:ignore="Typos">Esto tomará un momento, no cierres la aplicación.</string>
+
+    <!-- Cuenta creada -->
+    <string name="account_created_title">Tu cuenta ha sido creada</string>
+    <string name="account_created_body">Ya puedes iniciar sesión con tus nuevos datos.</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_title_1">Registra cada gasto en segundos</string>
+    <string name="tutorial_body_1">Toca el botón "+", elige una categoría y listo. Así de simple es llevar el control de tu dinero.</string>
+    <string name="tutorial_title_2">Organiza tus límites</string>
+    <string name="tutorial_body_2">Define un presupuesto para cada categoría y te avisamos antes de superarlo.</string>
+    <string name="tutorial_title_3">Entiende en qué se va tu dinero</string>
+    <string name="tutorial_body_3">Cada gasto que registres se convierte en gráficos claros, para que tomes mejores decisiones cada mes.</string>
+    <string name="tutorial_next">Siguiente</string>
+    <string name="tutorial_start">Empieza a ahorrar</string>
+    <string name="tutorial_skip">omitir</string>
+    <string name="tutorial_add_symbol" translatable="false">+</string>
+    <string name="tutorial_food">Comida</string>
+    <string name="tutorial_transport">Transporte</string>
+    <string name="tutorial_income">Sueldo</string>
+    <string name="tutorial_entertainment">Entretenimiento</string>
+    <string name="tutorial_budget_header">PRESUPUESTO DE ESTE MES</string>
+    <string name="tutorial_total_month">Total del mes</string>
+    <string name="tutorial_total_amount">$1.120.000</string>
+
+    <!-- Selector de idioma del Welcome (desvío del Figma, §14) -->
+    <string name="language_change">Cambiar idioma</string>
+    <string name="language_option_system">Automático</string>
+    <string name="language_option_system_subtitle">Idioma del sistema</string>
+    <string name="lang_name_es" translatable="false">Español</string>
+    <string name="lang_name_en" translatable="false">English</string>
+
+    <!-- Permisos -->
+    <string name="perm_notif_title">Recibe alertas de tus límites</string>
+    <string name="perm_notif_question">¿Quieres recibir tus avisos a tiempo?</string>
+    <string name="perm_notif_description">Te avisamos apenas estés cerca de superar el presupuesto de una categoría, para que decidas a tiempo.</string>
+    <string name="perm_notif_primary">Activar notificaciones</string>
+    <string name="perm_camera_title">Escanea tus recibos</string>
+    <string name="perm_camera_question">¿Quieres activar la cámara?</string>
+    <string name="perm_camera_description">Usa la cámara para fotografiar un recibo y registramos el gasto por ti, sin escribir nada.</string>
+    <string name="perm_camera_primary">Permitir el uso de cámara</string>
+    <string name="perm_mic_title">Registra gastos por voz</string>
+    <string name="perm_mic_question">¿Quieres permitir el uso del micrófono?</string>
+    <string name="perm_mic_description">Di cuánto gastaste y en qué categoría, y nosotros lo agregamos a tu registro al instante.</string>
+    <string name="perm_mic_primary">Permitir el uso del micrófono</string>
+    <string name="perm_not_now">Ahora no</string>
+
+    <!-- Home -->
+    <string name="home_welcome">¡Bienvenido!</string>
+    <string name="home_welcome_name">¡Bienvenido, %1$s!</string>
+    <string name="home_subtitle">Pronto habrá más zonas por descubrir.</string>
+    <string name="home_sign_out">Cerrar sesión</string>
+
+    <!-- Errores: los ViewModels emiten ErrorType; la UI traduce con estos textos (RF-A3) -->
+    <string name="error_invalid_credentials">Correo o contraseña incorrectos. Verifica tus datos</string>
+    <string name="error_empty_password">Ingresa tu contraseña</string>
+    <string name="error_email_taken">Este correo ya tiene una cuenta en PocketPal.</string>
+    <string name="error_no_network">Sin conexión a internet</string>
+    <string name="error_session_expired">Tu sesión expiró</string>
+    <string name="error_google_failed">No pudimos conectar tu cuenta</string>
+    <string name="error_invalid_otp">Código incorrecto. Intente de nuevo.</string>
+    <string name="error_expired_otp">El código que ingresaste ya expiró. Solicita uno nuevo para %1$s</string>
+    <string name="error_otp_incomplete">Ingresa los 6 dígitos</string>
+    <string name="error_invalid_email">Correo electrónico no válido</string>
+    <string name="error_invalid_name">Ingresa tu nombre completo</string>
+    <string name="error_password_too_short">Mínimo 8 caracteres</string>
+    <string name="error_password_upper_digit">Incluye una mayúscula y un número</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="error_terms_not_accepted">Es obligatorio aceptar los Términos y condiciones y la Política de privacidad.</string>
+    <string name="error_unknown">Algo salió mal. Inténtalo de nuevo</string>
 </resources>

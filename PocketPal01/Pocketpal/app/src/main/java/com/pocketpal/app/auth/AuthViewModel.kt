@@ -33,6 +33,14 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
     /** Primer nombre del usuario autenticado, para el saludo del Home. */
     val displayName: StateFlow<String> = _displayName.asStateFlow()
 
+    /**
+     * Momento en que vence el código OTP actual (RF-A5 / D-15). Supabase responde igual
+     * para un código inválido que para uno expirado, así que el cliente distingue el
+     * estado "expirado" con este temporizador, que empieza al enviar (o reenviar) el código.
+     */
+    private val _otpExpiresAt = MutableStateFlow<Long?>(null)
+    val otpExpiresAt: StateFlow<Long?> = _otpExpiresAt.asStateFlow()
+
     /** Email del flujo activo (registro o recuperación), usado por las pantallas OTP. */
     var pendingEmail: String = ""; private set
     var lastKnownEmail: String = ""; private set
@@ -43,8 +51,8 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
 
     // ---------- Login ----------
     fun login(email: String, password: String, rememberMe: Boolean) {
-        if (!AuthValidators.isValidEmail(email)) return fail("Correo electrónico no válido", ErrorType.InvalidEmail)
-        if (password.isEmpty()) return fail("Ingresa tu contraseña", ErrorType.InvalidCredentials)
+        if (!AuthValidators.isValidEmail(email)) return fail(ErrorType.InvalidEmail)
+        if (password.isEmpty()) return fail(ErrorType.EmptyPassword)
         // TODO: persistir rememberMe (DataStore) y cerrar sesión al salir si es false.
         run(AuthStep.LoggedIn) {
             supabase.auth.signInWith(Email) { this.email = email.trim(); this.password = password }
@@ -53,10 +61,10 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
 
     // ---------- Registro ----------
     fun register(name: String, email: String, password: String, confirm: String, acceptedTerms: Boolean) {
-        if (name.isBlank()) return fail("Ingresa tu nombre completo", ErrorType.InvalidName)
-        if (!AuthValidators.isValidEmail(email)) return fail("Correo electrónico no válido", ErrorType.InvalidEmail)
+        if (name.isBlank()) return fail(ErrorType.InvalidName)
+        if (!AuthValidators.isValidEmail(email)) return fail(ErrorType.InvalidEmail)
         passwordError(password, confirm)?.let { _state.value = it; return }
-        if (!acceptedTerms) return fail("Es obligatorio aceptar los Términos y condiciones y la Política de privacidad.", ErrorType.TermsNotAccepted)
+        if (!acceptedTerms) return fail(ErrorType.TermsNotAccepted)
 
         pendingEmail = email.trim()
         run(AuthStep.SignupOtpSent) {
@@ -68,12 +76,18 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
             // Con confirmación de email activa, Supabase no da error si el correo ya existe:
             // devuelve un usuario sin identities.
             if (user != null && user.identities.orEmpty().isEmpty()) throw EmailTakenException()
+            startOtpTimer()
         }
     }
 
     // ---------- OTP (registro y recuperación) ----------
     fun verifyOtp(mode: OtpMode, code: String) {
-        if (code.length != 6) return fail("Ingresa los 6 dígitos", ErrorType.InvalidOtp)
+        if (code.length != 6) return fail(ErrorType.OtpIncomplete)
+        // Si el temporizador del cliente ya venció, ni siquiera se llama al servidor (RF-A5).
+        if (isOtpExpired()) {
+            _state.value = AuthState.Error(ErrorType.ExpiredOtp, listOf(pendingEmail))
+            return
+        }
         when (mode) {
             OtpMode.Signup -> run(AuthStep.EmailVerified) {
                 supabase.auth.verifyEmailOtp(OtpType.Email.SIGNUP, pendingEmail, code)
@@ -89,13 +103,26 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
             OtpMode.Signup -> supabase.auth.resendEmail(OtpType.Email.SIGNUP, pendingEmail)
             OtpMode.Recovery -> supabase.auth.resetPasswordForEmail(pendingEmail)
         }
+        startOtpTimer()
+    }
+
+    private fun startOtpTimer() {
+        _otpExpiresAt.value = System.currentTimeMillis() + OTP_EXPIRY_MS
+    }
+
+    private fun isOtpExpired(): Boolean {
+        val expiresAt = _otpExpiresAt.value ?: return false
+        return System.currentTimeMillis() >= expiresAt
     }
 
     // ---------- Recuperación ----------
     fun sendRecoveryCode(email: String) {
-        if (!AuthValidators.isValidEmail(email)) return fail("Correo electrónico no válido", ErrorType.InvalidEmail)
+        if (!AuthValidators.isValidEmail(email)) return fail(ErrorType.InvalidEmail)
         pendingEmail = email.trim()
-        run(AuthStep.RecoveryCodeSent) { supabase.auth.resetPasswordForEmail(pendingEmail) }
+        run(AuthStep.RecoveryCodeSent) {
+            supabase.auth.resetPasswordForEmail(pendingEmail)
+            startOtpTimer()
+        }
     }
 
     fun updatePassword(password: String, confirm: String) {
@@ -141,24 +168,26 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AuthState.Error("No pudimos conectar tu cuenta", ErrorType.GoogleFailed)
+                AuthState.Error(ErrorType.GoogleFailed)
             }
         }
     }
 
     // ---------- Internos ----------
-    /** Devuelve el primer requisito que falla, con un mensaje específico. */
+    /** Devuelve el primer requisito que falla, con el tipo de error correspondiente. */
     private fun passwordError(p: String, c: String): AuthState.Error? {
         val r = PasswordRules.of(p, c)
         return when {
-            !r.minLength -> AuthState.Error("Mínimo 8 caracteres", ErrorType.WeakPassword)
-            !r.upperAndDigit -> AuthState.Error("Incluye una mayúscula y un número", ErrorType.WeakPassword)
-            !r.matches -> AuthState.Error("Las contraseñas no coinciden", ErrorType.PasswordMismatch)
+            !r.minLength -> AuthState.Error(ErrorType.PasswordTooShort)
+            !r.upperAndDigit -> AuthState.Error(ErrorType.PasswordNeedsUpperAndDigit)
+            !r.matches -> AuthState.Error(ErrorType.PasswordMismatch)
             else -> null
         }
     }
 
-    private fun fail(message: String, type: ErrorType) { _state.value = AuthState.Error(message, type) }
+    private fun fail(type: ErrorType, arg: String? = null) {
+        _state.value = AuthState.Error(type, listOfNotNull(arg))
+    }
 
     private fun run(step: AuthStep, block: suspend () -> Unit) {
         if (_state.value is AuthState.Loading) return
@@ -175,17 +204,17 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
         }
     }
 
+    /** Los errores del servidor se mapean a tipos; el texto lo pone la UI (RF-A3). */
     private fun Throwable.toAuthError(): AuthState.Error {
         val msg = message.orEmpty().lowercase()
         return when {
-            this is IOException -> AuthState.Error("Sin conexión a internet", ErrorType.NoNetwork)
-            "invalid login credentials" in msg ->
-                AuthState.Error("Correo o contraseña incorrectos. Verifica tus datos", ErrorType.InvalidCredentials)
-            "already registered" in msg || "already exists" in msg ->
-                AuthState.Error("Este correo ya tiene una cuenta en PocketPal.", ErrorType.EmailTaken)
-            "token" in msg && ("expired" in msg || "invalid" in msg) ->
-                AuthState.Error("Código inválido o expirado", ErrorType.InvalidOtp)
-            else -> AuthState.Error("Algo salió mal. Inténtalo de nuevo", ErrorType.Unknown)
+            this is IOException -> AuthState.Error(ErrorType.NoNetwork)
+            "invalid login credentials" in msg -> AuthState.Error(ErrorType.InvalidCredentials)
+            "already registered" in msg || "already exists" in msg -> AuthState.Error(ErrorType.EmailTaken)
+            // Supabase no distingue código inválido de expirado: aquí llega siempre como
+            // inválido; el estado "expirado" lo decide el temporizador del cliente (RF-A5).
+            "token" in msg && ("expired" in msg || "invalid" in msg) -> AuthState.Error(ErrorType.InvalidOtp)
+            else -> AuthState.Error(ErrorType.Unknown)
         }
     }
 
@@ -204,11 +233,19 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
                 }
                 is SessionStatus.NotAuthenticated -> {
                     if (wasAuthenticated && !status.isSignOut)
-                        _state.value = AuthState.Error("Tu sesión expiró", ErrorType.SessionExpired)
+                        _state.value = AuthState.Error(ErrorType.SessionExpired)
                     wasAuthenticated = false
                 }
                 else -> Unit
             }
         }
+    }
+
+    companion object {
+        /**
+         * Expiración del código OTP mostrada y real: 10 minutos (decisión D-15, cerrada en
+         * la §14 fila 16). Debe coincidir con `otp_expiry = 600` configurado en Supabase.
+         */
+        const val OTP_EXPIRY_MS: Long = 10 * 60 * 1000L
     }
 }

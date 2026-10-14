@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
 
 @Composable
@@ -56,7 +58,9 @@ fun PocketOutlinedTextField(
                     IconButton({ visible = !visible }) {
                         Icon(
                             if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                            contentDescription = if (visible) "Ocultar contraseña" else "Mostrar contraseña",
+                            contentDescription = stringResource(
+                                if (visible) R.string.a11y_hide_password else R.string.a11y_show_password
+                            ),
                         )
                     }
                 })

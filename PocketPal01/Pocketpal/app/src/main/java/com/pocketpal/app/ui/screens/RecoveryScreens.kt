@@ -17,15 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pocketpal.app.R
 import com.pocketpal.app.auth.AuthState
 import com.pocketpal.app.auth.ErrorType
+import com.pocketpal.app.auth.isPasswordProblem
 import com.pocketpal.app.ui.components.*
+import com.pocketpal.app.ui.errorMessage
 import com.pocketpal.app.ui.theme.PocketColors
 
 @Composable
@@ -46,17 +50,19 @@ fun ForgotEmailScreen(state: AuthState, onSend: (String) -> Unit, onBack: () -> 
     AuthScaffold(onBack = onBack) {
         Box(Modifier.align(Alignment.CenterHorizontally)) { IconBadge(Icons.Outlined.VisibilityOff) }
         Spacer(Modifier.height(16.dp))
-        ScreenHeader("¿Olvidaste tu contraseña?", "No hay problema. Ingresa tu correo y te enviaremos un código para recuperarla.", centered = true)
+        ScreenHeader(stringResource(R.string.forgot_title), stringResource(R.string.forgot_subtitle), centered = true)
         PocketOutlinedTextField(
-            email, { email = it }, "Correo electrónico",
+            email, { email = it }, stringResource(R.string.field_email),
             trailingIcon = Icons.Outlined.Email, keyboardType = KeyboardType.Email,
-            isError = bad, errorText = if (bad) "Cuenta no encontrada" else null,
+            // §14 fila 18: no se informa si el correo tiene cuenta (evita enumeración de cuentas);
+            // solo se valida el formato.
+            isError = bad, errorText = if (bad) error?.errorMessage() else null,
             imeAction = ImeAction.Done, onImeAction = { onSend(email) },
         )
         Spacer(Modifier.height(24.dp))
-        PocketPrimaryButton("Enviar código", { onSend(email) }, loading = state is AuthState.Loading)
+        PocketPrimaryButton(stringResource(R.string.forgot_send), { onSend(email) }, loading = state is AuthState.Loading)
         Spacer(Modifier.height(32.dp))
-        BottomLink("¿Recordaste tu contraseña?", "Inicia sesión", onLogin)
+        BottomLink(stringResource(R.string.forgot_remember), stringResource(R.string.login_signin_link), onLogin)
     }
 }
 
@@ -66,26 +72,27 @@ fun NewPasswordScreen(state: AuthState, onSave: (String, String) -> Unit) {
     var password by rememberSaveable { mutableStateOf("") }
     var confirm by rememberSaveable { mutableStateOf("") }
     val error = state as? AuthState.Error
+    val badPassword = error?.type?.isPasswordProblem == true
 
     AuthScaffold {
         Box(Modifier.align(Alignment.CenterHorizontally)) { IconBadge(Icons.Outlined.Lock) }
         Spacer(Modifier.height(16.dp))
-        ScreenHeader("Crea una nueva contraseña", "", centered = true)
+        ScreenHeader(stringResource(R.string.new_password_title), "", centered = true)
         PocketOutlinedTextField(
-            password, { password = it }, "Nueva contraseña", isPassword = true,
-            isError = error?.type == ErrorType.WeakPassword,
-            errorText = if (error?.type == ErrorType.WeakPassword) error.message else null,
+            password, { password = it }, stringResource(R.string.field_new_password), isPassword = true,
+            isError = badPassword,
+            errorText = if (badPassword) error?.errorMessage() else null,
         )
         Spacer(Modifier.height(14.dp))
         PocketOutlinedTextField(
-            confirm, { confirm = it }, "Confirmar contraseña", isPassword = true,
+            confirm, { confirm = it }, stringResource(R.string.field_new_password_confirm), isPassword = true,
             isError = error?.type == ErrorType.PasswordMismatch,
-            errorText = if (error?.type == ErrorType.PasswordMismatch) error.message else null,
+            errorText = if (error?.type == ErrorType.PasswordMismatch) error.errorMessage() else null,
         )
         Spacer(Modifier.height(10.dp))
         PasswordStrengthMeter(password, confirm)
         Spacer(Modifier.height(24.dp))
-        PocketPrimaryButton("Guardar y continuar", { onSave(password, confirm) }, loading = state is AuthState.Loading)
+        PocketPrimaryButton(stringResource(R.string.new_password_save), { onSave(password, confirm) }, loading = state is AuthState.Loading)
     }
 }
 
@@ -97,10 +104,10 @@ fun PasswordUpdatedScreen(onLogin: () -> Unit) {
         Icon(Icons.Outlined.CheckCircle, null, tint = PocketColors.Teal,
             modifier = Modifier.align(Alignment.CenterHorizontally).size(96.dp))
         Spacer(Modifier.height(16.dp))
-        Text("Contraseña actualizada", fontSize = 20.sp, fontWeight = FontWeight.SemiBold,
+        Text(stringResource(R.string.password_updated_title), fontSize = 20.sp, fontWeight = FontWeight.SemiBold,
             color = PocketColors.Ink, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
-        Text("Tu contraseña se cambió con éxito. Ya puedes iniciar sesión con tu nueva clave.",
+        Text(stringResource(R.string.password_updated_body),
             fontSize = 12.sp, color = PocketColors.Muted, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(24.dp))
         Row(
@@ -109,10 +116,10 @@ fun PasswordUpdatedScreen(onLogin: () -> Unit) {
         ) {
             Icon(Icons.Outlined.Lock, null, tint = PocketColors.Coral, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
-            Text("Por seguridad, cerramos tu sesión en todos los dispositivos en los que estuviera activa.",
+            Text(stringResource(R.string.password_updated_note),
                 fontSize = 11.sp, color = PocketColors.Muted)
         }
         Spacer(Modifier.height(24.dp))
-        PocketPrimaryButton("Iniciar sesión", onLogin)
+        PocketPrimaryButton(stringResource(R.string.common_sign_in), onLogin)
     }
 }

@@ -1,0 +1,37 @@
+package com.pocketpal.app.ui
+
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.pocketpal.app.R
+import com.pocketpal.app.auth.AuthState
+import com.pocketpal.app.auth.ErrorType
+
+/**
+ * RF-A3: los ViewModels emiten [ErrorType] (sin texto); esta función es la que
+ * convierte el tipo en un recurso de cadena traducible.
+ */
+@StringRes
+fun ErrorType.messageRes(): Int = when (this) {
+    ErrorType.InvalidCredentials -> R.string.error_invalid_credentials
+    ErrorType.EmptyPassword -> R.string.error_empty_password
+    ErrorType.EmailTaken -> R.string.error_email_taken
+    ErrorType.NoNetwork -> R.string.error_no_network
+    ErrorType.SessionExpired -> R.string.error_session_expired
+    ErrorType.GoogleFailed -> R.string.error_google_failed
+    ErrorType.InvalidOtp -> R.string.error_invalid_otp
+    ErrorType.ExpiredOtp -> R.string.error_expired_otp
+    ErrorType.OtpIncomplete -> R.string.error_otp_incomplete
+    ErrorType.InvalidEmail -> R.string.error_invalid_email
+    ErrorType.InvalidName -> R.string.error_invalid_name
+    ErrorType.PasswordTooShort -> R.string.error_password_too_short
+    ErrorType.PasswordNeedsUpperAndDigit -> R.string.error_password_upper_digit
+    ErrorType.PasswordMismatch -> R.string.error_password_mismatch
+    ErrorType.TermsNotAccepted -> R.string.error_terms_not_accepted
+    ErrorType.Unknown -> R.string.error_unknown
+}
+
+/** Texto localizado de un error, con sus argumentos (p. ej. el correo del código expirado). */
+@Composable
+fun AuthState.Error.errorMessage(): String =
+    stringResource(type.messageRes(), *args.toTypedArray())

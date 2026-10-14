@@ -35,6 +35,7 @@ object Routes {
 @Composable
 fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavController()) {
     val state by vm.state.collectAsStateWithLifecycle()
+    val otpExpiresAt by vm.otpExpiresAt.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     fun back() { vm.consume(); nav.popBackStack() }
@@ -111,7 +112,7 @@ fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavControl
             RegisterScreen(state, vm::register, ::back, { go(Routes.Login) })
         }
         composable(Routes.OtpSignup) {
-            OtpScreen(OtpMode.Signup, vm.pendingEmail, state,
+            OtpScreen(OtpMode.Signup, vm.pendingEmail, state, otpExpiresAt,
                 onVerify = { vm.verifyOtp(OtpMode.Signup, it) },
                 onResend = { vm.resendOtp(OtpMode.Signup) }, onBack = ::back)
         }
@@ -119,7 +120,7 @@ fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavControl
             ForgotEmailScreen(state, vm::sendRecoveryCode, ::back, { go(Routes.Login) })
         }
         composable(Routes.ForgotOtp) {
-            OtpScreen(OtpMode.Recovery, vm.pendingEmail, state,
+            OtpScreen(OtpMode.Recovery, vm.pendingEmail, state, otpExpiresAt,
                 onVerify = { vm.verifyOtp(OtpMode.Recovery, it) },
                 onResend = { vm.resendOtp(OtpMode.Recovery) }, onBack = ::back)
         }

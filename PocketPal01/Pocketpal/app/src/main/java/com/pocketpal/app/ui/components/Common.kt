@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
 
 @Composable
@@ -41,7 +44,14 @@ fun AuthScaffold(
             IconButton(
                 onClick = onBack,
                 modifier = Modifier.size(32.dp).background(PocketColors.Ink, RoundedCornerShape(8.dp)),
-            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = Color.White, modifier = Modifier.size(16.dp)) }
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    stringResource(R.string.a11y_back),
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp),
+                )
+            }
             Spacer(Modifier.height(24.dp))
         }
         content()
@@ -84,6 +94,7 @@ fun ErrorBanner(
     modifier: Modifier = Modifier,
     actionText: String? = null,
     onAction: (() -> Unit)? = null,
+    icon: ImageVector = Icons.Outlined.ErrorOutline,
 ) {
     Row(
         modifier.fillMaxWidth()
@@ -92,7 +103,7 @@ fun ErrorBanner(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(Icons.Outlined.ErrorOutline, null, tint = PocketColors.ErrorRed, modifier = Modifier.size(18.dp))
+        Icon(icon, null, tint = PocketColors.ErrorRed, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(8.dp))
         Text(
             buildAnnotatedString {

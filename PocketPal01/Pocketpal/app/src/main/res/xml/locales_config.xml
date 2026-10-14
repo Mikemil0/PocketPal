@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF-A3: idiomas soportados por la app (los 4 de la pantalla "Idioma" del Figma).
+  Permite el selector de idioma por aplicación de Android 13+ (Ajustes > Apps > PocketPal > Idioma).
+  Las traducciones de portugués y francés se agregan en la Fase 5.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="es" />
+    <locale android:name="en" />
+    <locale android:name="pt" />
+    <locale android:name="fr" />
+</locale-config>

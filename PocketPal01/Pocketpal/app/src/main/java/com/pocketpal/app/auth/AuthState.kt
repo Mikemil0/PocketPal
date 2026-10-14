@@ -1,9 +1,19 @@
 package com.pocketpal.app.auth
 
+/**
+ * Tipos de error. RF-A3: los ViewModels **no emiten texto**, emiten este tipo
+ * y la UI lo traduce (ver `ui/ErrorMessages.kt`).
+ */
 enum class ErrorType {
-    InvalidCredentials, EmailTaken, NoNetwork, SessionExpired, GoogleFailed, InvalidOtp,
-    InvalidEmail, InvalidName, WeakPassword, PasswordMismatch, TermsNotAccepted, Unknown,
+    InvalidCredentials, EmptyPassword, EmailTaken, NoNetwork, SessionExpired, GoogleFailed,
+    InvalidOtp, ExpiredOtp, OtpIncomplete,
+    InvalidEmail, InvalidName, PasswordTooShort, PasswordNeedsUpperAndDigit, PasswordMismatch,
+    TermsNotAccepted, Unknown,
 }
+
+/** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */
+val ErrorType.isPasswordProblem: Boolean
+    get() = this == ErrorType.PasswordTooShort || this == ErrorType.PasswordNeedsUpperAndDigit
 
 enum class AuthStep {
     LoggedIn, SignupOtpSent, EmailVerified,
@@ -20,6 +30,10 @@ sealed interface AuthState {
     data object Loading : AuthState
     /** Navega a la siguiente pantalla según [step]. */
     data class Success<T>(val step: AuthStep, val data: T) : AuthState
-    /** Renderiza banners o pantallas de error según [type]. */
-    data class Error(val message: String, val type: ErrorType) : AuthState
+    /**
+     * Renderiza banners o pantallas de error según [type].
+     * [args] son los datos que el texto necesita (p. ej. el correo en un código expirado);
+     * la traducción ocurre en la UI, nunca aquí (RF-A3).
+     */
+    data class Error(val type: ErrorType, val args: List<String> = emptyList()) : AuthState
 }
