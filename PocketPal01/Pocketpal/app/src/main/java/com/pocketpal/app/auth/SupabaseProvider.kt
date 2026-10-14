@@ -4,6 +4,7 @@ import com.pocketpal.app.BuildConfig
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
 
 /**
  * Cliente único de Supabase (RF-A2).
@@ -27,6 +28,10 @@ object SupabaseProvider {
     val GOOGLE_WEB_CLIENT_ID = required("GOOGLE_WEB_CLIENT_ID", BuildConfig.GOOGLE_WEB_CLIENT_ID)
 
     val client: SupabaseClient by lazy {
-        createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) { install(Auth) }
+        createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
+            install(Auth)
+            // Fase 2: lectura de las tablas con RLS (profiles, categories, …).
+            install(Postgrest)
+        }
     }
 }

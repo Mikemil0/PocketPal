@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
-import com.pocketpal.app.auth.SupabaseProvider
+import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.theme.PocketTheme
 
@@ -18,13 +18,17 @@ import com.pocketpal.app.ui.theme.PocketTheme
  * de API 33 para cambiar el idioma en ejecución.
  */
 class MainActivity : AppCompatActivity() {
+
+    /** Contenedor de dependencias: se crea una sola vez por actividad (§7.4, DI manual). */
+    private val container by lazy { AppContainer(applicationContext) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             PocketTheme {
                 val vm: AuthViewModel = viewModel(
-                    factory = viewModelFactory { initializer { AuthViewModel(SupabaseProvider.client) } }
+                    factory = viewModelFactory { initializer { AuthViewModel(container.supabase) } }
                 )
                 PocketNavHost(vm)
             }

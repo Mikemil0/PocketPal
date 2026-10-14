@@ -79,12 +79,17 @@ dependencies {
     // Supabase
     implementation(platform("io.github.jan-tennert.supabase:bom:3.5.0"))
     implementation("io.github.jan-tennert.supabase:auth-kt")
+    // Fase 2: Postgrest para leer/escribir las tablas con RLS
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-okhttp:3.1.3")
 
 // Navegación y lifecycle
     implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
+// Fase 2: preferencias locales (idioma, tema, moneda…) — RNF-06
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 // Íconos
     implementation("androidx.compose.material:material-icons-extended")
