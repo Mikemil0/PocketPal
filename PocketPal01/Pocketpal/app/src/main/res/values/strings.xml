@@ -177,4 +177,58 @@
     <string name="error_password_mismatch">Las contraseñas no coinciden</string>
     <string name="error_terms_not_accepted">Es obligatorio aceptar los Términos y condiciones y la Política de privacidad.</string>
     <string name="error_unknown">Algo salió mal. Inténtalo de nuevo</string>
+
+    <!-- Fase 3: Mi perfil (RF-B1) -->
+    <string name="profile_title">Mi perfil</string>
+    <string name="home_open_profile">Abrir mi perfil</string>
+    <string name="profile_stats_expenses">Gastos registrados</string>
+    <string name="profile_stats_goals">Metas activas</string>
+    <string name="profile_section_account">CUENTA</string>
+    <string name="profile_section_preferences">PREFERENCIAS</string>
+    <string name="profile_row_personal_data">Datos personales</string>
+    <string name="profile_row_personal_data_sub">Nombre, correo, teléfono</string>
+    <string name="profile_row_security">Seguridad</string>
+    <string name="profile_row_security_sub">Contraseña</string>
+    <string name="profile_row_notifications">Notificaciones</string>
+    <string name="profile_row_notifications_sub">Alertas y recordatorios</string>
+    <string name="profile_row_categories">Categorías</string>
+    <string name="profile_row_categories_sub">Personaliza tus gastos</string>
+    <string name="profile_row_preferences">Preferencias generales</string>
+    <string name="profile_row_preferences_sub">Moneda, idioma, formato</string>
+    <string name="profile_row_export">Exportar datos</string>
+    <string name="profile_row_export_sub">Descarga tu historial</string>
+    <string name="profile_row_help">Ayuda y soporte</string>
+    <string name="profile_row_about">Acerca de</string>
+    <string name="profile_row_sign_out">Cerrar sesión</string>
+    <string name="profile_coming_soon">Próximamente</string>
+
+    <!-- Fase 3: hoja "¿Cerrar sesión?" (RF-B12) -->
+    <string name="signout_title">¿Cerrar sesión?</string>
+    <string name="signout_body">Tienes que volver a ingresar tu correo y contraseña la próxima vez que abras PocketPal.</string>
+    <string name="signout_confirm">Sí, cerrar sesión</string>
+    <string name="common_cancel">Cancelar</string>
+
+    <!-- Fase 3: Datos personales (RF-B2) -->
+    <string name="edit_title">Datos personales</string>
+    <string name="edit_change_photo">Cambiar foto</string>
+    <string name="edit_field_name">Nombre</string>
+    <string name="edit_field_phone">Teléfono</string>
+    <string name="edit_phone_add">Agregar número de teléfono</string>
+    <string name="edit_section_location">UBICACIÓN</string>
+    <string name="edit_field_country">País</string>
+    <string name="edit_field_currency">Moneda</string>
+    <string name="edit_save">Guardar cambios</string>
+    <string name="a11y_change_photo">Cambiar foto de perfil</string>
+    <string name="error_name_too_long">El nombre no puede tener más de 60 caracteres</string>
+
+    <!-- Fase 3: hoja de foto (RF-B2) -->
+    <string name="photo_sheet_take">Tomar foto</string>
+    <string name="photo_sheet_gallery">Elegir de la galería</string>
+    <string name="photo_sheet_remove">Quitar foto actual</string>
+
+    <!-- Fase 3: etiquetas de moneda (códigos neutros en la base, RN-11) -->
+    <string name="currency_cop" translatable="false">COP$</string>
+    <string name="currency_usd" translatable="false">USD$</string>
+    <string name="currency_eur" translatable="false">EUR€</string>
+    <string name="currency_mxn" translatable="false">MXN$</string>
 </resources>

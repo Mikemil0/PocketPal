@@ -81,6 +81,8 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:auth-kt")
     // Fase 2: Postgrest para leer/escribir las tablas con RLS
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    // Fase 3: Storage para la foto de perfil (D-09: bucket público avatars)
+    implementation("io.github.jan-tennert.supabase:storage-kt")
     implementation("io.ktor:ktor-client-okhttp:3.1.3")
 
 // Navegación y lifecycle
@@ -90,6 +92,16 @@ dependencies {
 
 // Fase 2: preferencias locales (idioma, tema, moneda…) — RNF-06
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+// Fase 3: splash del sistema (RF-A4/D-16) con compat hasta API 23 (minSdk 26)
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+// Fase 3: rotación EXIF de la foto de perfil (la clase del framework la desaconseja lint)
+    implementation("androidx.exifinterface:exifinterface:1.4.1")
+
+// Fase 3: foto de perfil (Coil 2.7.0: un solo artefacto y usa OkHttp ya presente;
+// Coil 3 cambia de paquete y exige un módulo de red aparte)
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
 // Íconos
     implementation("androidx.compose.material:material-icons-extended")

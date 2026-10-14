@@ -17,6 +17,14 @@ object PocketColors {
     val Amber = Color(0xFFF2B84B)
     val ErrorRed = Color(0xFFD32020)
     val ErrorBg = Color(0xFFFFE5E5)
+
+    // Fase 3: tonos rosados y pastel del perfil (valores aproximados del Figma, §2)
+    val AvatarPink = Color(0xFFF79B97)   // círculo del avatar con la inicial
+    val Rose = Color(0xFFFBDBD7)         // chip rosa de las filas y la hoja de foto
+    val BlueSoft = Color(0xFFDFE6F7)     // chip azul de las filas
+    val TealSoft = Color(0xFFD3EFE6)     // chip verde de las filas
+    val BlueIcon = Color(0xFF7B95D6)     // tinte de ícono sobre chip azul
+    val RoseBorder = Color(0xFFF4AAAA)   // borde de campos, tarjetas y contadores
 }
 
 @Composable

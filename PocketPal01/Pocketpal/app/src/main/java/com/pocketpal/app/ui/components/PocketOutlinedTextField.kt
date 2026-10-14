@@ -38,6 +38,8 @@ fun PocketOutlinedTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {},
+    enabled: Boolean = true,
+    borderColor: Color? = null,
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -49,6 +51,7 @@ fun PocketOutlinedTextField(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            enabled = enabled,
             isError = isError,
             shape = RoundedCornerShape(12.dp),
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },
@@ -76,8 +79,9 @@ fun PocketOutlinedTextField(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
-                focusedBorderColor = PocketColors.Ink,
-                unfocusedBorderColor = PocketColors.Gray,
+                focusedBorderColor = borderColor ?: PocketColors.Ink,
+                unfocusedBorderColor = borderColor ?: PocketColors.Gray,
+                disabledBorderColor = borderColor ?: PocketColors.Gray,
                 errorBorderColor = PocketColors.ErrorRed,
                 errorContainerColor = Color.Transparent,
             ),

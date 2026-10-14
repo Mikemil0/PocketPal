@@ -8,11 +8,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.pocketpal.app.auth.*
+import com.pocketpal.app.ui.profile.EditProfileScreen
+import com.pocketpal.app.ui.profile.ProfileHomeScreen
+import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.screens.*
 
 object Routes {
+    const val Splash = "splash"
     const val Welcome = "welcome"
     const val Login = "login"
     const val Register = "register"
@@ -30,10 +35,17 @@ object Routes {
     const val Home = "home"
     const val AccountCreated = "account_created"
     const val Tutorial = "tutorial"
+    const val ProfileGraph = "profile_graph"
+    const val Profile = "profile"
+    const val ProfileEdit = "profile/edit"
 }
 
 @Composable
-fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavController()) {
+fun PocketNavHost(
+    vm: AuthViewModel,
+    profileVm: ProfileViewModel,
+    nav: NavHostController = rememberNavController(),
+) {
     val state by vm.state.collectAsStateWithLifecycle()
     val otpExpiresAt by vm.otpExpiresAt.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -97,7 +109,18 @@ fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavControl
         }
     }
 
-    NavHost(nav, startDestination = Routes.Welcome) {
+    NavHost(nav, startDestination = Routes.Splash) {
+        // RF-A4 / D-13: el splash decide a dónde entrar según la sesión guardada
+        // y la casilla "Recordarme" (sin marcar, la sesión no se restaura).
+        composable(Routes.Splash) {
+            SplashScreen(
+                resolveSession = { vm.restoreSession() },
+                onDecided = { toHome ->
+                    vm.consume()
+                    nav.navigate(if (toHome) Routes.Home else Routes.Welcome) { popUpTo(0) }
+                },
+            )
+        }
         composable(Routes.Welcome) {
             WelcomeScreen(
                 onGoogle = { nav.navigate(Routes.Google); startGoogle() },
@@ -106,7 +129,8 @@ fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavControl
             )
         }
         composable(Routes.Login) {
-            LoginScreen(state, vm::login, ::back, { go(Routes.ForgotEmail) }, { go(Routes.Register) })
+            val rememberMe by vm.rememberMe.collectAsStateWithLifecycle()
+            LoginScreen(state, vm::login, ::back, { go(Routes.ForgotEmail) }, { go(Routes.Register) }, rememberMe)
         }
         composable(Routes.Register) {
             RegisterScreen(state, vm::register, ::back, { go(Routes.Login) })
@@ -153,8 +177,54 @@ fun PocketNavHost(vm: AuthViewModel, nav: NavHostController = rememberNavControl
         composable(Routes.AccountCreated) { AccountCreatedScreen(onContinue = { nav.navigate(Routes.Tutorial) }) }
         composable(Routes.Tutorial) { TutorialScreen(onFinish = { goToPermission(0) }) }
         composable(Routes.Home) {
-            val name by vm.displayName.collectAsStateWithLifecycle()
-            HomeScreen(name = name, onSignOut = vm::signOut)
+            LaunchedEffect(Unit) { profileVm.refresh() }
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val data = (profileState as? ProfileViewModel.UiState.Content)?.data
+            HomeScreen(
+                name = data?.fullName.orEmpty(),
+                email = data?.email.orEmpty(),
+                avatarUrl = data?.avatarUrl,
+                onOpenProfile = { nav.navigate(Routes.Profile) },
+                onSignOut = vm::signOut,
+            )
+        }
+
+        // §7.5: grafo anidado del módulo Perfil. ProfileViewModel es único y
+        // compartido con el Home (§7.2) para que el saludo y "Mi perfil" coincidan.
+        navigation(startDestination = Routes.Profile, route = Routes.ProfileGraph) {
+            composable(Routes.Profile) {
+                LaunchedEffect(Unit) { profileVm.refresh() }
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
+                val error by profileVm.error.collectAsStateWithLifecycle()
+                ProfileHomeScreen(
+                    state = profileState,
+                    error = error,
+                    onBack = ::back,
+                    onOpenPersonalData = { nav.navigate(Routes.ProfileEdit) },
+                    onSignOut = vm::signOut,
+                    onAvatarBytes = profileVm::setAvatar,
+                    onRemoveAvatar = profileVm::removeAvatar,
+                    onErrorShown = profileVm::consumeError,
+                )
+            }
+            composable(Routes.ProfileEdit) {
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
+                val error by profileVm.error.collectAsStateWithLifecycle()
+                val saving by profileVm.saving.collectAsStateWithLifecycle()
+                val event by profileVm.event.collectAsStateWithLifecycle()
+                EditProfileScreen(
+                    state = profileState,
+                    error = error,
+                    saving = saving,
+                    event = event,
+                    onBack = ::back,
+                    onSave = profileVm::savePersonalData,
+                    onAvatarBytes = profileVm::setAvatar,
+                    onRemoveAvatar = profileVm::removeAvatar,
+                    onErrorShown = profileVm::consumeError,
+                    onEventConsumed = profileVm::consumeEvent,
+                )
+            }
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.pocketpal.app.data.settings
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 /**
  * Preferencias visuales locales (RNF-06). Los valores son **códigos neutros** (RN-11):
@@ -15,6 +17,8 @@ import kotlinx.coroutines.flow.map
  * @property language `""` = Automático (idioma del sistema); si no, `es`/`en`/`pt`/`fr`.
  * @property theme `light` | `dark` | `system`.
  * @property weekStart 0–6, con 0 = domingo.
+ * @property rememberMe D-13: "Recordarme" del login. `false` = la sesión no se
+ * restaura al abrir la app de nuevo (se limpia en el splash).
  */
 data class UserPreferences(
     val language: String = "",
@@ -22,6 +26,7 @@ data class UserPreferences(
     val currency: String = "COP",
     val dateFormat: String = "DD/MM/YYYY",
     val weekStart: Int = 0,
+    val rememberMe: Boolean = false,
 )
 
 private val Context.pocketpalDataStore by preferencesDataStore(name = "pocketpal_settings")
@@ -40,8 +45,12 @@ class UserPreferencesStore(private val context: Context) {
             currency = p[KEY_CURRENCY] ?: "COP",
             dateFormat = p[KEY_DATE_FORMAT] ?: "DD/MM/YYYY",
             weekStart = p[KEY_WEEK_START] ?: 0,
+            rememberMe = p[KEY_REMEMBER_ME] ?: false,
         )
     }
+
+    /** Lectura puntual (sin flujo) para decidir el arranque en el splash. */
+    suspend fun rememberMe(): Boolean = preferences.first().rememberMe
 
     suspend fun setLanguage(tag: String) {
         context.pocketpalDataStore.edit { it[KEY_LANGUAGE] = tag }
@@ -63,11 +72,16 @@ class UserPreferencesStore(private val context: Context) {
         context.pocketpalDataStore.edit { it[KEY_WEEK_START] = day }
     }
 
+    suspend fun setRememberMe(remember: Boolean) {
+        context.pocketpalDataStore.edit { it[KEY_REMEMBER_ME] = remember }
+    }
+
     companion object {
         val KEY_LANGUAGE = stringPreferencesKey("language")
         val KEY_THEME = stringPreferencesKey("theme")
         val KEY_CURRENCY = stringPreferencesKey("currency")
         val KEY_DATE_FORMAT = stringPreferencesKey("date_format")
         val KEY_WEEK_START = intPreferencesKey("week_start")
+        val KEY_REMEMBER_ME = booleanPreferencesKey("remember_me")
     }
 }

@@ -5,6 +5,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
 
 /**
  * Cliente único de Supabase (RF-A2).
@@ -30,8 +31,11 @@ object SupabaseProvider {
     val client: SupabaseClient by lazy {
         createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
             install(Auth)
-            // Fase 2: lectura de las tablas con RLS (profiles, categories, …).
+            // Fase 2: lectura de las tablas con RLS (profiles, categories, .).
             install(Postgrest)
+            // Fase 3: foto de perfil en el bucket `avatars` (D-09). Sin este install,
+            // `supabase.storage` lanza "Plugin storage not installed".
+            install(Storage)
         }
     }
 }

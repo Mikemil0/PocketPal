@@ -11,4 +11,25 @@ interface ProfileRepository {
 
     /** Contadores de la pantalla Mi perfil; 0 hasta que existan `movements` y `goals`. */
     suspend fun getStats(): ProfileStats
+
+    /** Correo de la cuenta con sesión (vive en `auth.users`, no en `profiles`). */
+    fun currentEmail(): String?
+
+    /**
+     * Guarda los datos personales (RN-01, RN-09) y devuelve la fila actualizada.
+     * `full_name` es obligatorio y de máximo 60 caracteres (la validación la hace la UI).
+     */
+    suspend fun savePersonalData(fullName: String, country: String, currency: String): Profile?
+
+    /**
+     * Sube la foto de perfil (RNF-04: la recibe ya comprimida como JPEG), borra la
+     * anterior (§8.3) y devuelve la fila actualizada con su nuevo `avatar_path`.
+     */
+    suspend fun updateAvatar(imageBytes: ByteArray): Profile?
+
+    /** Quita la foto actual: borra el archivo de Storage y pone `avatar_path` a null. */
+    suspend fun removeAvatar(): Profile?
+
+    /** URL pública del bucket `avatars` (D-09) o `null` si no hay foto. */
+    fun avatarUrl(avatarPath: String?): String?
 }

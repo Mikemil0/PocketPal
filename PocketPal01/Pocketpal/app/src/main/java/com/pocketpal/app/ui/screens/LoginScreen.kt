@@ -30,10 +30,12 @@ fun LoginScreen(
     onBack: () -> Unit,
     onForgot: () -> Unit,
     onRegister: () -> Unit,
+    initialRemember: Boolean = false,
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    var remember by rememberSaveable { mutableStateOf(false) }
+    // D-13: la casilla "Recordarme" se precarga con el último valor elegido.
+    var remember by rememberSaveable { mutableStateOf(initialRemember) }
 
     val error = state as? AuthState.Error
     val type = error?.type

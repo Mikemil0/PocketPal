@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fase 3 (RF-B2): la captura con la cámara se guarda en el caché y se comparte
+  con el intent mediante FileProvider (la alternativa, file://, es rechazada
+  desde Android 7 por FileUriExposedException).
+-->
+<paths>
+    <cache-path name="camera" path="camera/" />
+</paths>

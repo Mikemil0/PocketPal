@@ -7,7 +7,7 @@ package com.pocketpal.app.auth
 enum class ErrorType {
     InvalidCredentials, EmptyPassword, EmailTaken, NoNetwork, SessionExpired, GoogleFailed,
     InvalidOtp, ExpiredOtp, OtpIncomplete,
-    InvalidEmail, InvalidName, PasswordTooShort, PasswordNeedsUpperAndDigit, PasswordMismatch,
+    InvalidEmail, InvalidName, NameTooLong, PasswordTooShort, PasswordNeedsUpperAndDigit, PasswordMismatch,
     TermsNotAccepted, Unknown,
 }
 

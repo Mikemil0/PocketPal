@@ -16,6 +16,12 @@ interface SettingsRepository {
     suspend fun setCurrency(currency: String)
     suspend fun setDateFormat(format: String)
     suspend fun setWeekStart(day: Int)
+
+    /** D-13: persiste la casilla "Recordarme" del login. */
+    suspend fun setRememberMe(remember: Boolean)
+
+    /** Lectura puntual para el splash: ¿hay que restaurar la sesión al abrir? */
+    suspend fun isRememberMe(): Boolean
 }
 
 /** Implementación real: DataStore (preferencias locales del dispositivo). */
@@ -28,4 +34,6 @@ class DataStoreSettingsRepository(private val store: UserPreferencesStore) : Set
     override suspend fun setCurrency(currency: String) = store.setCurrency(currency)
     override suspend fun setDateFormat(format: String) = store.setDateFormat(format)
     override suspend fun setWeekStart(day: Int) = store.setWeekStart(day)
+    override suspend fun setRememberMe(remember: Boolean) = store.setRememberMe(remember)
+    override suspend fun isRememberMe(): Boolean = store.rememberMe()
 }

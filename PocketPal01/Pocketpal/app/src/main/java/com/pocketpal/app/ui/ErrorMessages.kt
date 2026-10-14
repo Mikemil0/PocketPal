@@ -24,6 +24,7 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.OtpIncomplete -> R.string.error_otp_incomplete
     ErrorType.InvalidEmail -> R.string.error_invalid_email
     ErrorType.InvalidName -> R.string.error_invalid_name
+    ErrorType.NameTooLong -> R.string.error_name_too_long
     ErrorType.PasswordTooShort -> R.string.error_password_too_short
     ErrorType.PasswordNeedsUpperAndDigit -> R.string.error_password_upper_digit
     ErrorType.PasswordMismatch -> R.string.error_password_mismatch

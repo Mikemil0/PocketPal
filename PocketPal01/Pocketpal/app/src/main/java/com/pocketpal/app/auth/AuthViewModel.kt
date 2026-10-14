@@ -2,6 +2,7 @@ package com.pocketpal.app.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pocketpal.app.data.settings.SettingsRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
@@ -14,24 +15,31 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import java.io.IOException
 
 private class EmailTakenException : Exception("already registered")
 
-class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
+class AuthViewModel(
+    private val supabase: SupabaseClient,
+    private val settings: SettingsRepository,
+) : ViewModel() {
 
     private val _state = MutableStateFlow<AuthState>(AuthState.Idle)
     val state: StateFlow<AuthState> = _state.asStateFlow()
 
-    private val _displayName = MutableStateFlow("")
-    /** Primer nombre del usuario autenticado, para el saludo del Home. */
-    val displayName: StateFlow<String> = _displayName.asStateFlow()
+    /**
+     * D-13: casilla "Recordarme" persistida en DataStore. Se precarga en el login
+     * con el último valor elegido y se guarda al iniciar sesión.
+     */
+    private val _rememberMe = MutableStateFlow(false)
+    val rememberMe: StateFlow<Boolean> = _rememberMe.asStateFlow()
 
     /**
      * Momento en que vence el código OTP actual (RF-A5 / D-15). Supabase responde igual
@@ -45,7 +53,10 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
     var pendingEmail: String = ""; private set
     var lastKnownEmail: String = ""; private set
 
-    init { observeSession() }
+    init {
+        observeSession()
+        viewModelScope.launch { _rememberMe.value = settings.isRememberMe() }
+    }
 
     fun consume() { _state.value = AuthState.Idle }
 
@@ -53,9 +64,10 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
     fun login(email: String, password: String, rememberMe: Boolean) {
         if (!AuthValidators.isValidEmail(email)) return fail(ErrorType.InvalidEmail)
         if (password.isEmpty()) return fail(ErrorType.EmptyPassword)
-        // TODO: persistir rememberMe (DataStore) y cerrar sesión al salir si es false.
         run(AuthStep.LoggedIn) {
             supabase.auth.signInWith(Email) { this.email = email.trim(); this.password = password }
+            settings.setRememberMe(rememberMe) // D-13: se guarda solo si el login tuvo éxito
+            _rememberMe.value = rememberMe
         }
     }
 
@@ -164,6 +176,9 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
             _state.value = try {
                 val token = getIdToken()
                 supabase.auth.signInWith(IDToken) { idToken = token; provider = Google }
+                // D-13: con Google no hay casilla "Recordarme"; se restaura siempre.
+                settings.setRememberMe(true)
+                _rememberMe.value = true
                 AuthState.Success(AuthStep.GoogleConnected, Unit)
             } catch (e: CancellationException) {
                 throw e
@@ -218,6 +233,27 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
         }
     }
 
+    /**
+     * RF-A4 / D-13: decide el destino inicial mientras se muestra el splash.
+     * Devuelve `true` si hay sesión que restaurar (va al Home) o `false` (Welcome).
+     *
+     * Con "Recordarme" sin marcar la sesión guardada se limpia aquí: dura solo
+     * mientras la app está abierta y el próximo arranque entra a Welcome.
+     * Si Supabase sigue cargando la sesión pasado un tiempo (sin red y sin token
+     * válido) se entra a Welcome en lugar de dejar el splash colgado (RNF-05).
+     */
+    suspend fun restoreSession(): Boolean {
+        val status = withTimeoutOrNull(SESSION_RESOLVE_TIMEOUT_MS) {
+            supabase.auth.sessionStatus.first { it !is SessionStatus.Initializing }
+        } ?: return false
+        if (status !is SessionStatus.Authenticated) return false
+        if (!settings.isRememberMe()) {
+            runCatching { supabase.auth.signOut() }
+            return false
+        }
+        return true
+    }
+
     /** Si había sesión y se pierde sin signOut explícito => sesión expirada. */
     private fun observeSession() = viewModelScope.launch {
         var wasAuthenticated = false
@@ -226,10 +262,6 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
                 is SessionStatus.Authenticated -> {
                     wasAuthenticated = true
                     lastKnownEmail = status.session.user?.email.orEmpty()
-                    val meta = status.session.user?.userMetadata
-                    val fullName = (meta?.get("full_name") ?: meta?.get("name"))?.jsonPrimitive?.contentOrNull
-                    _displayName.value = (fullName ?: lastKnownEmail.substringBefore("@"))
-                        .trim().substringBefore(" ")
                 }
                 is SessionStatus.NotAuthenticated -> {
                     if (wasAuthenticated && !status.isSignOut)
@@ -247,5 +279,8 @@ class AuthViewModel(private val supabase: SupabaseClient) : ViewModel() {
          * la §14 fila 16). Debe coincidir con `otp_expiry = 600` configurado en Supabase.
          */
         const val OTP_EXPIRY_MS: Long = 10 * 60 * 1000L
+
+        /** Espera máxima para resolver la sesión guardada antes de entrar a Welcome. */
+        const val SESSION_RESOLVE_TIMEOUT_MS: Long = 5_000L
     }
 }

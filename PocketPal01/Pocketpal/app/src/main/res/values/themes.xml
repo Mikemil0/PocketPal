@@ -8,4 +8,15 @@
       "Light" (y no "DayNight") porque el Módulo 1 solo tiene tema claro.
     -->
     <style name="Theme.Pocketpal" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <!--
+      RF-A4 / D-16: splash del sistema (API 31+; core-splashscreen lo adapta a API 23+).
+      installSplashScreen() aplica postSplashScreenTheme antes de super.onCreate(),
+      así que AppCompatActivity ya ve Theme.Pocketpal.
+    -->
+    <style name="Theme.Pocketpal.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/pocket_navy</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_pocketpal</item>
+        <item name="postSplashScreenTheme">@style/Theme.Pocketpal</item>
+    </style>
 </resources>

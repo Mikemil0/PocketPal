@@ -168,4 +168,52 @@
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_terms_not_accepted">You must accept the Terms and Conditions and the Privacy Policy.</string>
     <string name="error_unknown">Something went wrong. Try again</string>
+
+    <!-- Fase 3: Mi perfil (RF-B1) -->
+    <string name="profile_title">My profile</string>
+    <string name="home_open_profile">Open my profile</string>
+    <string name="profile_stats_expenses">Registered expenses</string>
+    <string name="profile_stats_goals">Active goals</string>
+    <string name="profile_section_account">ACCOUNT</string>
+    <string name="profile_section_preferences">PREFERENCES</string>
+    <string name="profile_row_personal_data">Personal data</string>
+    <string name="profile_row_personal_data_sub">Name, email, phone</string>
+    <string name="profile_row_security">Security</string>
+    <string name="profile_row_security_sub">Password</string>
+    <string name="profile_row_notifications">Notifications</string>
+    <string name="profile_row_notifications_sub">Alerts and reminders</string>
+    <string name="profile_row_categories">Categories</string>
+    <string name="profile_row_categories_sub">Customize your expenses</string>
+    <string name="profile_row_preferences">General preferences</string>
+    <string name="profile_row_preferences_sub">Currency, language, format</string>
+    <string name="profile_row_export">Export data</string>
+    <string name="profile_row_export_sub">Download your history</string>
+    <string name="profile_row_help">Help &amp; support</string>
+    <string name="profile_row_about">About</string>
+    <string name="profile_row_sign_out">Sign out</string>
+    <string name="profile_coming_soon">Coming soon</string>
+
+    <!-- Fase 3: hoja "¿Cerrar sesión?" (RF-B12) -->
+    <string name="signout_title">Sign out?</string>
+    <string name="signout_body">You will have to enter your email and password again the next time you open PocketPal.</string>
+    <string name="signout_confirm">Yes, sign out</string>
+    <string name="common_cancel">Cancel</string>
+
+    <!-- Fase 3: Datos personales (RF-B2) -->
+    <string name="edit_title">Personal data</string>
+    <string name="edit_change_photo">Change photo</string>
+    <string name="edit_field_name">Name</string>
+    <string name="edit_field_phone">Phone</string>
+    <string name="edit_phone_add">Add phone number</string>
+    <string name="edit_section_location">LOCATION</string>
+    <string name="edit_field_country">Country</string>
+    <string name="edit_field_currency">Currency</string>
+    <string name="edit_save">Save changes</string>
+    <string name="a11y_change_photo">Change profile photo</string>
+    <string name="error_name_too_long">Name can\'t be longer than 60 characters</string>
+
+    <!-- Fase 3: hoja de foto (RF-B2) -->
+    <string name="photo_sheet_take">Take photo</string>
+    <string name="photo_sheet_gallery">Choose from gallery</string>
+    <string name="photo_sheet_remove">Remove current photo</string>
 </resources>
