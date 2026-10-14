@@ -25,6 +25,11 @@ object PocketColors {
     val TealSoft = Color(0xFFD3EFE6)     // chip verde de las filas
     val BlueIcon = Color(0xFF7B95D6)     // tinte de ícono sobre chip azul
     val RoseBorder = Color(0xFFF4AAAA)   // borde de campos, tarjetas y contadores
+
+    // Fase 6: categorías (valores medidos del Figma, págs. 37 y 54)
+    val ChipPink = Color(0xFFFFE4E4)     // fondo del ícono de categoría y del botón atrás
+    val TabInactive = Color(0xFFCBD8EC)  // pestaña "Ingresos" inactiva
+    val ToggleOff = Color(0xFF718096)    // interruptor apagado (gris azulado, pág. 54)
 }
 
 @Composable

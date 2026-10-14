@@ -32,6 +32,7 @@ fun PocketOutlinedTextField(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
+    placeholder: String? = null,
     isPassword: Boolean = false,
     isError: Boolean = false,
     errorText: String? = null,
@@ -44,13 +45,16 @@ fun PocketOutlinedTextField(
     var visible by remember { mutableStateOf(false) }
 
     Column(modifier.fillMaxWidth()) {
-        Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Ink)
-        Spacer(Modifier.height(6.dp))
+        if (label.isNotEmpty()) {
+            Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Ink)
+            Spacer(Modifier.height(6.dp))
+        }
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            placeholder = placeholder?.let { { Text(it, color = PocketColors.Muted) } },
             enabled = enabled,
             isError = isError,
             shape = RoundedCornerShape(12.dp),

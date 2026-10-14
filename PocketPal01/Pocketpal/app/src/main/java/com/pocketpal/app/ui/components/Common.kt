@@ -32,23 +32,26 @@ fun AuthScaffold(
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
     background: Color = PocketColors.Cream,
+    scrollable: Boolean = true,
+    backBackground: Color = PocketColors.Ink,
+    backTint: Color = Color.White,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val base = modifier.fillMaxSize().background(background)
+        .systemBarsPadding().imePadding()
+        .padding(horizontal = 24.dp, vertical = 16.dp)
     Column(
-        modifier.fillMaxSize().background(background)
-            .systemBarsPadding().imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+        if (scrollable) base.verticalScroll(rememberScrollState()) else base,
     ) {
         if (onBack != null) {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.size(32.dp).background(PocketColors.Ink, RoundedCornerShape(8.dp)),
+                modifier = Modifier.size(32.dp).background(backBackground, RoundedCornerShape(8.dp)),
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     stringResource(R.string.a11y_back),
-                    tint = Color.White,
+                    tint = backTint,
                     modifier = Modifier.size(16.dp),
                 )
             }

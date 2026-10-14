@@ -50,6 +50,7 @@ fun ProfileHomeScreen(
     error: ErrorType?,
     onBack: () -> Unit,
     onOpenPersonalData: () -> Unit,
+    onOpenCategories: () -> Unit,
     onSignOut: () -> Unit,
     onAvatarBytes: (ByteArray?) -> Unit,
     onRemoveAvatar: () -> Unit,
@@ -175,7 +176,7 @@ fun ProfileHomeScreen(
                 iconTint = PocketColors.Coral,
                 title = stringResource(R.string.profile_row_categories),
                 subtitle = stringResource(R.string.profile_row_categories_sub),
-                onClick = comingSoon,
+                onClick = onOpenCategories,
             )
             SettingsRow(
                 icon = Icons.Outlined.AttachMoney,

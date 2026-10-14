@@ -9,6 +9,8 @@ enum class ErrorType {
     InvalidOtp, ExpiredOtp, OtpIncomplete,
     InvalidEmail, InvalidName, NameTooLong, PasswordTooShort, PasswordNeedsUpperAndDigit, PasswordMismatch,
     TermsNotAccepted, Unknown,
+    // Fase 6: categorías (RN-02 y RN-03)
+    DuplicateCategoryName, CategoryNameEmpty, CategoryNameTooLong, InvalidMonthlyLimit,
 }
 
 /** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */

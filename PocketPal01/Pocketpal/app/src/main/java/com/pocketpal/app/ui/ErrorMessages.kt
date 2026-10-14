@@ -29,6 +29,10 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.PasswordNeedsUpperAndDigit -> R.string.error_password_upper_digit
     ErrorType.PasswordMismatch -> R.string.error_password_mismatch
     ErrorType.TermsNotAccepted -> R.string.error_terms_not_accepted
+    ErrorType.DuplicateCategoryName -> R.string.error_duplicate_category
+    ErrorType.CategoryNameEmpty -> R.string.error_category_name_empty
+    ErrorType.CategoryNameTooLong -> R.string.error_category_name_too_long
+    ErrorType.InvalidMonthlyLimit -> R.string.error_invalid_monthly_limit
     ErrorType.Unknown -> R.string.error_unknown
 }
 

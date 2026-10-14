@@ -216,4 +216,37 @@
     <string name="photo_sheet_take">Take photo</string>
     <string name="photo_sheet_gallery">Choose from gallery</string>
     <string name="photo_sheet_remove">Remove current photo</string>
+
+    <!-- Phase 6: Categories (RF-B7, §8.8 and §8.9) -->
+    <string name="categories_title">Categories</string>
+    <string name="categories_tab_expenses">Expenses</string>
+    <string name="categories_tab_income">Income</string>
+    <string name="categories_header">YOUR CATEGORIES (%1$d)</string>
+    <string name="categories_empty_title">You don\'t have categories yet</string>
+    <string name="categories_empty_hint">Create your first category to organize your expenses and income.</string>
+    <string name="categories_create">Create custom category</string>
+    <plurals name="category_movements">
+        <item quantity="one">1 movement</item>
+        <item quantity="other">%1$d movements</item>
+    </plurals>
+    <string name="category_new_title">Create new category</string>
+    <string name="category_edit_title">Edit category</string>
+    <string name="category_name_label">NAME</string>
+    <string name="category_name_hint">Groceries</string>
+    <string name="category_color_label">COLOR</string>
+    <string name="category_budget_label">BUDGET</string>
+    <string name="category_limit_toggle">Set monthly limit</string>
+    <string name="category_limit_sub">We\'ll warn you as you get close</string>
+    <string name="category_save">Save</string>
+    <string name="category_delete">Delete category</string>
+    <string name="category_delete_title">Delete category?</string>
+    <string name="category_delete_body">It will no longer appear in your category list.</string>
+    <string name="category_delete_confirm">Delete</string>
+    <string name="error_duplicate_category">You already have a category with this name</string>
+    <string name="error_category_name_empty">Enter a name for the category</string>
+    <string name="error_category_name_too_long">The name can\'t be longer than 30 characters</string>
+    <string name="error_invalid_monthly_limit">The limit must be greater than 0</string>
+    <string name="a11y_reorder_category">Reorder category</string>
+    <string name="a11y_category_icon">Category icon</string>
+    <string name="a11y_category_icon_option">Choose this icon</string>
 </resources>

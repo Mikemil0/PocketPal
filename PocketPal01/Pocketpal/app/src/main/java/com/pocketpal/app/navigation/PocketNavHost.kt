@@ -6,11 +6,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.pocketpal.app.auth.*
+import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.profile.CategoriesScreen
+import com.pocketpal.app.ui.profile.CategoriesViewModel
+import com.pocketpal.app.ui.profile.CategoryFormScreen
 import com.pocketpal.app.ui.profile.EditProfileScreen
 import com.pocketpal.app.ui.profile.ProfileHomeScreen
 import com.pocketpal.app.ui.profile.ProfileViewModel
@@ -38,12 +44,19 @@ object Routes {
     const val ProfileGraph = "profile_graph"
     const val Profile = "profile"
     const val ProfileEdit = "profile/edit"
+    const val ProfileCategories = "profile/categories"
+    const val ProfileCategoryNew = "profile/category/new/{kind}"
+    const val ProfileCategoryDetail = "profile/category/{id}"
+
+    fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
+    fun categoryDetail(id: String) = "profile/category/$id"
 }
 
 @Composable
 fun PocketNavHost(
     vm: AuthViewModel,
     profileVm: ProfileViewModel,
+    categoriesVm: CategoriesViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -201,6 +214,7 @@ fun PocketNavHost(
                     error = error,
                     onBack = ::back,
                     onOpenPersonalData = { nav.navigate(Routes.ProfileEdit) },
+                    onOpenCategories = { nav.navigate(Routes.ProfileCategories) },
                     onSignOut = vm::signOut,
                     onAvatarBytes = profileVm::setAvatar,
                     onRemoveAvatar = profileVm::removeAvatar,
@@ -225,6 +239,96 @@ fun PocketNavHost(
                     onEventConsumed = profileVm::consumeEvent,
                 )
             }
+
+            // Fase 6 (RF-B7): categorías con pestañas, crear/editar/eliminar (§7.5).
+            composable(Routes.ProfileCategories) {
+                LaunchedEffect(Unit) { categoriesVm.refresh() }
+                val categoriesState by categoriesVm.state.collectAsStateWithLifecycle()
+                val categoriesError by categoriesVm.error.collectAsStateWithLifecycle()
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
+                CategoriesScreen(
+                    state = categoriesState,
+                    error = categoriesError,
+                    currency = profileCurrency(profileState),
+                    onBack = ::back,
+                    onSelectKind = categoriesVm::selectKind,
+                    onMove = categoriesVm::move,
+                    onCreate = { nav.navigate(Routes.categoryNew(it)) },
+                    onOpen = { nav.navigate(Routes.categoryDetail(it)) },
+                    onErrorShown = categoriesVm::consumeError,
+                )
+            }
+            composable(
+                Routes.ProfileCategoryNew,
+                arguments = listOf(navArgument("kind") { type = NavType.StringType }),
+            ) { entry ->
+                CategoryFormRoute(
+                    categoryId = null,
+                    requestedKind = CategoryKind.fromWire(entry.arguments?.getString("kind").orEmpty()),
+                    categoriesVm = categoriesVm,
+                    profileVm = profileVm,
+                    onBack = ::back,
+                    onDone = { nav.popBackStack() },
+                )
+            }
+            composable(
+                Routes.ProfileCategoryDetail,
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { entry ->
+                CategoryFormRoute(
+                    categoryId = entry.arguments?.getString("id").orEmpty(),
+                    requestedKind = CategoryKind.Expense,
+                    categoriesVm = categoriesVm,
+                    profileVm = profileVm,
+                    onBack = ::back,
+                    onDone = { nav.popBackStack() },
+                )
+            }
         }
     }
+}
+
+/** Moneda del perfil para formatear montos (RN-09); COP mientras no cargue. */
+@Composable
+private fun profileCurrency(state: ProfileViewModel.UiState): String =
+    (state as? ProfileViewModel.UiState.Content)?.data?.currency ?: "COP"
+
+/** Formulario crear/editar: resuelve la fila inicial y las de su tipo (RN-02). */
+@Composable
+private fun CategoryFormRoute(
+    categoryId: String?,
+    requestedKind: CategoryKind,
+    categoriesVm: CategoriesViewModel,
+    profileVm: ProfileViewModel,
+    onBack: () -> Unit,
+    onDone: () -> Unit,
+) {
+    // Carga defensiva: si se entra sin lista (deep link), el formulario la pide.
+    LaunchedEffect(Unit) { categoriesVm.refresh() }
+    val categoriesState by categoriesVm.state.collectAsStateWithLifecycle()
+    val saving by categoriesVm.saving.collectAsStateWithLifecycle()
+    val error by categoriesVm.error.collectAsStateWithLifecycle()
+    val event by categoriesVm.event.collectAsStateWithLifecycle()
+    val profileState by profileVm.state.collectAsStateWithLifecycle()
+    val initial = categoriesVm.find(categoryId.orEmpty())
+    val kindForList = initial?.kind ?: requestedKind
+    val existing = (categoriesState as? CategoriesViewModel.UiState.Content)?.data?.let {
+        if (kindForList == CategoryKind.Income) it.incomes else it.expenses
+    } ?: emptyList()
+    CategoryFormScreen(
+        categoryId = categoryId,
+        requestedKind = requestedKind,
+        initial = initial,
+        existing = existing,
+        currency = profileCurrency(profileState),
+        saving = saving,
+        error = error,
+        event = event,
+        onBack = onBack,
+        onSave = categoriesVm::save,
+        onDelete = categoriesVm::delete,
+        onErrorShown = categoriesVm::consumeError,
+        onEventConsumed = categoriesVm::consumeEvent,
+        onDone = onDone,
+    )
 }

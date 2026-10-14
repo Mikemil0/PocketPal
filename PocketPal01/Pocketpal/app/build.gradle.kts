@@ -69,6 +69,8 @@ dependencies {
     // RF-A3: AppCompat hace falta para AppCompatDelegate.setApplicationLocales (idioma en ejecución)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
+    // Fase 6: tests de ViewModels con repositorios simulados (RNF-02, §10)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -102,6 +104,9 @@ dependencies {
 // Fase 3: foto de perfil (Coil 2.7.0: un solo artefacto y usa OkHttp ya presente;
 // Coil 3 cambia de paquete y exige un módulo de red aparte)
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+// Fase 6: reordenar categorías arrastrando (D-10, §7.6: sh.calvin.reorderable)
+    implementation("sh.calvin.reorderable:reorderable:3.1.0")
 
 // Íconos
     implementation("androidx.compose.material:material-icons-extended")

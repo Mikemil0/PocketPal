@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.navigation.PocketNavHost
+import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.theme.PocketTheme
 
@@ -44,7 +45,14 @@ class MainActivity : AppCompatActivity() {
                         initializer { ProfileViewModel(container.profileRepository) }
                     }
                 )
-                PocketNavHost(vm, profileVm)
+                // Fase 6: un ViewModel por funcionalidad (§7.2); también con scope
+                // de actividad para compartirlo entre la lista y el formulario (fila 32).
+                val categoriesVm: CategoriesViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { CategoriesViewModel(container.categoryRepository) }
+                    }
+                )
+                PocketNavHost(vm, profileVm, categoriesVm)
             }
         }
     }

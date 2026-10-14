@@ -231,4 +231,37 @@
     <string name="currency_usd" translatable="false">USD$</string>
     <string name="currency_eur" translatable="false">EUR€</string>
     <string name="currency_mxn" translatable="false">MXN$</string>
+
+    <!-- Fase 6: Categorías (RF-B7, §8.8 y §8.9) -->
+    <string name="categories_title">Categorías</string>
+    <string name="categories_tab_expenses">Gastos</string>
+    <string name="categories_tab_income">Ingresos</string>
+    <string name="categories_header">TUS CATEGORÍAS (%1$d)</string>
+    <string name="categories_empty_title">Aún no tienes categorías</string>
+    <string name="categories_empty_hint">Crea tu primera categoría para organizar tus gastos e ingresos.</string>
+    <string name="categories_create">Crear categoría personalizada</string>
+    <plurals name="category_movements">
+        <item quantity="one">1 movimiento</item>
+        <item quantity="other">%1$d movimientos</item>
+    </plurals>
+    <string name="category_new_title">Crear nueva categoría</string>
+    <string name="category_edit_title">Editar categoría</string>
+    <string name="category_name_label">NOMBRE</string>
+    <string name="category_name_hint">Alimentos</string>
+    <string name="category_color_label">COLOR</string>
+    <string name="category_budget_label">PRESUPUESTO</string>
+    <string name="category_limit_toggle">Definir límite mensual</string>
+    <string name="category_limit_sub">Te avisamos si te acercas</string>
+    <string name="category_save">Guardar</string>
+    <string name="category_delete">Eliminar categoría</string>
+    <string name="category_delete_title">¿Eliminar categoría?</string>
+    <string name="category_delete_body">Ya no aparecerá en tu lista de categorías.</string>
+    <string name="category_delete_confirm">Eliminar</string>
+    <string name="error_duplicate_category">Ya tienes una categoría con este nombre</string>
+    <string name="error_category_name_empty">Ingresa un nombre para la categoría</string>
+    <string name="error_category_name_too_long">El nombre no puede tener más de 30 caracteres</string>
+    <string name="error_invalid_monthly_limit">El límite debe ser mayor que 0</string>
+    <string name="a11y_reorder_category">Reordenar categoría</string>
+    <string name="a11y_category_icon">Ícono de la categoría</string>
+    <string name="a11y_category_icon_option">Elegir este ícono</string>
 </resources>

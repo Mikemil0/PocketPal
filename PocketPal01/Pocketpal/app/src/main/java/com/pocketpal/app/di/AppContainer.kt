@@ -2,6 +2,8 @@ package com.pocketpal.app.di
 
 import android.content.Context
 import com.pocketpal.app.auth.SupabaseProvider
+import com.pocketpal.app.data.category.CategoryRepository
+import com.pocketpal.app.data.category.SupabaseCategoryRepository
 import com.pocketpal.app.data.profile.ProfileRepository
 import com.pocketpal.app.data.profile.SupabaseProfileRepository
 import com.pocketpal.app.data.settings.DataStoreSettingsRepository
@@ -22,6 +24,9 @@ class AppContainer(context: Context) {
     val supabase: SupabaseClient = SupabaseProvider.client
 
     val profileRepository: ProfileRepository = SupabaseProfileRepository(supabase)
+
+    /** Fase 6: categorías (RF-B7) sobre la tabla `categories` con RLS propia. */
+    val categoryRepository: CategoryRepository = SupabaseCategoryRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))
