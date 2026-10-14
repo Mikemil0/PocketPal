@@ -1,0 +1,24 @@
+# Copia este archivo a local.properties (misma carpeta) y rellena los valores reales.
+# local.properties está en .gitignore: NUNCA se sube al repositorio.
+#
+# Dónde encontrar cada valor:
+#   SUPABASE_URL / SUPABASE_KEY:
+#     Supabase → Project Settings → API. La URL es la del proyecto
+#     (https://TU-PROYECTO.supabase.co) y la clave es la publishable/anon
+#     (empieza con sb_publishable_ o eyJ...). NUNCA uses la service_role.
+#   GOOGLE_WEB_CLIENT_ID:
+#     Google Cloud Console → Credentials → cliente de tipo Web.
+#     Es el cliente "Web", NO el de Android (ver SDD Módulo 1, §9.2).
+
+# --- Obligatorios (si falta alguno, la app falla al iniciar y dice cuál falta) ---
+SUPABASE_URL=https://TU-PROYECTO.supabase.co
+SUPABASE_KEY=sb_publishable_TU_CLAVE
+GOOGLE_WEB_CLIENT_ID=TU_CLIENT_ID.apps.googleusercontent.com
+
+# --- Opcionales (la app arranca sin ellos; pantallas "Acerca de" y "Ayuda") ---
+TERMS_URL=https://example.com/terminos
+PRIVACY_URL=https://example.com/privacidad
+SUPPORT_EMAIL=soporte@pocketpal.com
+FACEBOOK_URL=https://facebook.com/pocketpal
+INSTAGRAM_URL=https://instagram.com/pocketpal
+X_URL=https://x.com/pocketpal

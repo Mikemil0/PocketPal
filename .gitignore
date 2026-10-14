@@ -1,0 +1,25 @@
+# PocketPal — repositorio raíz
+# Ignora artefactos del proyecto Android que vive en PocketPal01/Pocketpal/.
+
+# Secretos y configuración local
+local.properties
+*.jks
+*.keystore
+
+# Build / Gradle
+.gradle/
+build/
+.cxx/
+captures/
+.externalNativeBuild
+
+# IDE (parcial: se versionan algunas cosas de .idea si se desea)
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+*.iml
+
+.DS_Store
+
+Docs/
