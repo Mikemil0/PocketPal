@@ -22,6 +22,20 @@ interface ProfileRepository {
     suspend fun savePersonalData(fullName: String, country: String, currency: String): Profile?
 
     /**
+     * Guarda las preferencias generales (RNF-06, RN-09) y devuelve la fila actualizada.
+     * [language] vacío = "Automático" (idioma del dispositivo): en ese caso **no se
+     * escribe el idioma** en la cuenta porque el CHECK de `profiles.language` solo
+     * admite `es`/`en`/`pt`/`fr` y "Automático" es una preferencia del equipo (§14).
+     */
+    suspend fun savePreferences(
+        language: String,
+        theme: String,
+        currency: String,
+        dateFormat: String,
+        weekStart: Int,
+    ): Profile?
+
+    /**
      * Sube la foto de perfil (RNF-04: la recibe ya comprimida como JPEG), borra la
      * anterior (§8.3) y devuelve la fila actualizada con su nuevo `avatar_path`.
      */

@@ -31,13 +31,14 @@ import com.pocketpal.app.auth.isPasswordProblem
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.errorMessage
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 private fun IconBadge(icon: ImageVector) {
     Box(
-        Modifier.size(64.dp).background(Color.White, RoundedCornerShape(16.dp)),
+        Modifier.size(64.dp).background(pocketColors.Card, RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center,
-    ) { Icon(icon, null, tint = PocketColors.Coral, modifier = Modifier.size(28.dp)) }
+    ) { Icon(icon, null, tint = pocketColors.Coral, modifier = Modifier.size(28.dp)) }
 }
 
 /** Paso 1 */
@@ -101,23 +102,23 @@ fun NewPasswordScreen(state: AuthState, onSave: (String, String) -> Unit) {
 fun PasswordUpdatedScreen(onLogin: () -> Unit) {
     AuthScaffold {
         Spacer(Modifier.height(80.dp))
-        Icon(Icons.Outlined.CheckCircle, null, tint = PocketColors.Teal,
+        Icon(Icons.Outlined.CheckCircle, null, tint = pocketColors.Teal,
             modifier = Modifier.align(Alignment.CenterHorizontally).size(96.dp))
         Spacer(Modifier.height(16.dp))
         Text(stringResource(R.string.password_updated_title), fontSize = 20.sp, fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Ink, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            color = pocketColors.Ink, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
         Text(stringResource(R.string.password_updated_body),
-            fontSize = 12.sp, color = PocketColors.Muted, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            fontSize = 12.sp, color = pocketColors.Muted, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(24.dp))
         Row(
-            Modifier.fillMaxWidth().border(1.dp, PocketColors.Gray, RoundedCornerShape(10.dp)).padding(12.dp),
+            Modifier.fillMaxWidth().border(1.dp, pocketColors.Gray, RoundedCornerShape(10.dp)).padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.Lock, null, tint = PocketColors.Coral, modifier = Modifier.size(18.dp))
+            Icon(Icons.Outlined.Lock, null, tint = pocketColors.Coral, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.password_updated_note),
-                fontSize = 11.sp, color = PocketColors.Muted)
+                fontSize = 11.sp, color = pocketColors.Muted)
         }
         Spacer(Modifier.height(24.dp))
         PocketPrimaryButton(stringResource(R.string.common_sign_in), onLogin)

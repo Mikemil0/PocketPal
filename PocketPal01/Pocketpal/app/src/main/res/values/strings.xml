@@ -264,4 +264,164 @@
     <string name="a11y_reorder_category">Reordenar categoría</string>
     <string name="a11y_category_icon">Ícono de la categoría</string>
     <string name="a11y_category_icon_option">Elegir este ícono</string>
+
+    <!-- Fase 8: Exportar datos (RF-B9, D-05: solo UI y estados; el archivo real es del Módulo 3) -->
+    <string name="export_title">Exportar datos</string>
+    <string name="export_subtitle">Descarga el historial de tus movimientos para llevarlo a otra herramienta o guardarlo como respaldo.</string>
+    <string name="export_range_header">RANGO DE FECHAS</string>
+    <string name="export_range_this_month">Este mes</string>
+    <string name="export_range_last_3_months">Últimos 3 meses</string>
+    <string name="export_range_this_year">Este año</string>
+    <string name="export_range_all">Todo el historial</string>
+    <string name="export_range_custom">Personalizado</string>
+    <string name="export_format_header">FORMATO</string>
+    <string name="export_format_csv">CSV / Excel</string>
+    <string name="export_format_pdf">PDF</string>
+    <!-- Comillas obligatorias: conservan el espacio final antes del correo en negrita (§14, fila 23) -->
+    <string name="export_email_note_prefix">"El archivo se enviará a tu correo "</string>
+    <string name="export_button">Exportar historial</string>
+    <string name="export_empty_title">No hay movimientos que exportar</string>
+    <string name="export_empty_body">No registraste ningún gasto o ingreso en este rango de fechas. Elige otro período o registra un movimiento primero.</string>
+    <string name="export_custom_title">Rango personalizado</string>
+    <string name="export_custom_from">Desde</string>
+    <string name="export_custom_to">Hasta</string>
+    <string name="export_custom_apply">Aplicar</string>
+    <string name="export_a11y_range_option">Elegir este rango</string>
+    <string name="export_a11y_format_option">Elegir este formato</string>
+
+    <!-- Fase 8: Ayuda y soporte (RF-B10; acordeón pág. 40 + detalle con Anterior/Siguiente pág. 57) -->
+    <string name="help_title">Ayuda y soporte</string>
+    <string name="help_search_hint">Busca tu pregunta</string>
+    <string name="help_section_faqs">PREGUNTAS FRECUENTES</string>
+    <string name="help_chat_title">Chat en vivo</string>
+    <string name="help_chat_subtitle">Respuesta en minutos</string>
+    <string name="help_email_title">Escríbenos</string>
+    <string name="help_email_subject">Ayuda PocketPal</string>
+    <string name="help_no_results">No encontramos preguntas con tu búsqueda</string>
+    <string name="help_prev">Anterior</string>
+    <string name="help_next">Siguiente</string>
+    <string name="help_open_detail">Ver la respuesta completa</string>
+    <string name="faq_1_q">¿Cómo edito o elimino un movimiento?</string>
+    <string name="faq_1_a">Desde “Movimientos”, toca el gasto que quieras cambiar. Ahí puedes editar el monto, la categoría o eliminarlo por completo.</string>
+    <string name="faq_2_q">¿Mis datos están seguros?</string>
+    <string name="faq_2_a">Sí. Tus datos solo son accesibles desde tu cuenta (cada fila tiene reglas de seguridad en el servidor) y la conexión con la app va cifrada.</string>
+    <string name="faq_3_q">¿Cómo creo una meta de ahorro?</string>
+    <string name="faq_3_a">Las metas de ahorro llegarán en una próxima versión. Mientras tanto puedes organizar tus gastos con categorías y límites mensuales.</string>
+    <string name="faq_4_q">¿Puedo usar PocketPal sin internet?</string>
+    <string name="faq_4_a">Necesitas internet para iniciar sesión y consultar tus datos, porque se guardan en tu cuenta. La sección de ayuda sí puedes verla sin conexión.</string>
+    <string name="faq_5_q">¿Cómo elimino mi cuenta?</string>
+    <string name="faq_5_a">Escríbenos a %1$s y te ayudamos con el proceso.</string>
+
+    <!-- Fase 8: Acerca de (RF-B11) -->
+    <string name="about_title">Acerca de</string>
+    <string name="about_version">Versión %1$s</string>
+    <string name="about_section_legal">LEGAL</string>
+    <string name="about_section_share">COMPARTE</string>
+    <string name="about_terms">Términos y condiciones</string>
+    <string name="about_privacy">Política de privacidad</string>
+    <string name="about_licenses">Licencias de código abierto</string>
+    <string name="about_share_row">Recomienda PocketPal</string>
+    <string name="about_rate_row">Califícanos en la tienda de apps</string>
+    <string name="about_share_text">Organiza tus gastos e ingresos con PocketPal.</string>
+    <string name="about_footer">© 2026 PocketPal. Todos los derechos reservados.</string>
+    <string name="about_licenses_title">Licencias de código abierto</string>
+    <string name="about_licenses_intro">PocketPal usa las siguientes librerías de código abierto, todas bajo la Licencia Apache 2.0:</string>
+    <string name="about_licenses_apache" translatable="false">Apache License 2.0</string>
+    <string name="a11y_about_logo">Logo de PocketPal</string>
+    <string name="a11y_facebook" translatable="false">Facebook</string>
+    <string name="a11y_instagram" translatable="false">Instagram</string>
+    <string name="a11y_x" translatable="false">X</string>
+
+    <!-- Fase 8: librerías de código abierto (nombres propios, no se traducen) -->
+    <string name="oss_kotlin" translatable="false">Kotlin y Kotlin Coroutines</string>
+    <string name="oss_compose" translatable="false">Jetpack Compose y AndroidX</string>
+    <string name="oss_navigation" translatable="false">Navigation Compose</string>
+    <string name="oss_appcompat" translatable="false">AppCompat</string>
+    <string name="oss_datastore" translatable="false">DataStore</string>
+    <string name="oss_splashscreen" translatable="false">core-splashscreen</string>
+    <string name="oss_exif" translatable="false">ExifInterface</string>
+    <string name="oss_icons" translatable="false">Material Icons Extended</string>
+    <string name="oss_supabase" translatable="false">supabase-kt</string>
+    <string name="oss_ktor" translatable="false">Ktor</string>
+    <string name="oss_coil" translatable="false">Coil</string>
+    <string name="oss_reorderable" translatable="false">Reorderable</string>
+    <string name="oss_credentials" translatable="false">Credential Manager y Google Identity</string>
+
+    <!-- Fase 5: Notificaciones (RF-B6, pág. 36) -->
+    <string name="notif_title">Notificaciones</string>
+    <string name="notif_section_habit">HÁBITO DE REGISTRO</string>
+    <string name="notif_daily">Recordatorio diario</string>
+    <string name="notif_daily_sub">Si no has registrado gastos hoy</string>
+    <string name="notif_weekly">Resumen semanal</string>
+    <string name="notif_weekly_sub">Cada domingo sabrás cómo te fue con tus gastos</string>
+    <string name="notif_section_budgets">PRESUPUESTOS</string>
+    <string name="notif_budget">Alerta de presupuesto</string>
+    <string name="notif_budget_sub">Avísame al acercarme al límite de una categoría</string>
+    <string name="notif_threshold_label">Avisar al llegar a</string>
+    <string name="notif_threshold_value">%1$d%% del presupuesto</string>
+    <string name="notif_threshold_min">50%</string>
+    <string name="notif_threshold_max">100%</string>
+    <string name="notif_section_goals">METAS DE AHORRO</string>
+    <string name="notif_goals">Progreso de metas</string>
+    <string name="notif_goals_sub">Cuando estés cerca de cumplir una meta</string>
+    <string name="notif_section_channels">CANALES</string>
+    <string name="notif_channel_email">Correo</string>
+    <string name="notif_channel_sms" translatable="false">SMS</string>
+    <string name="notif_sms_note">Debes tener el número habilitado en tus datos personales para poder habilitar las notificaciones por SMS</string>
+
+    <!-- Fase 5: Preferencias generales (RF-B8, pág. 42) -->
+    <string name="prefs_title">Preferencias generales</string>
+    <string name="prefs_section_region">REGIÓN Y FORMATO</string>
+    <string name="prefs_currency">Moneda</string>
+    <string name="prefs_currency_sub">Cómo se muestran tus montos</string>
+    <string name="prefs_language">Idioma</string>
+    <string name="prefs_language_sub">Idioma de la aplicación</string>
+    <string name="prefs_date_format">Formato de fecha</string>
+    <string name="prefs_date_format_sub">Cómo se muestran las fechas</string>
+    <string name="prefs_section_appearance">APARIENCIA</string>
+    <string name="prefs_theme_light">Claro</string>
+    <string name="prefs_theme_dark">Oscuro</string>
+    <string name="prefs_theme_system">Automático</string>
+    <string name="prefs_section_week">SEMANA</string>
+    <string name="prefs_week_start">Inicio de semana</string>
+    <string name="prefs_week_start_sub">Para tus resúmenes y filtros</string>
+
+    <!-- Fase 5: días de la semana (iniciales y nombres localizados, RN-11) -->
+    <string name="day_initial_sun">D</string>
+    <string name="day_initial_mon">L</string>
+    <string name="day_initial_tue">M</string>
+    <string name="day_initial_wed">M</string>
+    <string name="day_initial_thu">J</string>
+    <string name="day_initial_fri">V</string>
+    <string name="day_initial_sat">S</string>
+    <string name="day_name_sun">Domingo</string>
+    <string name="day_name_mon">Lunes</string>
+    <string name="day_name_tue">Martes</string>
+    <string name="day_name_wed">Miércoles</string>
+    <string name="day_name_thu">Jueves</string>
+    <string name="day_name_fri">Viernes</string>
+    <string name="day_name_sat">Sábado</string>
+
+    <!-- Fase 5: Idioma (§8.10b, pág. 69; "Automático" aparte por decisión A, hallazgo 7) -->
+    <string name="lang_title">Idioma</string>
+    <string name="lang_description">Elige el idioma en el que quieres usar PocketPal</string>
+    <string name="lang_auto">Automático</string>
+    <string name="lang_auto_sub">Idioma del sistema</string>
+    <string name="lang_name_pt" translatable="false">Português</string>
+    <string name="lang_name_fr" translatable="false">Français</string>
+
+    <!-- Fase 5: Formato de fecha (§8.11, pág. 58; errata del Figma corregida) -->
+    <string name="date_title">Formato de fecha</string>
+    <string name="date_description">Elige cómo quieres ver las fechas en tus movimientos, resúmenes y reportes.</string>
+    <string name="date_option_dmy">DD/MM/AAAA</string>
+    <string name="date_option_dmy_example">07/09/2026</string>
+    <string name="date_option_mdy">MM/DD/AAAA</string>
+    <string name="date_option_mdy_example">09/07/2026</string>
+    <string name="date_option_ymd">AAAA-MM-DD</string>
+    <string name="date_option_ymd_example">2026-09-07</string>
+
+    <!-- Fase 5: Moneda (D-04, sin diseño) -->
+    <string name="currency_title">Moneda</string>
+
+    <string name="common_save">Guardar</string>
 </resources>

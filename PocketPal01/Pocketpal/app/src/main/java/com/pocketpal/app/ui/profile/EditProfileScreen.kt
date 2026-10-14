@@ -26,6 +26,7 @@ import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.messageRes
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -97,7 +98,7 @@ fun EditProfileScreen(
             stringResource(R.string.edit_title),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -122,7 +123,7 @@ fun EditProfileScreen(
                 stringResource(R.string.edit_change_photo),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = PocketColors.Coral,
+                color = pocketColors.Coral,
                 modifier = Modifier.clickable(onClick = { showPhotoSheet = true }),
             )
         }
@@ -137,7 +138,7 @@ fun EditProfileScreen(
             isError = name.trim().length > ProfileViewModel.MAX_NAME_LENGTH,
             errorText = if (name.trim().length > ProfileViewModel.MAX_NAME_LENGTH)
                 stringResource(R.string.error_name_too_long) else null,
-            borderColor = PocketColors.RoseBorder,
+            borderColor = pocketColors.RoseBorder,
         )
         Spacer(Modifier.height(16.dp))
         PocketOutlinedTextField(
@@ -145,7 +146,7 @@ fun EditProfileScreen(
             onValueChange = {},
             label = stringResource(R.string.field_email),
             enabled = false,
-            borderColor = PocketColors.RoseBorder,
+            borderColor = pocketColors.RoseBorder,
         )
         Spacer(Modifier.height(16.dp))
 
@@ -154,7 +155,7 @@ fun EditProfileScreen(
             stringResource(R.string.edit_field_phone),
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
         )
         Spacer(Modifier.height(6.dp))
         Row(
@@ -162,8 +163,8 @@ fun EditProfileScreen(
                 .fillMaxWidth()
                 .height(56.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color.White)
-                .border(1.dp, PocketColors.RoseBorder, RoundedCornerShape(12.dp))
+                .background(pocketColors.Card)
+                .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(12.dp))
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -171,10 +172,10 @@ fun EditProfileScreen(
                 stringResource(R.string.edit_phone_add),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                color = PocketColors.Coral,
+                color = pocketColors.Coral,
                 modifier = Modifier.weight(1f),
             )
-            Icon(Icons.Outlined.ChevronRight, null, tint = PocketColors.Coral, modifier = Modifier.size(22.dp))
+            Icon(Icons.Outlined.ChevronRight, null, tint = pocketColors.Coral, modifier = Modifier.size(22.dp))
         }
 
         SectionHeader(stringResource(R.string.edit_section_location))
@@ -226,7 +227,7 @@ private fun SelectField(
     val selectedLabel = options.firstOrNull { it.first == selectedCode }?.second ?: selectedCode
 
     Column(Modifier.fillMaxWidth()) {
-        Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Ink)
+        Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Ink)
         Spacer(Modifier.height(6.dp))
         Box(Modifier.fillMaxWidth()) {
             Row(
@@ -234,21 +235,21 @@ private fun SelectField(
                     .fillMaxWidth()
                     .height(56.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White)
-                    .border(1.dp, PocketColors.RoseBorder, RoundedCornerShape(12.dp))
+                    .background(pocketColors.Card)
+                    .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(12.dp))
                     .clickable { expanded = true }
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(selectedLabel, fontSize = 15.sp, color = PocketColors.Muted, modifier = Modifier.weight(1f))
+                Text(selectedLabel, fontSize = 15.sp, color = pocketColors.Muted, modifier = Modifier.weight(1f))
                 Box(
                     Modifier
                         .size(36.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(PocketColors.Rose),
+                        .background(pocketColors.Rose),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Outlined.ExpandMore, null, tint = PocketColors.Coral, modifier = Modifier.size(20.dp))
+                    Icon(Icons.Outlined.ExpandMore, null, tint = pocketColors.Coral, modifier = Modifier.size(20.dp))
                 }
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {

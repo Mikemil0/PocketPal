@@ -249,4 +249,144 @@
     <string name="a11y_reorder_category">Reorder category</string>
     <string name="a11y_category_icon">Category icon</string>
     <string name="a11y_category_icon_option">Choose this icon</string>
+
+    <!-- Phase 8: Export data (RF-B9, D-05: UI and states only; the real file comes in Module 3) -->
+    <string name="export_title">Export data</string>
+    <string name="export_subtitle">Download the history of your movements to take it to another tool or keep it as a backup.</string>
+    <string name="export_range_header">DATE RANGE</string>
+    <string name="export_range_this_month">This month</string>
+    <string name="export_range_last_3_months">Last 3 months</string>
+    <string name="export_range_this_year">This year</string>
+    <string name="export_range_all">All history</string>
+    <string name="export_range_custom">Custom</string>
+    <string name="export_format_header">FORMAT</string>
+    <string name="export_format_csv">CSV / Excel</string>
+    <string name="export_format_pdf">PDF</string>
+    <!-- Mandatory quotes keep the trailing space before the bold email (§14, row 23) -->
+    <string name="export_email_note_prefix">"The file will be sent to your email "</string>
+    <string name="export_button">Export history</string>
+    <string name="export_empty_title">There are no movements to export</string>
+    <string name="export_empty_body">You didn\'t record any expense or income in this date range. Choose another period or record a movement first.</string>
+    <string name="export_custom_title">Custom range</string>
+    <string name="export_custom_from">From</string>
+    <string name="export_custom_to">To</string>
+    <string name="export_custom_apply">Apply</string>
+    <string name="export_a11y_range_option">Choose this date range</string>
+    <string name="export_a11y_format_option">Choose this format</string>
+
+    <!-- Phase 8: Help & support (RF-B10; accordion p. 40 + detail with Previous/Next p. 57) -->
+    <string name="help_title">Help &amp; support</string>
+    <string name="help_search_hint">Search your question</string>
+    <string name="help_section_faqs">FREQUENTLY ASKED QUESTIONS</string>
+    <string name="help_chat_title">Live chat</string>
+    <string name="help_chat_subtitle">Answer in minutes</string>
+    <string name="help_email_title">Write to us</string>
+    <string name="help_email_subject">PocketPal Help</string>
+    <string name="help_no_results">We found no questions matching your search</string>
+    <string name="help_prev">Previous</string>
+    <string name="help_next">Next</string>
+    <string name="help_open_detail">See the full answer</string>
+    <string name="faq_1_q">How do I edit or delete a movement?</string>
+    <string name="faq_1_a">From “Movements”, tap the expense you want to change. There you can edit the amount, the category or delete it completely.</string>
+    <string name="faq_2_q">Is my data safe?</string>
+    <string name="faq_2_a">Yes. Your data is only accessible from your account (each row has security rules on the server) and the connection with the app is encrypted.</string>
+    <string name="faq_3_q">How do I create a savings goal?</string>
+    <string name="faq_3_a">Savings goals are coming in a future version. For now you can organize your spending with categories and monthly limits.</string>
+    <string name="faq_4_q">Can I use PocketPal without internet?</string>
+    <string name="faq_4_a">You need internet to sign in and check your data, because it is stored in your account. You can browse the help section without a connection.</string>
+    <string name="faq_5_q">How do I delete my account?</string>
+    <string name="faq_5_a">Email us at %1$s and we will help you with the process.</string>
+
+    <!-- Phase 8: About (RF-B11) -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_section_legal">LEGAL</string>
+    <string name="about_section_share">SHARE</string>
+    <string name="about_terms">Terms and conditions</string>
+    <string name="about_privacy">Privacy policy</string>
+    <string name="about_licenses">Open source licenses</string>
+    <string name="about_share_row">Recommend PocketPal</string>
+    <string name="about_rate_row">Rate us on the app store</string>
+    <string name="about_share_text">Organize your expenses and income with PocketPal.</string>
+    <string name="about_footer">© 2026 PocketPal. All rights reserved.</string>
+    <string name="about_licenses_title">Open source licenses</string>
+    <string name="about_licenses_intro">PocketPal uses the following open source libraries, all under the Apache License 2.0:</string>
+    <string name="a11y_about_logo">PocketPal logo</string>
+
+    <!-- Phase 8: open source libraries (proper nouns, not translated) -->
+
+    <!-- Phase 5: Notifications (RF-B6, p. 36) -->
+    <string name="notif_title">Notifications</string>
+    <string name="notif_section_habit">TRACKING HABIT</string>
+    <string name="notif_daily">Daily reminder</string>
+    <string name="notif_daily_sub">If you haven\'t logged any expenses today</string>
+    <string name="notif_weekly">Weekly summary</string>
+    <string name="notif_weekly_sub">Every Sunday you\'ll know how your spending went</string>
+    <string name="notif_section_budgets">BUDGETS</string>
+    <string name="notif_budget">Budget alert</string>
+    <string name="notif_budget_sub">Let me know as I get close to a category limit</string>
+    <string name="notif_threshold_label">Warn me at</string>
+    <string name="notif_threshold_value">%1$d%% of the budget</string>
+    <string name="notif_threshold_min">50%</string>
+    <string name="notif_threshold_max">100%</string>
+    <string name="notif_section_goals">SAVINGS GOALS</string>
+    <string name="notif_goals">Goals progress</string>
+    <string name="notif_goals_sub">When you\'re close to reaching a goal</string>
+    <string name="notif_section_channels">CHANNELS</string>
+    <string name="notif_channel_email">Email</string>
+    <string name="notif_sms_note">You must have the number enabled in your personal data to enable SMS notifications</string>
+
+    <!-- Phase 5: General preferences (RF-B8, p. 42) -->
+    <string name="prefs_title">General preferences</string>
+    <string name="prefs_section_region">REGION AND FORMAT</string>
+    <string name="prefs_currency">Currency</string>
+    <string name="prefs_currency_sub">How your amounts are shown</string>
+    <string name="prefs_language">Language</string>
+    <string name="prefs_language_sub">App language</string>
+    <string name="prefs_date_format">Date format</string>
+    <string name="prefs_date_format_sub">How dates are shown</string>
+    <string name="prefs_section_appearance">APPEARANCE</string>
+    <string name="prefs_theme_light">Light</string>
+    <string name="prefs_theme_dark">Dark</string>
+    <string name="prefs_theme_system">Automatic</string>
+    <string name="prefs_section_week">WEEK</string>
+    <string name="prefs_week_start">Week start</string>
+    <string name="prefs_week_start_sub">For your summaries and filters</string>
+
+    <!-- Phase 5: days of the week (localized initials and names, RN-11) -->
+    <string name="day_initial_sun">S</string>
+    <string name="day_initial_mon">M</string>
+    <string name="day_initial_tue">T</string>
+    <string name="day_initial_wed">W</string>
+    <string name="day_initial_thu">T</string>
+    <string name="day_initial_fri">F</string>
+    <string name="day_initial_sat">S</string>
+    <string name="day_name_sun">Sunday</string>
+    <string name="day_name_mon">Monday</string>
+    <string name="day_name_tue">Tuesday</string>
+    <string name="day_name_wed">Wednesday</string>
+    <string name="day_name_thu">Thursday</string>
+    <string name="day_name_fri">Friday</string>
+    <string name="day_name_sat">Saturday</string>
+
+    <!-- Phase 5: Language (§8.10b, p. 69; "Automatic" as its own option, finding 7) -->
+    <string name="lang_title">Language</string>
+    <string name="lang_description">Choose the language you want to use PocketPal in</string>
+    <string name="lang_auto">Automatic</string>
+    <string name="lang_auto_sub">System language</string>
+
+    <!-- Phase 5: Date format (§8.11, p. 58; Figma typo fixed) -->
+    <string name="date_title">Date format</string>
+    <string name="date_description">Choose how you want to see dates in your movements, summaries and reports.</string>
+    <string name="date_option_dmy">DD/MM/YYYY</string>
+    <string name="date_option_dmy_example">07/09/2026</string>
+    <string name="date_option_mdy">MM/DD/YYYY</string>
+    <string name="date_option_mdy_example">09/07/2026</string>
+    <string name="date_option_ymd">YYYY-MM-DD</string>
+    <string name="date_option_ymd_example">2026-09-07</string>
+
+    <!-- Phase 5: Currency (D-04, no design) -->
+    <string name="currency_title">Currency</string>
+
+    <string name="common_save">Save</string>
 </resources>

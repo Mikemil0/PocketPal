@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * Avatar circular (RF-A1 / RF-B2): la foto si existe; si no, un círculo con la
@@ -60,14 +61,14 @@ fun Avatar(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(CircleShape)
-                    .background(PocketColors.AvatarPink),
+                    .background(pocketColors.AvatarPink),
             )
         } else {
             Box(
                 Modifier
                     .fillMaxSize()
                     .clip(CircleShape)
-                    .background(PocketColors.AvatarPink),
+                    .background(pocketColors.AvatarPink),
                 contentAlignment = Alignment.Center,
             ) {
                 if (initial != null) {
@@ -94,8 +95,8 @@ fun Avatar(
                     .align(Alignment.BottomEnd)
                     .size(badgeSize.coerceAtLeast(18.dp))
                     .clip(CircleShape)
-                    .background(PocketColors.Ink)
-                    .border(2.dp, PocketColors.Cream, CircleShape)
+                    .background(pocketColors.Ink)
+                    .border(2.dp, pocketColors.Cream, CircleShape)
                     .clickable(onClick = onEditClick),
                 contentAlignment = Alignment.Center,
             ) {

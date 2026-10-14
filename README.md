@@ -45,6 +45,8 @@ PocketPall/                     ← raíz del repositorio (este README)
 
 4. Vuelve a Android Studio y haz **Sync Now**.
 
+**Claves opcionales** (Acerca de y Ayuda): `TERMS_URL`, `PRIVACY_URL`, `SUPPORT_EMAIL`, `FACEBOOK_URL`, `INSTAGRAM_URL`, `X_URL`. Si dejas una URL vacía, la app muestra el aviso **"Próximamente"** en esa fila o ícono (no se inventan destinos). `SUPPORT_EMAIL` es el correo real de soporte (`pocketpal81@gmail.com`).
+
 Si falta alguna clave obligatoria, la app compila pero **falla al iniciar** y el mensaje del crash indica exactamente cuál falta (`SupabaseProvider.kt`).
 
 > **Importante:** `local.properties` está en `.gitignore`. NUNCA lo subas al repositorio ni compartas sus valores. Tampoco subas keystores (`*.jks`).

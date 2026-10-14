@@ -56,6 +56,7 @@ import com.pocketpal.app.ui.components.SectionHeader
 import com.pocketpal.app.ui.components.ToggleCard
 import com.pocketpal.app.ui.messageRes
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * Crear y editar categoría (§8.9; págs. 54, 55, 67 y 68).
@@ -117,7 +118,7 @@ fun CategoryFormScreen(
     if (categoryId != null && initial == null) {
         AuthScaffold(onBack = onBack) {
             Box(Modifier.fillMaxWidth().padding(48.dp), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = PocketColors.Coral)
+                CircularProgressIndicator(color = pocketColors.Coral)
             }
         }
         return
@@ -131,8 +132,8 @@ fun CategoryFormScreen(
 
     AuthScaffold(
         onBack = onBack,
-        backBackground = PocketColors.ChipPink,
-        backTint = PocketColors.Coral,
+        backBackground = pocketColors.ChipPink,
+        backTint = pocketColors.Coral,
     ) {
         Text(
             stringResource(
@@ -140,7 +141,7 @@ fun CategoryFormScreen(
             ),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -166,7 +167,7 @@ fun CategoryFormScreen(
                 Icon(
                     CategoryIcon.fromId(iconId).icon,
                     stringResource(R.string.a11y_category_icon),
-                    tint = PocketColors.Coral,
+                    tint = pocketColors.Coral,
                     modifier = Modifier.size(36.dp),
                 )
             }
@@ -181,7 +182,7 @@ fun CategoryFormScreen(
             placeholder = stringResource(R.string.category_name_hint),
             isError = nameTooLong,
             errorText = if (nameTooLong) stringResource(R.string.error_category_name_too_long) else null,
-            borderColor = if (isDuplicate) PocketColors.ErrorRed else null,
+            borderColor = if (isDuplicate) pocketColors.ErrorRed else null,
         )
         if (isDuplicate) {
             Spacer(Modifier.height(8.dp))
@@ -201,15 +202,15 @@ fun CategoryFormScreen(
                                 .weight(1f)
                                 .aspectRatio(1f)
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(Color.White)
-                                .border(1.dp, PocketColors.ChipPink, RoundedCornerShape(12.dp))
+                                .background(pocketColors.Card)
+                                .border(1.dp, pocketColors.ChipPink, RoundedCornerShape(12.dp))
                                 .clickable { iconId = option.id },
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
                                 option.icon,
                                 stringResource(R.string.a11y_category_icon_option),
-                                tint = PocketColors.Coral,
+                                tint = pocketColors.Coral,
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -233,7 +234,7 @@ fun CategoryFormScreen(
                         Box(
                             Modifier
                                 .size(52.dp)
-                                .border(2.dp, PocketColors.Coral, CircleShape),
+                                .border(2.dp, pocketColors.Coral, CircleShape),
                         )
                     }
                     Box(
@@ -287,9 +288,9 @@ fun CategoryFormScreen(
             PocketPrimaryButton(
                 text = stringResource(R.string.category_delete),
                 onClick = { showDeleteDialog = true },
-                containerColor = Color.White,
-                contentColor = PocketColors.Coral,
-                border = BorderStroke(1.dp, PocketColors.Coral),
+                containerColor = pocketColors.Card,
+                contentColor = pocketColors.Coral,
+                border = BorderStroke(1.dp, pocketColors.Coral),
             )
         }
         Spacer(Modifier.height(24.dp))
@@ -298,20 +299,20 @@ fun CategoryFormScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            containerColor = Color.White,
+            containerColor = pocketColors.Card,
             title = {
                 Text(
                     stringResource(R.string.category_delete_title),
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
-                    color = PocketColors.Ink,
+                    color = pocketColors.Ink,
                 )
             },
             text = {
                 Text(
                     stringResource(R.string.category_delete_body),
                     fontSize = 13.sp,
-                    color = PocketColors.Muted,
+                    color = pocketColors.Muted,
                 )
             },
             confirmButton = {
@@ -321,14 +322,14 @@ fun CategoryFormScreen(
                 }) {
                     Text(
                         stringResource(R.string.category_delete_confirm),
-                        color = PocketColors.ErrorRed,
+                        color = pocketColors.ErrorRed,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text(stringResource(R.string.common_cancel), color = PocketColors.Muted)
+                    Text(stringResource(R.string.common_cancel), color = pocketColors.Muted)
                 }
             },
         )

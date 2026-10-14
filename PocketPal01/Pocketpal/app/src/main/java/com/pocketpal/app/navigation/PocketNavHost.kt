@@ -3,6 +3,10 @@ package com.pocketpal.app.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -12,12 +16,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.profile.AboutLicensesScreen
+import com.pocketpal.app.ui.profile.AboutScreen
 import com.pocketpal.app.ui.profile.CategoriesScreen
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.CategoryFormScreen
+import com.pocketpal.app.ui.profile.CurrencyScreen
+import com.pocketpal.app.ui.profile.DateFormatScreen
 import com.pocketpal.app.ui.profile.EditProfileScreen
+import com.pocketpal.app.ui.profile.ExportScreen
+import com.pocketpal.app.ui.profile.ExportViewModel
+import com.pocketpal.app.ui.profile.HelpDetailScreen
+import com.pocketpal.app.ui.profile.HelpScreen
+import com.pocketpal.app.ui.profile.LanguageScreen
+import com.pocketpal.app.ui.profile.NotificationSettingsViewModel
+import com.pocketpal.app.ui.profile.NotificationsScreen
+import com.pocketpal.app.ui.profile.PreferencesScreen
+import com.pocketpal.app.ui.profile.PreferencesViewModel
 import com.pocketpal.app.ui.profile.ProfileHomeScreen
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.screens.*
@@ -48,8 +66,23 @@ object Routes {
     const val ProfileCategoryNew = "profile/category/new/{kind}"
     const val ProfileCategoryDetail = "profile/category/{id}"
 
+    // Fase 8 (§7.5): exportar, ayuda y acerca de
+    const val ProfileExport = "profile/export"
+    const val ProfileHelp = "profile/help"
+    const val ProfileHelpDetail = "profile/help/{index}"
+    const val ProfileAbout = "profile/about"
+    const val ProfileAboutLicenses = "profile/about/licenses"
+
+    // Fase 5 (§7.5): notificaciones y preferencias generales
+    const val ProfileNotifications = "profile/notifications"
+    const val ProfilePreferences = "profile/preferences"
+    const val ProfileCurrency = "profile/currency"
+    const val ProfileLanguage = "profile/language"
+    const val ProfileDateFormat = "profile/date-format"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
+    fun helpDetail(index: Int) = "profile/help/$index"
 }
 
 @Composable
@@ -57,6 +90,9 @@ fun PocketNavHost(
     vm: AuthViewModel,
     profileVm: ProfileViewModel,
     categoriesVm: CategoriesViewModel,
+    exportVm: ExportViewModel,
+    preferencesVm: PreferencesViewModel,
+    notificationsVm: NotificationSettingsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -215,6 +251,11 @@ fun PocketNavHost(
                     onBack = ::back,
                     onOpenPersonalData = { nav.navigate(Routes.ProfileEdit) },
                     onOpenCategories = { nav.navigate(Routes.ProfileCategories) },
+                    onOpenExport = { nav.navigate(Routes.ProfileExport) },
+                    onOpenHelp = { nav.navigate(Routes.ProfileHelp) },
+                    onOpenAbout = { nav.navigate(Routes.ProfileAbout) },
+                    onOpenNotifications = { nav.navigate(Routes.ProfileNotifications) },
+                    onOpenPreferences = { nav.navigate(Routes.ProfilePreferences) },
                     onSignOut = vm::signOut,
                     onAvatarBytes = profileVm::setAvatar,
                     onRemoveAvatar = profileVm::removeAvatar,
@@ -282,6 +323,120 @@ fun PocketNavHost(
                     profileVm = profileVm,
                     onBack = ::back,
                     onDone = { nav.popBackStack() },
+                )
+            }
+
+            // Fase 8 (RF-B9 / D-05): exportar datos, solo UI y estados.
+            composable(Routes.ProfileExport) {
+                val exportState by exportVm.state.collectAsStateWithLifecycle()
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
+                ExportScreen(
+                    state = exportState,
+                    email = (profileState as? ProfileViewModel.UiState.Content)?.data?.email.orEmpty(),
+                    onBack = ::back,
+                    onSelectRange = exportVm::selectRange,
+                    onSelectFormat = exportVm::selectFormat,
+                    onCustomRange = exportVm::setCustomRange,
+                )
+            }
+
+            // Fase 8 (RF-B10): ayuda y soporte (acordeón) y detalle de pregunta.
+            composable(Routes.ProfileHelp) {
+                HelpScreen(
+                    supportEmail = BuildConfig.SUPPORT_EMAIL,
+                    onBack = ::back,
+                    onOpenDetail = { nav.navigate(Routes.helpDetail(it)) },
+                )
+            }
+            composable(
+                Routes.ProfileHelpDetail,
+                arguments = listOf(navArgument("index") { type = NavType.IntType }),
+            ) { entry ->
+                // Anterior/Siguiente cambian el índice local: un solo destino en la pila.
+                var index by rememberSaveable { mutableStateOf(entry.arguments?.getInt("index") ?: 0) }
+                HelpDetailScreen(
+                    index = index,
+                    supportEmail = BuildConfig.SUPPORT_EMAIL,
+                    onBack = ::back,
+                    onPrev = { index = it },
+                    onNext = { index = it },
+                )
+            }
+
+            // Fase 8 (RF-B11): acerca de y sus licencias.
+            composable(Routes.ProfileAbout) {
+                AboutScreen(
+                    version = BuildConfig.VERSION_NAME,
+                    termsUrl = BuildConfig.TERMS_URL,
+                    privacyUrl = BuildConfig.PRIVACY_URL,
+                    facebookUrl = BuildConfig.FACEBOOK_URL,
+                    instagramUrl = BuildConfig.INSTAGRAM_URL,
+                    xUrl = BuildConfig.X_URL,
+                    onBack = ::back,
+                    onOpenLicenses = { nav.navigate(Routes.ProfileAboutLicenses) },
+                )
+            }
+            composable(Routes.ProfileAboutLicenses) {
+                AboutLicensesScreen(onBack = ::back)
+            }
+
+            // Fase 5 (RF-B6): notificaciones, solo preferencias (sin envíos reales).
+            composable(Routes.ProfileNotifications) {
+                LaunchedEffect(Unit) { notificationsVm.refresh() }
+                val nState by notificationsVm.state.collectAsStateWithLifecycle()
+                val nError by notificationsVm.error.collectAsStateWithLifecycle()
+                NotificationsScreen(
+                    state = nState,
+                    error = nError,
+                    onBack = ::back,
+                    onToggleDailyReminder = notificationsVm::toggleDailyReminder,
+                    onToggleWeeklySummary = notificationsVm::toggleWeeklySummary,
+                    onToggleBudgetAlert = notificationsVm::toggleBudgetAlert,
+                    onToggleGoalsProgress = notificationsVm::toggleGoalsProgress,
+                    onToggleChannelEmail = notificationsVm::toggleChannelEmail,
+                    onThresholdChange = notificationsVm::setBudgetThreshold,
+                    onErrorShown = notificationsVm::consumeError,
+                )
+            }
+
+            // Fase 5 (RF-B8): preferencias generales y sus selectores.
+            composable(Routes.ProfilePreferences) {
+                val pState by preferencesVm.state.collectAsStateWithLifecycle()
+                val pError by preferencesVm.error.collectAsStateWithLifecycle()
+                PreferencesScreen(
+                    state = pState,
+                    error = pError,
+                    onBack = ::back,
+                    onOpenCurrency = { nav.navigate(Routes.ProfileCurrency) },
+                    onOpenLanguage = { nav.navigate(Routes.ProfileLanguage) },
+                    onOpenDateFormat = { nav.navigate(Routes.ProfileDateFormat) },
+                    onThemeChange = preferencesVm::setTheme,
+                    onWeekStartChange = preferencesVm::setWeekStart,
+                    onErrorShown = preferencesVm::consumeError,
+                )
+            }
+            composable(Routes.ProfileCurrency) {
+                val pState by preferencesVm.state.collectAsStateWithLifecycle()
+                CurrencyScreen(
+                    current = pState.currency,
+                    onBack = ::back,
+                    onSave = { preferencesVm.setCurrency(it); nav.popBackStack() },
+                )
+            }
+            composable(Routes.ProfileLanguage) {
+                val pState by preferencesVm.state.collectAsStateWithLifecycle()
+                LanguageScreen(
+                    current = pState.language,
+                    onBack = ::back,
+                    onSave = { preferencesVm.setLanguage(it); nav.popBackStack() },
+                )
+            }
+            composable(Routes.ProfileDateFormat) {
+                val pState by preferencesVm.state.collectAsStateWithLifecycle()
+                DateFormatScreen(
+                    current = pState.dateFormat,
+                    onBack = ::back,
+                    onSave = { preferencesVm.setDateFormat(it); nav.popBackStack() },
                 )
             }
         }

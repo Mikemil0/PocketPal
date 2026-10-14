@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.AppLocale
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * Botón globo con el código del idioma efectivo (ES/EN…) de la esquina superior derecha
@@ -43,7 +44,7 @@ fun LanguageSelectorButton(
     ) {
         Row(
             Modifier
-                .background(PocketColors.NavyLight, RoundedCornerShape(24.dp))
+                .background(pocketColors.NavyLight, RoundedCornerShape(24.dp))
                 .height(40.dp)
                 .padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -51,7 +52,7 @@ fun LanguageSelectorButton(
             Icon(
                 Icons.Outlined.Language,
                 stringResource(R.string.language_change),
-                tint = PocketColors.Coral,
+                tint = pocketColors.Coral,
                 modifier = Modifier.size(18.dp),
             )
             Spacer(Modifier.width(6.dp))
@@ -79,7 +80,7 @@ fun LanguageBottomSheet(onDismiss: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = PocketColors.Cream,
+        containerColor = pocketColors.Cream,
     ) {
         LanguageOption(
             title = stringResource(R.string.language_option_system),
@@ -96,6 +97,17 @@ fun LanguageBottomSheet(onDismiss: () -> Unit) {
             title = stringResource(R.string.lang_name_en),
             selected = saved == "en",
             onClick = { AppLocale.setLanguage("en"); onDismiss() },
+        )
+        // Fase 5: portugués y francés (RF-A3).
+        LanguageOption(
+            title = stringResource(R.string.lang_name_pt),
+            selected = saved == "pt",
+            onClick = { AppLocale.setLanguage("pt"); onDismiss() },
+        )
+        LanguageOption(
+            title = stringResource(R.string.lang_name_fr),
+            selected = saved == "fr",
+            onClick = { AppLocale.setLanguage("fr"); onDismiss() },
         )
         Spacer(Modifier.height(12.dp))
     }
@@ -120,15 +132,15 @@ private fun LanguageOption(
                 title,
                 fontSize = 15.sp,
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-                color = PocketColors.Ink,
+                color = pocketColors.Ink,
             )
             if (subtitle != null) {
                 Spacer(Modifier.height(2.dp))
-                Text(subtitle, fontSize = 12.sp, color = PocketColors.Muted)
+                Text(subtitle, fontSize = 12.sp, color = pocketColors.Muted)
             }
         }
         if (selected) {
-            Icon(Icons.Outlined.Check, null, tint = PocketColors.Coral, modifier = Modifier.size(22.dp))
+            Icon(Icons.Outlined.Check, null, tint = pocketColors.Coral, modifier = Modifier.size(22.dp))
         }
     }
 }

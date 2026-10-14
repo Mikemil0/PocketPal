@@ -18,6 +18,7 @@ import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.components.StepProgressBar
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /** "VER - COD" paso final: correo verificado. */
 @Composable
@@ -27,13 +28,13 @@ fun AccountCreatedScreen(onContinue: () -> Unit) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(24.dp))
-            Icon(Icons.Outlined.CheckCircle, null, tint = PocketColors.Teal, modifier = Modifier.size(110.dp))
+            Icon(Icons.Outlined.CheckCircle, null, tint = pocketColors.Teal, modifier = Modifier.size(110.dp))
             Spacer(Modifier.height(24.dp))
             Text(stringResource(R.string.account_created_title), fontSize = 22.sp, fontWeight = FontWeight.SemiBold,
-                color = PocketColors.Ink, textAlign = TextAlign.Center)
+                color = pocketColors.Ink, textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
             Text(stringResource(R.string.account_created_body), fontSize = 12.sp,
-                color = PocketColors.Muted, textAlign = TextAlign.Center)
+                color = pocketColors.Muted, textAlign = TextAlign.Center)
             Spacer(Modifier.height(24.dp))
         }
 

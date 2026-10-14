@@ -5,14 +5,19 @@
       El parent debe ser un tema AppCompat (o hijo) desde que MainActivity extiende
       AppCompatActivity, necesario para cambiar el idioma en ejecución con
       AppCompatDelegate.setApplicationLocales en API < 33 (RF-A3, riesgo de la §11.2).
-      "Light" (y no "DayNight") porque el Módulo 1 solo tiene tema claro.
+      "DayNight" desde la Fase 5 (D-03): el tema oscuro ya existe en toda la app y
+      el fondo de la ventana debe seguirlo (antes era "Light" porque solo había tema
+      claro; ver fila 22 de la §14 y su corrección en la fila 66).
     -->
-    <style name="Theme.Pocketpal" parent="Theme.AppCompat.Light.NoActionBar" />
+    <style name="Theme.Pocketpal" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/pocket_window_bg</item>
+    </style>
 
     <!--
       RF-A4 / D-16: splash del sistema (API 31+; core-splashscreen lo adapta a API 23+).
       installSplashScreen() aplica postSplashScreenTheme antes de super.onCreate(),
-      así que AppCompatActivity ya ve Theme.Pocketpal.
+      así que AppCompatActivity ya ve Theme.Pocketpal. El splash conserva el navy de
+      la marca en ambos temas.
     -->
     <style name="Theme.Pocketpal.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/pocket_navy</item>

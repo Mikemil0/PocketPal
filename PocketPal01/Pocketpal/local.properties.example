@@ -16,9 +16,11 @@ SUPABASE_KEY=sb_publishable_TU_CLAVE
 GOOGLE_WEB_CLIENT_ID=TU_CLIENT_ID.apps.googleusercontent.com
 
 # --- Opcionales (la app arranca sin ellos; pantallas "Acerca de" y "Ayuda") ---
-TERMS_URL=https://example.com/terminos
-PRIVACY_URL=https://example.com/privacidad
-SUPPORT_EMAIL=soporte@pocketpal.com
-FACEBOOK_URL=https://facebook.com/pocketpal
-INSTAGRAM_URL=https://instagram.com/pocketpal
-X_URL=https://x.com/pocketpal
+# Si dejas una URL vacía, la app muestra el aviso "Próximamente" en esa fila o ícono:
+# NO se inventan destinos. Rellénalas cuando existan los enlaces reales.
+TERMS_URL=
+PRIVACY_URL=
+SUPPORT_EMAIL=pocketpal81@gmail.com
+FACEBOOK_URL=
+INSTAGRAM_URL=
+X_URL=

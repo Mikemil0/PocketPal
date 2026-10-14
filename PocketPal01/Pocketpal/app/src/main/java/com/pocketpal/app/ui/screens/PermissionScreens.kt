@@ -29,6 +29,7 @@ import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.components.StepProgressBar
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 private fun PermissionScreen(
@@ -54,16 +55,16 @@ private fun PermissionScreen(
                 Icon(icon, null, tint = iconTint, modifier = Modifier.size(32.dp))
             }
             Spacer(Modifier.height(16.dp))
-            Text(stringResource(title), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink, textAlign = TextAlign.Center)
-            Text(stringResource(question), fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(title), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = pocketColors.Ink, textAlign = TextAlign.Center)
+            Text(stringResource(question), fontSize = 12.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(stringResource(description), fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(description), fontSize = 12.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
             Spacer(Modifier.height(16.dp))
             PocketPrimaryButton(stringResource(primaryText), { if (permission == null) onDone() else launcher.launch(permission) })
             Spacer(Modifier.height(16.dp))
-            Text(stringResource(R.string.perm_not_now), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Muted,
+            Text(stringResource(R.string.perm_not_now), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Muted,
                 modifier = Modifier.clickable(onClick = onDone))
             Spacer(Modifier.height(8.dp))
         }
@@ -72,7 +73,7 @@ private fun PermissionScreen(
 
 @Composable
 fun NotificationPermissionScreen(onDone: () -> Unit) = PermissionScreen(
-    step = 1, icon = Icons.Outlined.NotificationsActive, iconTint = PocketColors.Coral, iconBg = Color(0xFFFFD9D9),
+    step = 1, icon = Icons.Outlined.NotificationsActive, iconTint = pocketColors.Coral, iconBg = Color(0xFFFFD9D9),
     title = R.string.perm_notif_title, question = R.string.perm_notif_question,
     description = R.string.perm_notif_description, primaryText = R.string.perm_notif_primary,
     permission = AppPermissions.notifications,
@@ -81,7 +82,7 @@ fun NotificationPermissionScreen(onDone: () -> Unit) = PermissionScreen(
 
 @Composable
 fun CameraPermissionScreen(onDone: () -> Unit) = PermissionScreen(
-    step = 2, icon = Icons.Outlined.CameraAlt, iconTint = PocketColors.Ink, iconBg = Color(0xFFD1D5DB),
+    step = 2, icon = Icons.Outlined.CameraAlt, iconTint = pocketColors.Ink, iconBg = Color(0xFFD1D5DB),
     title = R.string.perm_camera_title, question = R.string.perm_camera_question,
     description = R.string.perm_camera_description, primaryText = R.string.perm_camera_primary,
     permission = AppPermissions.camera, onDone = onDone,
@@ -89,7 +90,7 @@ fun CameraPermissionScreen(onDone: () -> Unit) = PermissionScreen(
 
 @Composable
 fun MicrophonePermissionScreen(onDone: () -> Unit) = PermissionScreen(
-    step = 3, icon = Icons.Outlined.Mic, iconTint = PocketColors.Teal, iconBg = Color(0xFFCDEFE6),
+    step = 3, icon = Icons.Outlined.Mic, iconTint = pocketColors.Teal, iconBg = Color(0xFFCDEFE6),
     title = R.string.perm_mic_title, question = R.string.perm_mic_question,
     description = R.string.perm_mic_description, primaryText = R.string.perm_mic_primary,
     permission = AppPermissions.microphone, onDone = onDone,

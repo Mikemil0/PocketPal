@@ -27,6 +27,7 @@ import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.auth.OtpMode
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 
 /**
@@ -72,12 +73,12 @@ fun OtpScreen(
 
         Box(
             Modifier.align(Alignment.CenterHorizontally).size(64.dp)
-                .background(Color.White, RoundedCornerShape(16.dp)),
+                .background(pocketColors.Card, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 if (mode == OtpMode.Signup) Icons.Outlined.Email else Icons.Outlined.Lock,
-                null, tint = PocketColors.Coral, modifier = Modifier.size(28.dp),
+                null, tint = pocketColors.Coral, modifier = Modifier.size(28.dp),
             )
         }
         Spacer(Modifier.height(16.dp))
@@ -110,7 +111,7 @@ fun OtpScreen(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     stringResource(R.string.error_otp_incomplete), fontSize = 11.sp,
-                    color = PocketColors.ErrorRed, modifier = Modifier.fillMaxWidth(),
+                    color = pocketColors.ErrorRed, modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -118,7 +119,7 @@ fun OtpScreen(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     pluralStringResource(R.plurals.otp_expires_in, minutesLeft, minutesLeft),
-                    fontSize = 11.sp, color = PocketColors.Muted, modifier = Modifier.fillMaxWidth(),
+                    fontSize = 11.sp, color = pocketColors.Muted, modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -139,7 +140,7 @@ fun OtpScreen(
         )
         if (mode == OtpMode.Signup) {
             Spacer(Modifier.height(48.dp))
-            Text(stringResource(R.string.otp_not_your_email), fontSize = 12.sp, color = PocketColors.Coral, fontWeight = FontWeight.Medium,
+            Text(stringResource(R.string.otp_not_your_email), fontSize = 12.sp, color = pocketColors.Coral, fontWeight = FontWeight.Medium,
                 modifier = Modifier.fillMaxWidth().clickable(onClick = onBack), textAlign = TextAlign.Center)
         }
     }

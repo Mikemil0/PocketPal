@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="pocket_navy">#1B3050</color>
+    <!-- Fase 5 (D-03): fondo de la ventana nativa detrás de Compose; se oscurece
+         en values-night para evitar destellos con el tema oscuro. -->
+    <color name="pocket_window_bg">#FFF8F5</color>
 </resources>

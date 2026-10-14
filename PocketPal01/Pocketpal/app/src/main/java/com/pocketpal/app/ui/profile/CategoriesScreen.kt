@@ -57,6 +57,7 @@ import com.pocketpal.app.ui.components.CategoryIcon
 import com.pocketpal.app.ui.components.ErrorBanner
 import com.pocketpal.app.ui.messageRes
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -94,14 +95,14 @@ fun CategoriesScreen(
     AuthScaffold(
         onBack = onBack,
         scrollable = false,
-        backBackground = PocketColors.ChipPink,
-        backTint = PocketColors.Coral,
+        backBackground = pocketColors.ChipPink,
+        backTint = pocketColors.Coral,
     ) {
         Text(
             stringResource(R.string.categories_title),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -136,7 +137,7 @@ fun CategoriesScreen(
                 Modifier.fillMaxWidth().weight(1f),
                 contentAlignment = Alignment.Center,
             ) {
-                CircularProgressIndicator(color = PocketColors.Coral)
+                CircularProgressIndicator(color = pocketColors.Coral)
             }
 
             is CategoriesViewModel.UiState.Error -> Box(
@@ -151,7 +152,7 @@ fun CategoriesScreen(
                     stringResource(R.string.categories_header, list.size),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = PocketColors.Muted,
+                    color = pocketColors.Muted,
                     letterSpacing = 1.sp,
                     modifier = Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 8.dp),
                 )
@@ -176,14 +177,14 @@ fun CategoriesScreen(
                                     stringResource(R.string.categories_empty_title),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = PocketColors.Ink,
+                                    color = pocketColors.Ink,
                                     textAlign = TextAlign.Center,
                                 )
                                 Spacer(Modifier.height(4.dp))
                                 Text(
                                     stringResource(R.string.categories_empty_hint),
                                     fontSize = 12.sp,
-                                    color = PocketColors.Muted,
+                                    color = pocketColors.Muted,
                                     textAlign = TextAlign.Center,
                                 )
                             }
@@ -203,7 +204,7 @@ fun CategoriesScreen(
                                     Icon(
                                         Icons.Outlined.UnfoldMore,
                                         stringResource(R.string.a11y_reorder_category),
-                                        tint = PocketColors.Coral,
+                                        tint = pocketColors.Coral,
                                         modifier = Modifier.draggableHandle().size(20.dp),
                                     )
                                 },
@@ -226,7 +227,7 @@ private fun CategoryTab(text: String, selected: Boolean, onClick: () -> Unit) {
     Box(
         Modifier
             .clip(RoundedCornerShape(50))
-            .background(if (selected) PocketColors.Navy else PocketColors.TabInactive)
+            .background(if (selected) pocketColors.Navy else pocketColors.TabInactive)
             .clickable(onClick = onClick)
             .padding(horizontal = 24.dp, vertical = 8.dp),
     ) {
@@ -234,7 +235,7 @@ private fun CategoryTab(text: String, selected: Boolean, onClick: () -> Unit) {
             text,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (selected) Color.White else PocketColors.Navy,
+            color = if (selected) Color.White else pocketColors.Ink,
         )
     }
 }
@@ -261,8 +262,8 @@ private fun CategoryRow(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White)
-            .border(1.dp, PocketColors.RoseBorder, RoundedCornerShape(20.dp))
+            .background(pocketColors.Card)
+            .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(20.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -279,18 +280,18 @@ private fun CategoryRow(
             Icon(
                 icon.icon,
                 stringResource(R.string.a11y_category_icon),
-                tint = PocketColors.Coral,
+                tint = pocketColors.Coral,
                 modifier = Modifier.size(22.dp),
             )
         }
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text(name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink)
+            Text(name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = pocketColors.Ink)
             Spacer(Modifier.height(2.dp))
             Text(
                 pluralStringResource(R.plurals.category_movements, movementCount, movementCount),
                 fontSize = 12.sp,
-                color = PocketColors.Muted,
+                color = pocketColors.Muted,
             )
         }
         Spacer(Modifier.width(8.dp))
@@ -298,7 +299,7 @@ private fun CategoryRow(
             MoneyFormat.format(total, currency),
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
         )
     }
 }
@@ -309,7 +310,7 @@ private fun CreateCategoryButton(onClick: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .dashedBorder(PocketColors.Coral, RoundedCornerShape(12.dp))
+            .dashedBorder(pocketColors.Coral, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(vertical = 14.dp),
         horizontalArrangement = Arrangement.Center,
@@ -318,7 +319,7 @@ private fun CreateCategoryButton(onClick: () -> Unit) {
         Icon(
             Icons.Outlined.Add,
             null,
-            tint = PocketColors.Coral,
+            tint = pocketColors.Coral,
             modifier = Modifier.size(18.dp),
         )
         Spacer(Modifier.width(8.dp))
@@ -326,7 +327,7 @@ private fun CreateCategoryButton(onClick: () -> Unit) {
             stringResource(R.string.categories_create),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Coral,
+            color = pocketColors.Coral,
         )
     }
 }

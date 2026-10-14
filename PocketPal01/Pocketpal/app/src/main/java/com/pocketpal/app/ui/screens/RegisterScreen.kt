@@ -26,6 +26,7 @@ import com.pocketpal.app.auth.isPasswordProblem
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.errorMessage
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun RegisterScreen(
@@ -102,23 +103,23 @@ fun RegisterScreen(
             Checkbox(
                 terms, { terms = it },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = PocketColors.Teal,
-                    uncheckedColor = if (type == ErrorType.TermsNotAccepted) PocketColors.ErrorRed else PocketColors.Teal,
+                    checkedColor = pocketColors.Teal,
+                    uncheckedColor = if (type == ErrorType.TermsNotAccepted) pocketColors.ErrorRed else pocketColors.Teal,
                 ),
             )
             Text(
                 buildAnnotatedString {
                     append(termsPrefix)
-                    withStyle(SpanStyle(color = PocketColors.Coral)) { append(termsLink) }
+                    withStyle(SpanStyle(color = pocketColors.Coral)) { append(termsLink) }
                     append(termsMiddle)
-                    withStyle(SpanStyle(color = PocketColors.Coral)) { append(privacyLink) }
+                    withStyle(SpanStyle(color = pocketColors.Coral)) { append(privacyLink) }
                 },
-                fontSize = 11.sp, color = PocketColors.Ink,
+                fontSize = 11.sp, color = pocketColors.Ink,
                 modifier = Modifier.padding(top = 12.dp).clickable { terms = !terms },
             )
         }
         if (type == ErrorType.TermsNotAccepted) {
-            Text(error!!.errorMessage(), fontSize = 11.sp, color = PocketColors.ErrorRed,
+            Text(error!!.errorMessage(), fontSize = 11.sp, color = pocketColors.ErrorRed,
                 modifier = Modifier.padding(start = 12.dp))
         }
     }

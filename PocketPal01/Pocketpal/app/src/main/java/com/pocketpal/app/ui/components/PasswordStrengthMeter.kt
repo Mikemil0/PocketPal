@@ -17,16 +17,17 @@ import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.auth.PasswordRules
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /** Barras: Gris (0 reglas) -> Rojo (1) -> Amarillo (2) -> Verde (3). Cada regla: cumplida = verde, fallida = rojo. */
 @Composable
 fun PasswordStrengthMeter(password: String, confirm: String, modifier: Modifier = Modifier) {
     val rules = PasswordRules.of(password, confirm)
     val (color, labelRes) = when (rules.score) {
-        0 -> PocketColors.Gray to R.string.strength_enter_password
-        1 -> PocketColors.ErrorRed to R.string.strength_insecure
-        2 -> PocketColors.Amber to R.string.strength_low
-        else -> PocketColors.Teal to R.string.strength_high
+        0 -> pocketColors.Gray to R.string.strength_enter_password
+        1 -> pocketColors.ErrorRed to R.string.strength_insecure
+        2 -> pocketColors.Amber to R.string.strength_low
+        else -> pocketColors.Teal to R.string.strength_high
     }
 
     Column(modifier.fillMaxWidth()) {
@@ -34,14 +35,14 @@ fun PasswordStrengthMeter(password: String, confirm: String, modifier: Modifier 
             repeat(3) { i ->
                 Box(
                     Modifier.weight(1f).height(3.dp).background(
-                        if (i < rules.score) color else PocketColors.Gray,
+                        if (i < rules.score) color else pocketColors.Gray,
                         RoundedCornerShape(2.dp),
                     )
                 )
             }
         }
         Spacer(Modifier.height(4.dp))
-        Text(stringResource(labelRes), fontSize = 11.sp, color = if (rules.score == 0) PocketColors.Muted else color)
+        Text(stringResource(labelRes), fontSize = 11.sp, color = if (rules.score == 0) pocketColors.Muted else color)
         Spacer(Modifier.height(8.dp))
         RuleRow(stringResource(R.string.rule_min_8), rules.minLength, touched = password.isNotEmpty())
         RuleRow(stringResource(R.string.rule_upper_digit), rules.upperAndDigit, touched = password.isNotEmpty())
@@ -52,9 +53,9 @@ fun PasswordStrengthMeter(password: String, confirm: String, modifier: Modifier 
 @Composable
 private fun RuleRow(text: String, ok: Boolean, touched: Boolean) {
     val tint = when {
-        ok -> PocketColors.Teal
-        touched -> PocketColors.ErrorRed
-        else -> PocketColors.Muted
+        ok -> pocketColors.Teal
+        touched -> pocketColors.ErrorRed
+        else -> pocketColors.Muted
     }
     Row(Modifier.padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(

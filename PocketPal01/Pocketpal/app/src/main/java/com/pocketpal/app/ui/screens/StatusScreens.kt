@@ -29,23 +29,24 @@ import com.pocketpal.app.auth.AuthStep
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun NoWifiScreen(onRetry: () -> Unit) {
     AuthScaffold {
         Spacer(Modifier.height(80.dp))
-        Icon(Icons.Outlined.WifiOff, null, tint = PocketColors.Muted,
+        Icon(Icons.Outlined.WifiOff, null, tint = pocketColors.Muted,
             modifier = Modifier.align(Alignment.CenterHorizontally).size(96.dp))
         Spacer(Modifier.height(24.dp))
         ScreenHeader(stringResource(R.string.status_no_wifi_title), stringResource(R.string.status_no_wifi_body), centered = true)
         Row(
-            Modifier.fillMaxWidth().border(1.dp, PocketColors.Gray, RoundedCornerShape(10.dp)).padding(12.dp),
+            Modifier.fillMaxWidth().border(1.dp, pocketColors.Gray, RoundedCornerShape(10.dp)).padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.CheckCircle, null, tint = PocketColors.Teal, modifier = Modifier.size(18.dp))
+            Icon(Icons.Outlined.CheckCircle, null, tint = pocketColors.Teal, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.status_no_wifi_note),
-                fontSize = 12.sp, color = PocketColors.Ink)
+                fontSize = 12.sp, color = pocketColors.Ink)
         }
         Spacer(Modifier.height(24.dp))
         PocketPrimaryButton(stringResource(R.string.status_retry), onRetry)
@@ -54,7 +55,7 @@ fun NoWifiScreen(onRetry: () -> Unit) {
 
 @Composable
 fun SessionExpiredScreen(email: String, onLogin: () -> Unit, onOtherAccount: () -> Unit) {
-    AuthScaffold(background = PocketColors.Navy) {
+    AuthScaffold(background = pocketColors.Navy) {
         Spacer(Modifier.height(100.dp))
         Icon(Icons.Outlined.AccessTime, null, tint = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally).size(64.dp))
@@ -63,11 +64,11 @@ fun SessionExpiredScreen(email: String, onLogin: () -> Unit, onOtherAccount: () 
             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
         Text(stringResource(R.string.session_expired_body),
-            fontSize = 12.sp, color = PocketColors.Coral, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            fontSize = 12.sp, color = pocketColors.Coral, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         if (email.isNotBlank()) {
             Spacer(Modifier.height(24.dp))
             Row(
-                Modifier.fillMaxWidth().background(PocketColors.NavyLight, RoundedCornerShape(12.dp)).padding(12.dp),
+                Modifier.fillMaxWidth().background(pocketColors.NavyLight, RoundedCornerShape(12.dp)).padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(Modifier.size(32.dp).background(Color.LightGray, CircleShape))
@@ -78,7 +79,7 @@ fun SessionExpiredScreen(email: String, onLogin: () -> Unit, onOtherAccount: () 
         Spacer(Modifier.height(24.dp))
         PocketPrimaryButton(stringResource(R.string.session_sign_in_again), onLogin)
         Spacer(Modifier.height(16.dp))
-        Text(stringResource(R.string.session_use_other), fontSize = 12.sp, color = PocketColors.Muted,
+        Text(stringResource(R.string.session_use_other), fontSize = 12.sp, color = pocketColors.Muted,
             modifier = Modifier.fillMaxWidth().clickable(onClick = onOtherAccount), textAlign = TextAlign.Center)
     }
 }
@@ -93,7 +94,7 @@ fun GoogleAuthScreen(state: AuthState, onContinue: () -> Unit, onRetry: () -> Un
         Spacer(Modifier.height(120.dp))
         when {
             success -> {
-                Icon(Icons.Outlined.CheckCircle, null, tint = PocketColors.Teal,
+                Icon(Icons.Outlined.CheckCircle, null, tint = pocketColors.Teal,
                     modifier = Modifier.align(Alignment.CenterHorizontally).size(110.dp))
                 Spacer(Modifier.height(24.dp))
                 ScreenHeader(stringResource(R.string.google_success_title), "", centered = true)
@@ -101,7 +102,7 @@ fun GoogleAuthScreen(state: AuthState, onContinue: () -> Unit, onRetry: () -> Un
                 PocketPrimaryButton(stringResource(R.string.google_continue), onContinue)
             }
             failed -> {
-                Icon(Icons.Outlined.Cancel, null, tint = PocketColors.ErrorRed,
+                Icon(Icons.Outlined.Cancel, null, tint = pocketColors.ErrorRed,
                     modifier = Modifier.align(Alignment.CenterHorizontally).size(110.dp))
                 Spacer(Modifier.height(24.dp))
                 ScreenHeader(stringResource(R.string.google_error_title),
@@ -109,13 +110,13 @@ fun GoogleAuthScreen(state: AuthState, onContinue: () -> Unit, onRetry: () -> Un
                 Spacer(Modifier.height(80.dp))
                 PocketPrimaryButton(stringResource(R.string.google_retry), onRetry)
                 Spacer(Modifier.height(16.dp))
-                Text(stringResource(R.string.google_use_email), fontSize = 12.sp, color = PocketColors.Muted,
+                Text(stringResource(R.string.google_use_email), fontSize = 12.sp, color = pocketColors.Muted,
                     modifier = Modifier.fillMaxWidth().clickable(onClick = onUseEmail), textAlign = TextAlign.Center)
             }
             else -> {
                 CircularProgressIndicator(
                     Modifier.align(Alignment.CenterHorizontally).size(72.dp),
-                    color = PocketColors.Muted, strokeWidth = 5.dp,
+                    color = pocketColors.Muted, strokeWidth = 5.dp,
                 )
                 Spacer(Modifier.height(24.dp))
                 ScreenHeader(stringResource(R.string.google_loading_title), stringResource(R.string.google_loading_body), centered = true)

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 
 /**
@@ -49,7 +50,7 @@ fun SplashScreen(
     )
 
     Box(
-        Modifier.fillMaxSize().background(PocketColors.Navy),
+        Modifier.fillMaxSize().background(pocketColors.Navy),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -65,7 +66,7 @@ fun SplashScreen(
             Text(
                 buildAnnotatedString {
                     withStyle(SpanStyle(color = Color.White)) { append(stringResource(R.string.brand_pocket)) }
-                    withStyle(SpanStyle(color = PocketColors.Coral)) { append(stringResource(R.string.brand_pal)) }
+                    withStyle(SpanStyle(color = pocketColors.Coral)) { append(stringResource(R.string.brand_pal)) }
                 },
                 fontSize = 44.sp,
                 fontWeight = FontWeight.Bold,

@@ -27,6 +27,7 @@ import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 private data class TutPage(@param:StringRes val title: Int, @param:StringRes val body: Int)
 
@@ -47,16 +48,16 @@ fun TutorialScreen(onFinish: () -> Unit) {
             Spacer(Modifier.height(24.dp))
             Box(
                 Modifier.fillMaxWidth().height(260.dp).clip(shape)
-                    .background(Brush.verticalGradient(listOf(Color(0xFFFFE3DD), Color.White)))
-                    .border(1.dp, PocketColors.Gray, shape),
+                    .background(Brush.verticalGradient(listOf(pocketColors.ChipPink, pocketColors.Cream)))
+                    .border(1.dp, pocketColors.Gray, shape),
                 contentAlignment = Alignment.Center,
             ) { Illustration(page) }
 
             Spacer(Modifier.height(32.dp))
             Text(stringResource(pages[page].title), fontSize = 22.sp, fontWeight = FontWeight.SemiBold,
-                color = PocketColors.Ink, textAlign = TextAlign.Center)
+                color = pocketColors.Ink, textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(pages[page].body), fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(pages[page].body), fontSize = 12.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -64,14 +65,14 @@ fun TutorialScreen(onFinish: () -> Unit) {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 pages.indices.forEach { i ->
                     Box(Modifier.size(24.dp, 4.dp).background(
-                        if (i == page) PocketColors.Coral else PocketColors.Gray, RoundedCornerShape(2.dp)))
+                        if (i == page) pocketColors.Coral else pocketColors.Gray, RoundedCornerShape(2.dp)))
                 }
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 if (page > 0) {
                     Box(
-                        Modifier.size(52.dp).background(PocketColors.Muted, RoundedCornerShape(12.dp))
+                        Modifier.size(52.dp).background(pocketColors.Muted, RoundedCornerShape(12.dp))
                             .clickable { page-- },
                         contentAlignment = Alignment.Center,
                     ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.a11y_previous), tint = Color.White) }
@@ -85,7 +86,7 @@ fun TutorialScreen(onFinish: () -> Unit) {
             }
             Spacer(Modifier.height(12.dp))
             if (!last) {
-                Text(stringResource(R.string.tutorial_skip), fontSize = 12.sp, color = PocketColors.Muted,
+                Text(stringResource(R.string.tutorial_skip), fontSize = 12.sp, color = pocketColors.Muted,
                     modifier = Modifier.clickable(onClick = onFinish))
             } else {
                 Spacer(Modifier.height(16.dp))
@@ -99,13 +100,13 @@ private fun Illustration(page: Int) {
     when (page) {
         0 -> Box(Modifier.size(210.dp, 130.dp)) {
             Column(
-                Modifier.fillMaxSize().background(PocketColors.Navy, RoundedCornerShape(14.dp)).padding(16.dp),
+                Modifier.fillMaxSize().background(pocketColors.Navy, RoundedCornerShape(14.dp)).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 listOf(
-                    stringResource(R.string.tutorial_food) to PocketColors.Coral,
-                    stringResource(R.string.tutorial_transport) to PocketColors.Coral,
-                    stringResource(R.string.tutorial_income) to PocketColors.Teal,
+                    stringResource(R.string.tutorial_food) to pocketColors.Coral,
+                    stringResource(R.string.tutorial_transport) to pocketColors.Coral,
+                    stringResource(R.string.tutorial_income) to pocketColors.Teal,
                 ).forEach { (t, c) ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(Modifier.size(8.dp).background(c, CircleShape))
@@ -115,37 +116,37 @@ private fun Illustration(page: Int) {
                 }
             }
             Box(
-                Modifier.align(Alignment.BottomEnd).offset(12.dp, 12.dp).size(40.dp).background(PocketColors.Coral, CircleShape),
+                Modifier.align(Alignment.BottomEnd).offset(12.dp, 12.dp).size(40.dp).background(pocketColors.Coral, CircleShape),
                 contentAlignment = Alignment.Center,
             ) { Text(stringResource(R.string.tutorial_add_symbol), color = Color.White, fontSize = 22.sp) }
         }
         1 -> Column(
-            Modifier.width(210.dp).background(Color.White, RoundedCornerShape(12.dp)).padding(14.dp),
+            Modifier.width(210.dp).background(pocketColors.Card, RoundedCornerShape(12.dp)).padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text(stringResource(R.string.tutorial_budget_header), fontSize = 8.sp, color = PocketColors.Muted)
+            Text(stringResource(R.string.tutorial_budget_header), fontSize = 8.sp, color = pocketColors.Muted)
             listOf(
                 stringResource(R.string.tutorial_food) to 0.75f,
                 stringResource(R.string.tutorial_transport) to 0.85f,
                 stringResource(R.string.tutorial_entertainment) to 0.4f,
             ).forEach { (t, p) ->
                 Column {
-                    Text(t, fontSize = 9.sp, color = PocketColors.Ink)
+                    Text(t, fontSize = 9.sp, color = pocketColors.Ink)
                     Spacer(Modifier.height(4.dp))
-                    Box(Modifier.fillMaxWidth().height(4.dp).background(PocketColors.Gray.copy(alpha = 0.4f), RoundedCornerShape(2.dp))) {
-                        Box(Modifier.fillMaxWidth(p).fillMaxHeight().background(PocketColors.Coral, RoundedCornerShape(2.dp)))
+                    Box(Modifier.fillMaxWidth().height(4.dp).background(pocketColors.Gray.copy(alpha = 0.4f), RoundedCornerShape(2.dp))) {
+                        Box(Modifier.fillMaxWidth(p).fillMaxHeight().background(pocketColors.Coral, RoundedCornerShape(2.dp)))
                     }
                 }
             }
         }
         else -> Column(
-            Modifier.width(210.dp).background(Color.White, RoundedCornerShape(12.dp)).padding(14.dp),
+            Modifier.width(210.dp).background(pocketColors.Card, RoundedCornerShape(12.dp)).padding(14.dp),
         ) {
-            Text(stringResource(R.string.tutorial_total_month), fontSize = 9.sp, color = PocketColors.Muted)
-            Text(stringResource(R.string.tutorial_total_amount), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = PocketColors.Ink)
+            Text(stringResource(R.string.tutorial_total_month), fontSize = 9.sp, color = pocketColors.Muted)
+            Text(stringResource(R.string.tutorial_total_amount), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = pocketColors.Ink)
             Spacer(Modifier.height(10.dp))
             Row(Modifier.fillMaxWidth().height(90.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.Bottom) {
-                listOf(PocketColors.Coral to 50, PocketColors.Muted to 28, PocketColors.Teal to 85).forEach { (c, h) ->
+                listOf(pocketColors.Coral to 50, pocketColors.Muted to 28, pocketColors.Teal to 85).forEach { (c, h) ->
                     Box(Modifier.size(28.dp, h.dp).background(c, RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)))
                 }
             }

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * Hoja inferior de confirmación (pág. 52: "¿Cerrar sesión?"): ícono en caja rosada,
@@ -39,7 +40,7 @@ fun ConfirmSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = PocketColors.Cream,
+        containerColor = pocketColors.Cream,
     ) {
         Column(
             Modifier
@@ -50,18 +51,18 @@ fun ConfirmSheet(
             Box(
                 Modifier
                     .size(72.dp)
-                    .background(PocketColors.Rose, RoundedCornerShape(20.dp)),
+                    .background(pocketColors.Rose, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(icon, null, tint = PocketColors.Coral, modifier = Modifier.size(34.dp))
+                Icon(icon, null, tint = pocketColors.Coral, modifier = Modifier.size(34.dp))
             }
             Spacer(Modifier.height(16.dp))
-            Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = PocketColors.Ink)
+            Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = pocketColors.Ink)
             Spacer(Modifier.height(8.dp))
             Text(
                 body,
                 fontSize = 13.sp,
-                color = PocketColors.Muted,
+                color = pocketColors.Muted,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(24.dp))
@@ -70,9 +71,9 @@ fun ConfirmSheet(
             PocketPrimaryButton(
                 cancelText,
                 onDismiss,
-                containerColor = Color.White,
-                contentColor = PocketColors.Muted,
-                border = BorderStroke(1.dp, PocketColors.Gray),
+                containerColor = pocketColors.Card,
+                contentColor = pocketColors.Muted,
+                border = BorderStroke(1.dp, pocketColors.Gray),
             )
             Spacer(Modifier.height(24.dp))
         }

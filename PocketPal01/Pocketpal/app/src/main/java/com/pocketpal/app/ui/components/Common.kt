@@ -26,18 +26,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun AuthScaffold(
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
-    background: Color = PocketColors.Cream,
+    background: Color = Color.Unspecified,
     scrollable: Boolean = true,
-    backBackground: Color = PocketColors.Ink,
+    backBackground: Color = Color.Unspecified,
     backTint: Color = Color.White,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val base = modifier.fillMaxSize().background(background)
+    // Sentinel Unspecified = color del tema (no se puede leer la paleta en los
+    // valores por defecto de los parámetros).
+    val bg = if (background == Color.Unspecified) pocketColors.Cream else background
+    val backBg = if (backBackground == Color.Unspecified) pocketColors.Ink else backBackground
+    val base = modifier.fillMaxSize().background(bg)
         .systemBarsPadding().imePadding()
         .padding(horizontal = 24.dp, vertical = 16.dp)
     Column(
@@ -46,7 +51,7 @@ fun AuthScaffold(
         if (onBack != null) {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.size(32.dp).background(backBackground, RoundedCornerShape(8.dp)),
+                modifier = Modifier.size(32.dp).background(backBg, RoundedCornerShape(8.dp)),
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
@@ -64,10 +69,10 @@ fun AuthScaffold(
 @Composable
 fun ScreenHeader(title: String, subtitle: String, centered: Boolean = false) {
     val align = if (centered) TextAlign.Center else TextAlign.Start
-    Text(title, fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink,
+    Text(title, fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = pocketColors.Ink,
         modifier = Modifier.fillMaxWidth(), textAlign = align)
     Spacer(Modifier.height(4.dp))
-    Text(subtitle, fontSize = 13.sp, color = PocketColors.Muted,
+    Text(subtitle, fontSize = 13.sp, color = pocketColors.Muted,
         modifier = Modifier.fillMaxWidth(), textAlign = align)
     Spacer(Modifier.height(16.dp))
 }
@@ -80,9 +85,9 @@ fun StepProgressBar(current: Int, total: Int = 3, modifier: Modifier = Modifier)
             Box(
                 Modifier.weight(1f).height(3.dp).background(
                     when {
-                        i < current - 1 -> PocketColors.Teal
-                        i == current - 1 -> PocketColors.Coral
-                        else -> PocketColors.Gray
+                        i < current - 1 -> pocketColors.Teal
+                        i == current - 1 -> pocketColors.Coral
+                        else -> pocketColors.Gray
                     },
                     RoundedCornerShape(2.dp),
                 )
@@ -101,12 +106,12 @@ fun ErrorBanner(
 ) {
     Row(
         modifier.fillMaxWidth()
-            .background(PocketColors.ErrorBg, RoundedCornerShape(10.dp))
-            .border(1.dp, PocketColors.ErrorRed, RoundedCornerShape(10.dp))
+            .background(pocketColors.ErrorBg, RoundedCornerShape(10.dp))
+            .border(1.dp, pocketColors.ErrorRed, RoundedCornerShape(10.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(icon, null, tint = PocketColors.ErrorRed, modifier = Modifier.size(18.dp))
+        Icon(icon, null, tint = pocketColors.ErrorRed, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(8.dp))
         Text(
             buildAnnotatedString {
@@ -116,7 +121,7 @@ fun ErrorBanner(
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(actionText) }
                 }
             },
-            fontSize = 12.sp, color = PocketColors.ErrorRed,
+            fontSize = 12.sp, color = pocketColors.ErrorRed,
             modifier = if (onAction != null) Modifier.clickable(onClick = onAction) else Modifier,
         )
     }
@@ -126,9 +131,9 @@ fun ErrorBanner(
 @Composable
 fun BottomLink(prefix: String, action: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        Text(prefix, fontSize = 12.sp, color = PocketColors.Muted)
+        Text(prefix, fontSize = 12.sp, color = pocketColors.Muted)
         Spacer(Modifier.width(4.dp))
-        Text(action, fontSize = 12.sp, color = PocketColors.Coral, fontWeight = FontWeight.Medium,
+        Text(action, fontSize = 12.sp, color = pocketColors.Coral, fontWeight = FontWeight.Medium,
             modifier = Modifier.clickable(onClick = onClick))
     }
 }
@@ -143,7 +148,7 @@ fun BottomLink(prefix: String, action: String, onClick: () -> Unit, modifier: Mo
 @Composable
 fun ScrollableScreen(
     modifier: Modifier = Modifier,
-    background: Color = PocketColors.Cream,
+    background: Color = pocketColors.Cream,
     verticalArrangement: Arrangement.Vertical = Arrangement.SpaceBetween,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     content: @Composable ColumnScope.() -> Unit,

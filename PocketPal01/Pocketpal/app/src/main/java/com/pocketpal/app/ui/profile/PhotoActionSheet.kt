@@ -35,6 +35,7 @@ import com.pocketpal.app.data.profile.AvatarImageEncoder
 import com.pocketpal.app.navigation.AppPermissions
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -55,7 +56,7 @@ fun PhotoActionSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = PocketColors.Cream,
+        containerColor = pocketColors.Cream,
     ) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
             PhotoActionRow(
@@ -80,9 +81,9 @@ fun PhotoActionSheet(
             PocketPrimaryButton(
                 stringResource(R.string.common_cancel),
                 onDismiss,
-                containerColor = Color.White,
-                contentColor = PocketColors.Muted,
-                border = BorderStroke(1.dp, PocketColors.Gray),
+                containerColor = pocketColors.Card,
+                contentColor = pocketColors.Muted,
+                border = BorderStroke(1.dp, pocketColors.Gray),
             )
             Spacer(Modifier.height(24.dp))
         }
@@ -107,7 +108,7 @@ private fun PhotoActionRow(
             Modifier
                 .size(56.dp)
                 .background(
-                    if (destructive) PocketColors.Coral else PocketColors.Rose,
+                    if (destructive) pocketColors.Coral else pocketColors.Rose,
                     RoundedCornerShape(18.dp),
                 ),
             contentAlignment = Alignment.Center,
@@ -115,7 +116,7 @@ private fun PhotoActionRow(
             Icon(
                 icon,
                 null,
-                tint = if (destructive) Color.White else PocketColors.Coral,
+                tint = if (destructive) Color.White else pocketColors.Coral,
                 modifier = Modifier.size(26.dp),
             )
         }
@@ -124,7 +125,7 @@ private fun PhotoActionRow(
             label,
             fontSize = 17.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (destructive) PocketColors.Coral else PocketColors.Ink,
+            color = if (destructive) pocketColors.Coral else pocketColors.Ink,
         )
     }
 }

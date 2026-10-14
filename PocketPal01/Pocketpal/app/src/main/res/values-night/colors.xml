@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fase 5 (D-03): ventana oscura detrás de Compose (paleta derivada, §14). -->
+<resources>
+    <color name="pocket_window_bg">#243447</color>
+</resources>

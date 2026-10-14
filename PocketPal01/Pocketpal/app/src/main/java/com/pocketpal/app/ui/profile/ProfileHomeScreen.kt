@@ -33,6 +33,7 @@ import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.messageRes
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 
 /**
@@ -51,6 +52,11 @@ fun ProfileHomeScreen(
     onBack: () -> Unit,
     onOpenPersonalData: () -> Unit,
     onOpenCategories: () -> Unit,
+    onOpenExport: () -> Unit,
+    onOpenHelp: () -> Unit,
+    onOpenAbout: () -> Unit,
+    onOpenNotifications: () -> Unit,
+    onOpenPreferences: () -> Unit,
     onSignOut: () -> Unit,
     onAvatarBytes: (ByteArray?) -> Unit,
     onRemoveAvatar: () -> Unit,
@@ -84,7 +90,7 @@ fun ProfileHomeScreen(
             stringResource(R.string.profile_title),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            color = PocketColors.Ink,
+            color = pocketColors.Ink,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -112,14 +118,14 @@ fun ProfileHomeScreen(
                 data?.fullName.orEmpty(),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = PocketColors.Ink,
+                color = pocketColors.Ink,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 data?.email.orEmpty(),
                 fontSize = 14.sp,
-                color = PocketColors.Muted,
+                color = pocketColors.Muted,
                 textAlign = TextAlign.Center,
             )
         }
@@ -142,16 +148,16 @@ fun ProfileHomeScreen(
         SettingsGroup {
             SettingsRow(
                 icon = Icons.Outlined.Person,
-                iconBackground = PocketColors.Rose,
-                iconTint = PocketColors.Coral,
+                iconBackground = pocketColors.Rose,
+                iconTint = pocketColors.Coral,
                 title = stringResource(R.string.profile_row_personal_data),
                 subtitle = stringResource(R.string.profile_row_personal_data_sub),
                 onClick = onOpenPersonalData,
             )
             SettingsRow(
                 icon = Icons.Outlined.Lock,
-                iconBackground = PocketColors.BlueSoft,
-                iconTint = PocketColors.BlueIcon,
+                iconBackground = pocketColors.BlueSoft,
+                iconTint = pocketColors.BlueIcon,
                 title = stringResource(R.string.profile_row_security),
                 subtitle = stringResource(R.string.profile_row_security_sub),
                 dividerAbove = true,
@@ -159,12 +165,12 @@ fun ProfileHomeScreen(
             )
             SettingsRow(
                 icon = Icons.Outlined.Notifications,
-                iconBackground = PocketColors.TealSoft,
-                iconTint = PocketColors.Teal,
+                iconBackground = pocketColors.TealSoft,
+                iconTint = pocketColors.Teal,
                 title = stringResource(R.string.profile_row_notifications),
                 subtitle = stringResource(R.string.profile_row_notifications_sub),
                 dividerAbove = true,
-                onClick = comingSoon,
+                onClick = onOpenNotifications,
             )
         }
 
@@ -172,29 +178,29 @@ fun ProfileHomeScreen(
         SettingsGroup {
             SettingsRow(
                 icon = Icons.Outlined.Tune,
-                iconBackground = PocketColors.Rose,
-                iconTint = PocketColors.Coral,
+                iconBackground = pocketColors.Rose,
+                iconTint = pocketColors.Coral,
                 title = stringResource(R.string.profile_row_categories),
                 subtitle = stringResource(R.string.profile_row_categories_sub),
                 onClick = onOpenCategories,
             )
             SettingsRow(
                 icon = Icons.Outlined.AttachMoney,
-                iconBackground = PocketColors.BlueSoft,
-                iconTint = PocketColors.BlueIcon,
+                iconBackground = pocketColors.BlueSoft,
+                iconTint = pocketColors.BlueIcon,
                 title = stringResource(R.string.profile_row_preferences),
                 subtitle = stringResource(R.string.profile_row_preferences_sub),
                 dividerAbove = true,
-                onClick = comingSoon,
+                onClick = onOpenPreferences,
             )
             SettingsRow(
                 icon = Icons.Outlined.Download,
-                iconBackground = PocketColors.TealSoft,
-                iconTint = PocketColors.Teal,
+                iconBackground = pocketColors.TealSoft,
+                iconTint = pocketColors.Teal,
                 title = stringResource(R.string.profile_row_export),
                 subtitle = stringResource(R.string.profile_row_export_sub),
                 dividerAbove = true,
-                onClick = comingSoon,
+                onClick = onOpenExport,
             )
         }
 
@@ -202,18 +208,18 @@ fun ProfileHomeScreen(
         SettingsGroup {
             SettingsRow(
                 icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                iconBackground = PocketColors.Rose,
-                iconTint = PocketColors.Coral,
+                iconBackground = pocketColors.Rose,
+                iconTint = pocketColors.Coral,
                 title = stringResource(R.string.profile_row_help),
-                onClick = comingSoon,
+                onClick = onOpenHelp,
             )
             SettingsRow(
                 icon = Icons.Outlined.Info,
-                iconBackground = PocketColors.BlueSoft,
-                iconTint = PocketColors.BlueIcon,
+                iconBackground = pocketColors.BlueSoft,
+                iconTint = pocketColors.BlueIcon,
                 title = stringResource(R.string.profile_row_about),
                 dividerAbove = true,
-                onClick = comingSoon,
+                onClick = onOpenAbout,
             )
         }
 
@@ -221,10 +227,10 @@ fun ProfileHomeScreen(
         SettingsGroup {
             SettingsRow(
                 icon = Icons.AutoMirrored.Filled.Logout,
-                iconBackground = PocketColors.Rose,
-                iconTint = PocketColors.Coral,
+                iconBackground = pocketColors.Rose,
+                iconTint = pocketColors.Coral,
                 title = stringResource(R.string.profile_row_sign_out),
-                titleColor = PocketColors.Coral,
+                titleColor = pocketColors.Coral,
                 showChevron = false,
                 onClick = { showSignOutSheet = true },
             )
@@ -259,14 +265,14 @@ fun ProfileHomeScreen(
 private fun StatCard(value: Int, label: String, modifier: Modifier = Modifier) {
     Column(
         modifier
-            .background(Color.White, RoundedCornerShape(16.dp))
-            .border(1.dp, PocketColors.RoseBorder, RoundedCornerShape(16.dp))
+            .background(pocketColors.Card, RoundedCornerShape(16.dp))
+            .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(16.dp))
             .padding(vertical = 16.dp, horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(value.toString(), fontSize = 26.sp, fontWeight = FontWeight.Bold, color = PocketColors.Ink)
+        Text(value.toString(), fontSize = 26.sp, fontWeight = FontWeight.Bold, color = pocketColors.Ink)
         Spacer(Modifier.height(4.dp))
-        Text(label, fontSize = 12.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+        Text(label, fontSize = 12.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
     }
 }
 

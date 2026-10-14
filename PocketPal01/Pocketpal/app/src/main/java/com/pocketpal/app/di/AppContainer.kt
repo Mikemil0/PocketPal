@@ -4,6 +4,8 @@ import android.content.Context
 import com.pocketpal.app.auth.SupabaseProvider
 import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
+import com.pocketpal.app.data.notification.NotificationSettingsRepository
+import com.pocketpal.app.data.notification.SupabaseNotificationSettingsRepository
 import com.pocketpal.app.data.profile.ProfileRepository
 import com.pocketpal.app.data.profile.SupabaseProfileRepository
 import com.pocketpal.app.data.settings.DataStoreSettingsRepository
@@ -27,6 +29,10 @@ class AppContainer(context: Context) {
 
     /** Fase 6: categorías (RF-B7) sobre la tabla `categories` con RLS propia. */
     val categoryRepository: CategoryRepository = SupabaseCategoryRepository(supabase)
+
+    /** Fase 5: preferencias de notificación (RF-B6) sobre `notification_settings`. */
+    val notificationRepository: NotificationSettingsRepository =
+        SupabaseNotificationSettingsRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))

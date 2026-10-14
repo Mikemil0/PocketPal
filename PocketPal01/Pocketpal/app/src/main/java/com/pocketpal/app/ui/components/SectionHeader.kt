@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /** Rótulo de sección de Mi perfil ("CUENTA", "PREFERENCIAS", "UBICACIÓN"…). */
 @Composable
@@ -17,7 +18,7 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier) {
         title,
         fontSize = 12.sp,
         fontWeight = FontWeight.SemiBold,
-        color = PocketColors.Muted,
+        color = pocketColors.Muted,
         letterSpacing = 1.sp,
         modifier = modifier
             .fillMaxWidth()

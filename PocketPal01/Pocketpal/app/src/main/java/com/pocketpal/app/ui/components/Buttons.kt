@@ -1,17 +1,21 @@
 package com.pocketpal.app.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun PocketPrimaryButton(
@@ -23,6 +27,7 @@ fun PocketPrimaryButton(
     containerColor: Color = PocketColors.Coral,
     contentColor: Color = Color.White,
     border: BorderStroke? = null,
+    icon: ImageVector? = null,
 ) {
     Button(
         onClick = onClick,
@@ -37,8 +42,15 @@ fun PocketPrimaryButton(
             disabledContentColor = contentColor,
         ),
     ) {
-        if (loading) CircularProgressIndicator(Modifier.size(20.dp), color = contentColor, strokeWidth = 2.dp)
-        else Text(text, fontWeight = FontWeight.SemiBold)
+        if (loading) {
+            CircularProgressIndicator(Modifier.size(20.dp), color = contentColor, strokeWidth = 2.dp)
+        } else {
+            if (icon != null) {
+                Icon(icon, null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+            }
+            Text(text, fontWeight = FontWeight.SemiBold)
+        }
     }
 }
 
@@ -53,5 +65,5 @@ fun PocketSecondaryButton(text: String, onClick: () -> Unit, modifier: Modifier 
     PocketPrimaryButton(
         text, onClick, modifier,
         containerColor = PocketColors.NavyLight,
-        border = BorderStroke(1.dp, PocketColors.Muted),
+        border = BorderStroke(1.dp, pocketColors.Muted),
     )

@@ -22,6 +22,7 @@ import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.errorMessage
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun LoginScreen(
@@ -74,11 +75,11 @@ fun LoginScreen(
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 remember, { remember = it },
-                colors = CheckboxDefaults.colors(checkedColor = PocketColors.Teal),
+                colors = CheckboxDefaults.colors(checkedColor = pocketColors.Teal),
             )
-            Text(stringResource(R.string.login_remember), fontSize = 12.sp, color = PocketColors.Muted)
+            Text(stringResource(R.string.login_remember), fontSize = 12.sp, color = pocketColors.Muted)
             Spacer(Modifier.weight(1f))
-            Text(stringResource(R.string.login_forgot_password), fontSize = 12.sp, color = PocketColors.Coral,
+            Text(stringResource(R.string.login_forgot_password), fontSize = 12.sp, color = pocketColors.Coral,
                 modifier = Modifier.clickable(onClick = onForgot))
         }
         Spacer(Modifier.height(24.dp))

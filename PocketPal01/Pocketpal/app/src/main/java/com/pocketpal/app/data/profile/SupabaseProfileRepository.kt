@@ -42,6 +42,32 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
         return getMyProfile()
     }
 
+    /**
+     * Preferencias generales (RNF-06). Con idioma vacio ("Automatico" del
+     * dispositivo) no se escribe `language`: el CHECK de la tabla solo admite
+     * `es`/`en`/`pt`/`fr` (ver savePreferences del contrato, SDD 14).
+     */
+    override suspend fun savePreferences(
+        language: String,
+        theme: String,
+        currency: String,
+        dateFormat: String,
+        weekStart: Int,
+    ): Profile? {
+        val userId = currentUserId() ?: return null
+        supabase.postgrest.from("profiles")
+            .update(
+                buildJsonObject {
+                    if (language.isNotBlank()) put("language", language)
+                    put("theme", theme)
+                    put("currency", currency)
+                    put("date_format", dateFormat)
+                    put("week_start", weekStart)
+                }
+            ) { filter { eq("id", userId) } }
+        return getMyProfile()
+    }
+
     override suspend fun updateAvatar(imageBytes: ByteArray): Profile? {
         val userId = currentUserId() ?: return null
         val previous = getMyProfile()?.avatarPath

@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun PocketOutlinedTextField(
@@ -41,12 +43,13 @@ fun PocketOutlinedTextField(
     onImeAction: () -> Unit = {},
     enabled: Boolean = true,
     borderColor: Color? = null,
+    shape: Shape = RoundedCornerShape(12.dp),
 ) {
     var visible by remember { mutableStateOf(false) }
 
     Column(modifier.fillMaxWidth()) {
         if (label.isNotEmpty()) {
-            Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Ink)
+            Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Ink)
             Spacer(Modifier.height(6.dp))
         }
         OutlinedTextField(
@@ -54,13 +57,13 @@ fun PocketOutlinedTextField(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            placeholder = placeholder?.let { { Text(it, color = PocketColors.Muted) } },
+            placeholder = placeholder?.let { { Text(it, color = pocketColors.Muted) } },
             enabled = enabled,
             isError = isError,
-            shape = RoundedCornerShape(12.dp),
+            shape = shape,
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },
             trailingIcon = when {
-                isError -> ({ Icon(Icons.Outlined.Cancel, null, tint = PocketColors.ErrorRed) })
+                isError -> ({ Icon(Icons.Outlined.Cancel, null, tint = pocketColors.ErrorRed) })
                 isPassword -> ({
                     IconButton({ visible = !visible }) {
                         Icon(
@@ -83,16 +86,16 @@ fun PocketOutlinedTextField(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
-                focusedBorderColor = borderColor ?: PocketColors.Ink,
-                unfocusedBorderColor = borderColor ?: PocketColors.Gray,
-                disabledBorderColor = borderColor ?: PocketColors.Gray,
-                errorBorderColor = PocketColors.ErrorRed,
+                focusedBorderColor = borderColor ?: pocketColors.Ink,
+                unfocusedBorderColor = borderColor ?: pocketColors.Gray,
+                disabledBorderColor = borderColor ?: pocketColors.Gray,
+                errorBorderColor = pocketColors.ErrorRed,
                 errorContainerColor = Color.Transparent,
             ),
         )
         if (isError && errorText != null) {
             Spacer(Modifier.height(4.dp))
-            Text(errorText, fontSize = 11.sp, color = PocketColors.ErrorRed)
+            Text(errorText, fontSize = 11.sp, color = pocketColors.ErrorRed)
         }
     }
 }

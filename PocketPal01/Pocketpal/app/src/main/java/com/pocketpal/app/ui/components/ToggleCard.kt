@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * Tarjeta con interruptor: título, subtítulo y switch (§8.9 "PRESUPUESTO" y §8.7).
@@ -43,16 +44,16 @@ fun ToggleCard(
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, PocketColors.RoseBorder, RoundedCornerShape(16.dp))
+            .background(pocketColors.Card)
+            .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(16.dp))
             .clickable { onCheckedChange(!checked) }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(title, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink)
+            Text(title, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = pocketColors.Ink)
             Spacer(Modifier.height(2.dp))
-            Text(subtitle, fontSize = 12.sp, color = PocketColors.Muted)
+            Text(subtitle, fontSize = 12.sp, color = pocketColors.Muted)
         }
         Spacer(Modifier.width(12.dp))
         Switch(
@@ -61,11 +62,11 @@ fun ToggleCard(
             modifier = Modifier.size(48.dp),
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
-                checkedTrackColor = PocketColors.Teal,
-                checkedBorderColor = PocketColors.Teal,
+                checkedTrackColor = pocketColors.Teal,
+                checkedBorderColor = pocketColors.Teal,
                 uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = PocketColors.ToggleOff,
-                uncheckedBorderColor = PocketColors.ToggleOff,
+                uncheckedTrackColor = pocketColors.ToggleOff,
+                uncheckedBorderColor = pocketColors.ToggleOff,
             ),
         )
     }

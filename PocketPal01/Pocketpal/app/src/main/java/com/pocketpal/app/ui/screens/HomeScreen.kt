@@ -15,6 +15,7 @@ import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.Avatar
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * RF-A1: ícono circular de 40 dp arriba a la derecha — la foto del perfil si existe;
@@ -37,12 +38,12 @@ fun HomeScreen(
             Text(
                 if (firstName.isBlank()) stringResource(R.string.home_welcome)
                 else stringResource(R.string.home_welcome_name, firstName),
-                fontSize = 26.sp, fontWeight = FontWeight.Bold, color = PocketColors.Ink, textAlign = TextAlign.Center,
+                fontSize = 26.sp, fontWeight = FontWeight.Bold, color = pocketColors.Ink, textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(R.string.home_subtitle), fontSize = 14.sp, color = PocketColors.Muted, textAlign = TextAlign.Center)
+            Text(stringResource(R.string.home_subtitle), fontSize = 14.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
             Spacer(Modifier.height(40.dp))
-            Text(stringResource(R.string.home_sign_out), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = PocketColors.Coral,
+            Text(stringResource(R.string.home_sign_out), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Coral,
                 modifier = Modifier.clickable(onClick = onSignOut))
         }
 

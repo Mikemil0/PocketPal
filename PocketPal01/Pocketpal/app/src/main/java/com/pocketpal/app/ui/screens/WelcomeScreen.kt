@@ -23,13 +23,14 @@ import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable
 fun WelcomeScreen(onGoogle: () -> Unit, onRegister: () -> Unit, onLogin: () -> Unit) {
     var showLanguageSheet by rememberSaveable { mutableStateOf(false) }
 
     Box(Modifier.fillMaxSize()) {
-        ScrollableScreen(background = PocketColors.Navy) {
+        ScrollableScreen(background = pocketColors.Navy) {
             // Spacer vacío arriba: con SpaceBetween deja el logo centrado en el espacio sobre los botones.
             Spacer(Modifier.height(0.dp))
 
@@ -43,7 +44,7 @@ fun WelcomeScreen(onGoogle: () -> Unit, onRegister: () -> Unit, onLogin: () -> U
                 Text(
                     buildAnnotatedString {
                         withStyle(SpanStyle(color = Color.White)) { append(stringResource(R.string.brand_pocket)) }
-                        withStyle(SpanStyle(color = PocketColors.Coral)) { append(stringResource(R.string.brand_pal)) }
+                        withStyle(SpanStyle(color = pocketColors.Coral)) { append(stringResource(R.string.brand_pal)) }
                     },
                     fontSize = 44.sp,
                     fontWeight = FontWeight.Bold,
@@ -54,7 +55,7 @@ fun WelcomeScreen(onGoogle: () -> Unit, onRegister: () -> Unit, onLogin: () -> U
                 Spacer(Modifier.height(24.dp)) // separación mínima cuando hay que hacer scroll
                 PocketGoogleButton(stringResource(R.string.welcome_google), onGoogle)
                 Spacer(Modifier.height(12.dp))
-                Text(stringResource(R.string.common_or), color = PocketColors.Muted, fontSize = 12.sp)
+                Text(stringResource(R.string.common_or), color = pocketColors.Muted, fontSize = 12.sp)
                 Spacer(Modifier.height(12.dp))
                 PocketPrimaryButton(stringResource(R.string.welcome_create_account), onRegister)
                 Spacer(Modifier.height(10.dp))
@@ -62,7 +63,7 @@ fun WelcomeScreen(onGoogle: () -> Unit, onRegister: () -> Unit, onLogin: () -> U
                 Spacer(Modifier.height(16.dp))
                 Text(
                     stringResource(R.string.welcome_terms),
-                    color = PocketColors.Muted, fontSize = 11.sp, textAlign = TextAlign.Center,
+                    color = pocketColors.Muted, fontSize = 11.sp, textAlign = TextAlign.Center,
                 )
             }
         }

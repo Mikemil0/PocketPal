@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RF-A3: traduction complète en français (Phase 5). Doit avoir les mêmes clés que
+  values/strings.xml (les translatable="false" ne vont que dans values/).
+  TRADUCTION GÉNÉRÉE PAR L'IA : en attente de révision de l'utilisateur (§5.2).
+-->
+<resources>
+    <!-- Common / accessibility -->
+    <string name="a11y_back">Retour</string>
+    <string name="a11y_show_password">Afficher le mot de passe</string>
+    <string name="a11y_hide_password">Masquer le mot de passe</string>
+    <string name="a11y_previous">Précédent</string>
+    <string name="common_or">ou</string>
+    <string name="common_sign_in">Se connecter</string>
+
+    <!-- Form fields -->
+    <string name="field_email">Adresse e-mail</string>
+    <string name="field_password">Mot de passe</string>
+    <string name="field_full_name">Nom complet</string>
+    <string name="field_password_confirm">Confirmez votre mot de passe</string>
+    <string name="field_new_password">Nouveau mot de passe</string>
+    <string name="field_new_password_confirm">Confirmer le mot de passe</string>
+
+    <!-- Password strength meter -->
+    <string name="strength_enter_password">Saisissez votre mot de passe</string>
+    <string name="strength_insecure">Faible</string>
+    <string name="strength_low">Moyen</string>
+    <string name="strength_high">Très sûr</string>
+    <string name="rule_min_8">Au moins 8 caractères</string>
+    <string name="rule_upper_digit">Incluez une majuscule et un chiffre</string>
+    <string name="rule_match">Les mots de passe correspondent</string>
+
+    <!-- Welcome -->
+    <string name="welcome_google">Continuer avec Google</string>
+    <string name="welcome_create_account">Créer un compte</string>
+    <string name="welcome_have_account">J\'ai déjà un compte</string>
+    <string name="welcome_terms">En continuant, vous acceptez nos Conditions et notre Politique de confidentialité.</string>
+
+    <!-- Login -->
+    <string name="login_title">Bon retour</string>
+    <string name="login_subtitle">Connectez-vous à votre compte pour continuer à gérer votre argent.</string>
+    <string name="login_wrong_combo">Cette combinaison ne correspond à aucun compte.</string>
+    <string name="login_remember">Se souvenir de moi</string>
+    <string name="login_forgot_password">Mot de passe oublié ?</string>
+    <string name="login_button">Se connecter</string>
+    <string name="login_retry">Réessayer</string>
+    <string name="login_no_account">Pas de compte ?</string>
+    <string name="login_signup">S\'inscrire</string>
+    <string name="login_signin_link">Se connecter</string>
+
+    <!-- Register -->
+    <string name="register_title">Créez votre compte</string>
+    <string name="register_subtitle">Commencez à vraiment maîtriser vos dépenses en quelques minutes.</string>
+    <string name="register_terms_prefix">"J\'accepte les "</string>
+    <string name="register_terms_terms">Conditions générales</string>
+    <string name="register_terms_middle">" et la "</string>
+    <string name="register_terms_privacy">Politique de confidentialité</string>
+    <string name="register_button">Créer un compte</string>
+    <string name="email_taken_action">Connectez-vous ou utilisez une autre adresse e-mail.</string>
+
+    <!-- OTP code (signup and recovery) -->
+    <string name="otp_title_signup">Vérifiez votre e-mail</string>
+    <string name="otp_title_recovery">Saisissez le code</string>
+    <string name="otp_sent_to">Nous avons envoyé un code à 6 chiffres à %1$s</string>
+    <string name="otp_incorrect_message">Code incorrect. Réessayez.</string>
+    <string name="otp_expired_title">Le code a expiré</string>
+    <string name="otp_expired_message">Code expiré</string>
+    <string name="otp_verify">Vérifier</string>
+    <string name="otp_no_received">Vous n\'avez pas reçu le code ?</string>
+    <string name="otp_resend">Renvoyer</string>
+    <string name="otp_not_your_email">Ce n\'est pas votre e-mail ?</string>
+    <plurals name="otp_expires_in">
+        <item quantity="one">Le code expire dans %1$d minute</item>
+        <item quantity="other">Le code expire dans %1$d minutes</item>
+    </plurals>
+
+    <!-- Password recovery -->
+    <string name="forgot_title">Mot de passe oublié ?</string>
+    <string name="forgot_subtitle">Pas de problème. Saisissez votre e-mail et nous vous enverrons un code pour le récupérer.</string>
+    <string name="forgot_send">Envoyer le code</string>
+    <string name="forgot_remember">Vous vous souvenez de votre mot de passe ?</string>
+    <string name="new_password_title">Créez un nouveau mot de passe</string>
+    <string name="new_password_save">Enregistrer et continuer</string>
+    <string name="password_updated_title">Mot de passe mis à jour</string>
+    <string name="password_updated_body">Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</string>
+    <string name="password_updated_note">Pour votre sécurité, nous vous avons déconnecté de tous les appareils où la session était active.</string>
+
+    <!-- Status screens -->
+    <string name="status_no_wifi_title">Pas de connexion Internet</string>
+    <string name="status_no_wifi_body">Impossible de nous connecter. Vérifiez votre wifi ou vos données mobiles et réessayez.</string>
+    <string name="status_no_wifi_note">Pas d\'inquiétude : vous pourrez continuer le formulaire une fois connecté à un réseau.</string>
+    <string name="status_retry">Réessayer</string>
+    <string name="session_expired_title">Votre session a expiré</string>
+    <string name="session_expired_body">Pour votre sécurité, nous vous avons déconnecté après une période d\'inactivité. Connectez-vous à nouveau pour continuer.</string>
+    <string name="session_sign_in_again">Se connecter à nouveau</string>
+    <string name="session_use_other">Utiliser un autre compte</string>
+    <string name="google_success_title">Compte connecté avec succès</string>
+    <string name="google_continue">Continuer</string>
+    <string name="google_error_title">Impossible de connecter votre compte.</string>
+    <string name="google_error_body">Impossible de nous connecter à votre compte Google. Vérifiez votre connexion et réessayez.</string>
+    <string name="google_retry">Réessayer</string>
+    <string name="google_use_email">Utiliser l\'e-mail et le mot de passe</string>
+    <string name="google_loading_title">Connexion à Google</string>
+    <string name="google_loading_body">Cela prendra un instant, ne fermez pas l\'application.</string>
+
+    <!-- Account created -->
+    <string name="account_created_title">Votre compte a été créé</string>
+    <string name="account_created_body">Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_title_1">Enregistrez chaque dépense en quelques secondes</string>
+    <string name="tutorial_body_1">Appuyez sur le bouton \"+\", choisissez une catégorie et c\'est fait. Gérer votre argent est aussi simple.</string>
+    <string name="tutorial_title_2">Organisez vos limites</string>
+    <string name="tutorial_body_2">Définissez un budget pour chaque catégorie et nous vous avertirons avant que vous ne le dépassiez.</string>
+    <string name="tutorial_title_3">Comprenez où part votre argent</string>
+    <string name="tutorial_body_3">Chaque dépense enregistrée devient des graphiques clairs, pour prendre de meilleures décisions chaque mois.</string>
+    <string name="tutorial_next">Suivant</string>
+    <string name="tutorial_start">Commencer à économiser</string>
+    <string name="tutorial_skip">passer</string>
+    <string name="tutorial_food">Repas</string>
+    <string name="tutorial_transport">Transport</string>
+    <string name="tutorial_income">Salaire</string>
+    <string name="tutorial_entertainment">Loisirs</string>
+    <string name="tutorial_budget_header">BUDGET DE CE MOIS</string>
+    <string name="tutorial_total_month">Total du mois</string>
+    <string name="tutorial_total_amount">1 120 000 $</string>
+
+    <!-- Language selector on the Welcome screen -->
+    <string name="language_change">Changer de langue</string>
+    <string name="language_option_system">Automatique</string>
+    <string name="language_option_system_subtitle">Langue du système</string>
+
+    <!-- Permissions -->
+    <string name="perm_notif_title">Recevez des alertes sur vos limites</string>
+    <string name="perm_notif_question">Voulez-vous recevoir vos alertes à temps ?</string>
+    <string name="perm_notif_description">Nous vous préviendrons dès que vous approcherez du budget d\'une catégorie, pour décider à temps.</string>
+    <string name="perm_notif_primary">Activer les notifications</string>
+    <string name="perm_camera_title">Scannez vos reçus</string>
+    <string name="perm_camera_question">Voulez-vous activer l\'appareil photo ?</string>
+    <string name="perm_camera_description">Utilisez l\'appareil photo pour photographier un reçu et nous enregistrerons la dépense pour vous, sans rien saisir.</string>
+    <string name="perm_camera_primary">Autoriser l\'utilisation de l\'appareil photo</string>
+    <string name="perm_mic_title">Enregistrez vos dépenses à la voix</string>
+    <string name="perm_mic_question">Voulez-vous autoriser l\'utilisation du micro ?</string>
+    <string name="perm_mic_description">Dites combien vous avez dépensé et dans quelle catégorie, et nous l\'ajoutons à votre registre instantanément.</string>
+    <string name="perm_mic_primary">Autoriser l\'utilisation du micro</string>
+    <string name="perm_not_now">Pas maintenant</string>
+
+    <!-- Home -->
+    <string name="home_welcome">Bienvenue !</string>
+    <string name="home_welcome_name">Bienvenue, %1$s !</string>
+    <string name="home_subtitle">D\'autres zones à découvrir bientôt.</string>
+    <string name="home_sign_out">Se déconnecter</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_credentials">E-mail ou mot de passe incorrects. Vérifiez vos données.</string>
+    <string name="error_empty_password">Saisissez votre mot de passe</string>
+    <string name="error_email_taken">Cet e-mail a déjà un compte PocketPal.</string>
+    <string name="error_no_network">Pas de connexion Internet</string>
+    <string name="error_session_expired">Votre session a expiré</string>
+    <string name="error_google_failed">Impossible de connecter votre compte</string>
+    <string name="error_invalid_otp">Code incorrect. Réessayez.</string>
+    <string name="error_expired_otp">Le code que vous avez saisi a expiré. Demandez-en un nouveau pour %1$s</string>
+    <string name="error_otp_incomplete">Saisissez les 6 chiffres</string>
+    <string name="error_invalid_email">Adresse e-mail invalide</string>
+    <string name="error_invalid_name">Saisissez votre nom complet</string>
+    <string name="error_password_too_short">Au moins 8 caractères</string>
+    <string name="error_password_upper_digit">Incluez une majuscule et un chiffre</string>
+    <string name="error_password_mismatch">Les mots de passe ne correspondent pas</string>
+    <string name="error_terms_not_accepted">Vous devez accepter les Conditions générales et la Politique de confidentialité.</string>
+    <string name="error_unknown">Une erreur est survenue. Réessayez</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Mon profil</string>
+    <string name="home_open_profile">Ouvrir mon profil</string>
+    <string name="profile_stats_expenses">Dépenses enregistrées</string>
+    <string name="profile_stats_goals">Objectifs actifs</string>
+    <string name="profile_section_account">COMPTE</string>
+    <string name="profile_section_preferences">PRÉFÉRENCES</string>
+    <string name="profile_row_personal_data">Données personnelles</string>
+    <string name="profile_row_personal_data_sub">Nom, e-mail, téléphone</string>
+    <string name="profile_row_security">Sécurité</string>
+    <string name="profile_row_security_sub">Mot de passe</string>
+    <string name="profile_row_notifications">Notifications</string>
+    <string name="profile_row_notifications_sub">Alertes et rappels</string>
+    <string name="profile_row_categories">Catégories</string>
+    <string name="profile_row_categories_sub">Personnalisez vos dépenses</string>
+    <string name="profile_row_preferences">Préférences générales</string>
+    <string name="profile_row_preferences_sub">Devise, langue, format</string>
+    <string name="profile_row_export">Exporter les données</string>
+    <string name="profile_row_export_sub">Téléchargez votre historique</string>
+    <string name="profile_row_help">Aide et assistance</string>
+    <string name="profile_row_about">À propos</string>
+    <string name="profile_row_sign_out">Se déconnecter</string>
+    <string name="profile_coming_soon">Bientôt disponible</string>
+
+    <!-- Sign out sheet -->
+    <string name="signout_title">Se déconnecter ?</string>
+    <string name="signout_body">Vous devrez ressaisir votre e-mail et votre mot de passe la prochaine fois que vous ouvrirez PocketPal.</string>
+    <string name="signout_confirm">Oui, se déconnecter</string>
+    <string name="common_cancel">Annuler</string>
+
+    <!-- Personal data -->
+    <string name="edit_title">Données personnelles</string>
+    <string name="edit_change_photo">Changer la photo</string>
+    <string name="edit_field_name">Nom</string>
+    <string name="edit_field_phone">Téléphone</string>
+    <string name="edit_phone_add">Ajouter un numéro de téléphone</string>
+    <string name="edit_section_location">LOCALISATION</string>
+    <string name="edit_field_country">Pays</string>
+    <string name="edit_field_currency">Devise</string>
+    <string name="edit_save">Enregistrer les modifications</string>
+    <string name="a11y_change_photo">Changer la photo de profil</string>
+    <string name="error_name_too_long">Le nom ne peut pas dépasser 60 caractères</string>
+
+    <!-- Photo sheet -->
+    <string name="photo_sheet_take">Prendre une photo</string>
+    <string name="photo_sheet_gallery">Choisir dans la galerie</string>
+    <string name="photo_sheet_remove">Supprimer la photo actuelle</string>
+
+    <!-- Categories -->
+    <string name="categories_title">Catégories</string>
+    <string name="categories_tab_expenses">Dépenses</string>
+    <string name="categories_tab_income">Revenus</string>
+    <string name="categories_header">VOS CATÉGORIES (%1$d)</string>
+    <string name="categories_empty_title">Vous n\'avez pas encore de catégories</string>
+    <string name="categories_empty_hint">Créez votre première catégorie pour organiser vos dépenses et vos revenus.</string>
+    <string name="categories_create">Créer une catégorie personnalisée</string>
+    <plurals name="category_movements">
+        <item quantity="one">%1$d mouvement</item>
+        <item quantity="other">%1$d mouvements</item>
+    </plurals>
+    <string name="category_new_title">Créer une nouvelle catégorie</string>
+    <string name="category_edit_title">Modifier la catégorie</string>
+    <string name="category_name_label">NOM</string>
+    <string name="category_name_hint">Alimentation</string>
+    <string name="category_color_label">COULEUR</string>
+    <string name="category_budget_label">BUDGET</string>
+    <string name="category_limit_toggle">Définir une limite mensuelle</string>
+    <string name="category_limit_sub">Nous vous avertirons quand vous approchez</string>
+    <string name="category_save">Enregistrer</string>
+    <string name="category_delete">Supprimer la catégorie</string>
+    <string name="category_delete_title">Supprimer la catégorie ?</string>
+    <string name="category_delete_body">Elle n\'apparaîtra plus dans votre liste de catégories.</string>
+    <string name="category_delete_confirm">Supprimer</string>
+    <string name="error_duplicate_category">Vous avez déjà une catégorie avec ce nom</string>
+    <string name="error_category_name_empty">Saisissez un nom pour la catégorie</string>
+    <string name="error_category_name_too_long">Le nom ne peut pas dépasser 30 caractères</string>
+    <string name="error_invalid_monthly_limit">La limite doit être supérieure à 0</string>
+    <string name="a11y_reorder_category">Réordonner la catégorie</string>
+    <string name="a11y_category_icon">Icône de la catégorie</string>
+    <string name="a11y_category_icon_option">Choisir cette icône</string>
+
+    <!-- Export data -->
+    <string name="export_title">Exporter les données</string>
+    <string name="export_subtitle">Téléchargez l\'historique de vos mouvements pour le transférer dans un autre outil ou le garder en sauvegarde.</string>
+    <string name="export_range_header">PÉRIODE</string>
+    <string name="export_range_this_month">Ce mois-ci</string>
+    <string name="export_range_last_3_months">3 derniers mois</string>
+    <string name="export_range_this_year">Cette année</string>
+    <string name="export_range_all">Tout l\'historique</string>
+    <string name="export_range_custom">Personnalisé</string>
+    <string name="export_format_header">FORMAT</string>
+    <string name="export_format_csv">CSV / Excel</string>
+    <string name="export_format_pdf">PDF</string>
+    <string name="export_email_note_prefix">"Le fichier sera envoyé à votre e-mail "</string>
+    <string name="export_button">Exporter l\'historique</string>
+    <string name="export_empty_title">Aucun mouvement à exporter</string>
+    <string name="export_empty_body">Vous n\'avez enregistré aucune dépense ni aucun revenu sur cette période. Choisissez une autre période ou enregistrez d\'abord un mouvement.</string>
+    <string name="export_custom_title">Période personnalisée</string>
+    <string name="export_custom_from">Du</string>
+    <string name="export_custom_to">Au</string>
+    <string name="export_custom_apply">Appliquer</string>
+    <string name="export_a11y_range_option">Choisir cette période</string>
+    <string name="export_a11y_format_option">Choisir ce format</string>
+
+    <!-- Help and support -->
+    <string name="help_title">Aide et assistance</string>
+    <string name="help_search_hint">Cherchez votre question</string>
+    <string name="help_section_faqs">QUESTIONS FRÉQUENTES</string>
+    <string name="help_chat_title">Chat en direct</string>
+    <string name="help_chat_subtitle">Réponse en quelques minutes</string>
+    <string name="help_email_title">Écrivez-nous</string>
+    <string name="help_email_subject">Aide PocketPal</string>
+    <string name="help_no_results">Aucune question ne correspond à votre recherche</string>
+    <string name="help_prev">Précédent</string>
+    <string name="help_next">Suivant</string>
+    <string name="help_open_detail">Voir la réponse complète</string>
+    <string name="faq_1_q">Comment modifier ou supprimer un mouvement ?</string>
+    <string name="faq_1_a">Dans « Mouvements », appuyez sur la dépense que vous voulez changer. Vous pourrez y modifier le montant, la catégorie ou la supprimer complètement.</string>
+    <string name="faq_2_q">Mes données sont-elles en sécurité ?</string>
+    <string name="faq_2_a">Oui. Vos données ne sont accessibles que depuis votre compte (chaque ligne a des règles de sécurité sur le serveur) et la connexion avec l\'application est chiffrée.</string>
+    <string name="faq_3_q">Comment créer un objectif d\'épargne ?</string>
+    <string name="faq_3_a">Les objectifs d\'épargne arriveront dans une prochaine version. Pour l\'instant, vous pouvez organiser vos dépenses avec des catégories et des limites mensuelles.</string>
+    <string name="faq_4_q">Puis-je utiliser PocketPal sans Internet ?</string>
+    <string name="faq_4_a">Vous avez besoin d\'Internet pour vous connecter et consulter vos données, car elles sont stockées sur votre compte. La section d\'aide est consultable hors connexion.</string>
+    <string name="faq_5_q">Comment supprimer mon compte ?</string>
+    <string name="faq_5_a">Écrivez-nous à %1$s et nous vous aiderons dans la démarche.</string>
+
+    <!-- About -->
+    <string name="about_title">À propos</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_section_legal">MENTIONS LÉGALES</string>
+    <string name="about_section_share">PARTAGER</string>
+    <string name="about_terms">Conditions générales</string>
+    <string name="about_privacy">Politique de confidentialité</string>
+    <string name="about_licenses">Licences open source</string>
+    <string name="about_share_row">Recommander PocketPal</string>
+    <string name="about_rate_row">Évaluez-nous sur la boutique d\'applications</string>
+    <string name="about_share_text">Organisez vos dépenses et vos revenus avec PocketPal.</string>
+    <string name="about_footer">© 2026 PocketPal. Tous droits réservés.</string>
+    <string name="about_licenses_title">Licences open source</string>
+    <string name="about_licenses_intro">PocketPal utilise les bibliothèques open source suivantes, toutes sous licence Apache 2.0 :</string>
+    <string name="a11y_about_logo">Logo PocketPal</string>
+
+    <!-- Notifications -->
+    <string name="notif_title">Notifications</string>
+    <string name="notif_section_habit">HABITUDE DE SAISIE</string>
+    <string name="notif_daily">Rappel quotidien</string>
+    <string name="notif_daily_sub">Si vous n\'avez pas enregistré de dépenses aujourd\'hui</string>
+    <string name="notif_weekly">Résumé hebdomadaire</string>
+    <string name="notif_weekly_sub">Chaque dimanche, vous saurez comment se sont passées vos dépenses</string>
+    <string name="notif_section_budgets">BUDGETS</string>
+    <string name="notif_budget">Alerte de budget</string>
+    <string name="notif_budget_sub">Prévenez-moi quand j\'approche de la limite d\'une catégorie</string>
+    <string name="notif_threshold_label">M\'avertir à</string>
+    <string name="notif_threshold_value">%1$d%% du budget</string>
+    <string name="notif_threshold_min">50 %</string>
+    <string name="notif_threshold_max">100 %</string>
+    <string name="notif_section_goals">OBJECTIFS D\'ÉPARGNE</string>
+    <string name="notif_goals">Progression des objectifs</string>
+    <string name="notif_goals_sub">Quand vous êtes sur le point d\'atteindre un objectif</string>
+    <string name="notif_section_channels">CANAUX</string>
+    <string name="notif_channel_email">E-mail</string>
+    <string name="notif_sms_note">Vous devez avoir le numéro activé dans vos données personnelles pour activer les notifications par SMS</string>
+
+    <!-- General preferences -->
+    <string name="prefs_title">Préférences générales</string>
+    <string name="prefs_section_region">RÉGION ET FORMAT</string>
+    <string name="prefs_currency">Devise</string>
+    <string name="prefs_currency_sub">Comment vos montants sont affichés</string>
+    <string name="prefs_language">Langue</string>
+    <string name="prefs_language_sub">Langue de l\'application</string>
+    <string name="prefs_date_format">Format de date</string>
+    <string name="prefs_date_format_sub">Comment les dates sont affichées</string>
+    <string name="prefs_section_appearance">APPARENCE</string>
+    <string name="prefs_theme_light">Clair</string>
+    <string name="prefs_theme_dark">Sombre</string>
+    <string name="prefs_theme_system">Automatique</string>
+    <string name="prefs_section_week">SEMAINE</string>
+    <string name="prefs_week_start">Début de semaine</string>
+    <string name="prefs_week_start_sub">Pour vos résumés et vos filtres</string>
+
+    <!-- Days of the week -->
+    <string name="day_initial_sun">D</string>
+    <string name="day_initial_mon">L</string>
+    <string name="day_initial_tue">M</string>
+    <string name="day_initial_wed">M</string>
+    <string name="day_initial_thu">J</string>
+    <string name="day_initial_fri">V</string>
+    <string name="day_initial_sat">S</string>
+    <string name="day_name_sun">Dimanche</string>
+    <string name="day_name_mon">Lundi</string>
+    <string name="day_name_tue">Mardi</string>
+    <string name="day_name_wed">Mercredi</string>
+    <string name="day_name_thu">Jeudi</string>
+    <string name="day_name_fri">Vendredi</string>
+    <string name="day_name_sat">Samedi</string>
+
+    <!-- Language -->
+    <string name="lang_title">Langue</string>
+    <string name="lang_description">Choisissez la langue dans laquelle vous voulez utiliser PocketPal</string>
+    <string name="lang_auto">Automatique</string>
+    <string name="lang_auto_sub">Langue du système</string>
+
+    <!-- Date format -->
+    <string name="date_title">Format de date</string>
+    <string name="date_description">Choisissez comment vous voulez voir les dates dans vos mouvements, résumés et rapports.</string>
+    <string name="date_option_dmy">JJ/MM/AAAA</string>
+    <string name="date_option_dmy_example">07/09/2026</string>
+    <string name="date_option_mdy">MM/JJ/AAAA</string>
+    <string name="date_option_mdy_example">09/07/2026</string>
+    <string name="date_option_ymd">AAAA-MM-JJ</string>
+    <string name="date_option_ymd_example">2026-09-07</string>
+
+    <!-- Currency -->
+    <string name="currency_title">Devise</string>
+
+    <string name="common_save">Enregistrer</string>
+</resources>

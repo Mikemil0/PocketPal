@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.theme.pocketColors
 
 /** Un único BasicTextField oculto, dibujado como N recuadros. */
 @Composable
@@ -42,9 +43,9 @@ fun OtpInputRow(
                             .border(
                                 if (active || value.getOrNull(i) != null) 2.dp else 1.dp,
                                 when {
-                                    isError -> PocketColors.ErrorRed
-                                    active -> PocketColors.Ink
-                                    else -> PocketColors.Coral
+                                    isError -> pocketColors.ErrorRed
+                                    active -> pocketColors.Ink
+                                    else -> pocketColors.Coral
                                 },
                                 RoundedCornerShape(10.dp),
                             ),
@@ -52,7 +53,7 @@ fun OtpInputRow(
                     ) {
                         Text(
                             value.getOrNull(i)?.toString().orEmpty(),
-                            fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = PocketColors.Ink,
+                            fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = pocketColors.Ink,
                         )
                     }
                 }
