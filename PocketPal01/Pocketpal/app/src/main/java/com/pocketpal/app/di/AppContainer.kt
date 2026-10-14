@@ -1,13 +1,20 @@
 package com.pocketpal.app.di
 
 import android.content.Context
+import android.os.Build
 import com.pocketpal.app.auth.SupabaseProvider
 import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
+import com.pocketpal.app.data.device.DeviceRepository
+import com.pocketpal.app.data.device.SupabaseDeviceRepository
 import com.pocketpal.app.data.notification.NotificationSettingsRepository
 import com.pocketpal.app.data.notification.SupabaseNotificationSettingsRepository
+import com.pocketpal.app.data.phone.PhoneRepository
+import com.pocketpal.app.data.phone.SupabasePhoneRepository
 import com.pocketpal.app.data.profile.ProfileRepository
 import com.pocketpal.app.data.profile.SupabaseProfileRepository
+import com.pocketpal.app.data.security.SecurityRepository
+import com.pocketpal.app.data.security.SupabaseSecurityRepository
 import com.pocketpal.app.data.settings.DataStoreSettingsRepository
 import com.pocketpal.app.data.settings.SettingsRepository
 import com.pocketpal.app.data.settings.UserPreferencesStore
@@ -33,6 +40,18 @@ class AppContainer(context: Context) {
     /** Fase 5: preferencias de notificación (RF-B6) sobre `notification_settings`. */
     val notificationRepository: NotificationSettingsRepository =
         SupabaseNotificationSettingsRepository(supabase)
+
+    /** Fase 4: cambio de contraseña (RF-B4, §8.6). */
+    val securityRepository: SecurityRepository = SupabaseSecurityRepository(supabase)
+
+    /** Fase 4: sesiones activas (RF-B5, D-01) sobre `user_devices`. */
+    val deviceRepository: DeviceRepository = SupabaseDeviceRepository(
+        supabase,
+        deviceName = "${Build.MANUFACTURER} ${Build.MODEL}",
+    )
+
+    /** Fase 7: verificación de teléfono por SMS (RF-B3). */
+    val phoneRepository: PhoneRepository = SupabasePhoneRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))

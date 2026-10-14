@@ -15,6 +15,9 @@ interface ProfileRepository {
     /** Correo de la cuenta con sesión (vive en `auth.users`, no en `profiles`). */
     fun currentEmail(): String?
 
+    /** Teléfono verificado de la cuenta (RN-06, vive en `auth.users.phone`) o null. */
+    fun currentPhone(): String?
+
     /**
      * Guarda los datos personales (RN-01, RN-09) y devuelve la fila actualizada.
      * `full_name` es obligatorio y de máximo 60 caracteres (la validación la hace la UI).

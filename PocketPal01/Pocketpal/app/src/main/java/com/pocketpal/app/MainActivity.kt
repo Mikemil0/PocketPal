@@ -17,8 +17,10 @@ import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.ExportViewModel
 import com.pocketpal.app.ui.profile.NotificationSettingsViewModel
+import com.pocketpal.app.ui.profile.PhoneViewModel
 import com.pocketpal.app.ui.profile.PreferencesViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
+import com.pocketpal.app.ui.profile.SecurityViewModel
 import com.pocketpal.app.ui.theme.PocketTheme
 
 /**
@@ -83,7 +85,22 @@ class MainActivity : AppCompatActivity() {
                         initializer { NotificationSettingsViewModel(container.notificationRepository) }
                     }
                 )
-                PocketNavHost(vm, profileVm, categoriesVm, exportVm, preferencesVm, notificationsVm)
+                // Fase 4: seguridad (§7.2: cambiar contraseña y sesiones activas).
+                val securityVm: SecurityViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { SecurityViewModel(container.securityRepository, container.deviceRepository) }
+                    }
+                )
+                // Fase 7: teléfono (§7.2: número, envío y verificación del código SMS).
+                val phoneVm: PhoneViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { PhoneViewModel(container.phoneRepository) }
+                    }
+                )
+                PocketNavHost(
+                    vm, profileVm, categoriesVm, exportVm,
+                    preferencesVm, notificationsVm, securityVm, phoneVm,
+                )
             }
         }
     }

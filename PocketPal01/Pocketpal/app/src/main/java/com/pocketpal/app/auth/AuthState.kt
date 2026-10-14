@@ -11,6 +11,8 @@ enum class ErrorType {
     TermsNotAccepted, Unknown,
     // Fase 6: categorías (RN-02 y RN-03)
     DuplicateCategoryName, CategoryNameEmpty, CategoryNameTooLong, InvalidMonthlyLimit,
+    // Fase 4 y 7: seguridad (RN-04) y teléfono (RF-B3)
+    CurrentPasswordIncorrect, NewPasswordSameAsCurrent, InvalidPhone, SmsUnavailable,
 }
 
 /** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */

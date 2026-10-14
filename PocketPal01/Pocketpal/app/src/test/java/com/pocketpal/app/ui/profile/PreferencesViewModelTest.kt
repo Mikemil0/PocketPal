@@ -48,6 +48,7 @@ class PreferencesViewModelTest {
         override suspend fun getMyProfile(): Profile? = profile
         override suspend fun getStats() = ProfileStats()
         override fun currentEmail(): String? = "user@test.com"
+        override fun currentPhone(): String? = null
         override suspend fun savePersonalData(fullName: String, country: String, currency: String): Profile? = profile
         override suspend fun savePreferences(
             language: String,

@@ -26,6 +26,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     data class ProfileUi(
         val fullName: String = "",
         val email: String = "",
+        val phone: String? = null,
         val avatarUrl: String? = null,
         val country: String = "CO",
         val currency: String = "COP",
@@ -75,6 +76,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
                     ProfileUi(
                         fullName = profile?.fullName.orEmpty(),
                         email = repository.currentEmail().orEmpty(),
+                        phone = repository.currentPhone(),
                         avatarUrl = repository.avatarUrl(profile?.avatarPath),
                         country = profile?.country ?: "CO",
                         currency = profile?.currency ?: "COP",

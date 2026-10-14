@@ -386,4 +386,59 @@
     <string name="currency_title">Moeda</string>
 
     <string name="common_save">Salvar</string>
+
+    <!-- Fase 4: Segurança (RF-B4 / RF-B5) -->
+    <string name="security_title">Segurança</string>
+    <string name="security_section_password">SENHA</string>
+    <string name="security_section_sessions">SESSÕES ATIVAS</string>
+    <string name="security_change_password">Alterar senha</string>
+    <string name="password_last_update">Última atualização: %1$s</string>
+    <string name="security_google_only">Sua conta usa Google, então você não tem senha para alterar.</string>
+    <string name="security_device_active">Ativa</string>
+    <string name="security_revoke">Fechar</string>
+    <string name="security_revoke_title">Fechar esta sessão?</string>
+    <string name="security_revoke_body">Este dispositivo terá que iniciar sessão novamente para acessar sua conta.</string>
+    <string name="security_revoke_confirm">Sim, fechar sessão</string>
+    <string name="password_title">Alterar senha</string>
+    <string name="password_subtitle">Para sua segurança, digite sua senha atual antes de criar uma nova.</string>
+    <string name="password_current">Senha atual</string>
+    <string name="password_new">Nova senha</string>
+    <string name="password_confirm">Confirmar nova senha</string>
+    <string name="password_forgot">Esqueceu sua senha?</string>
+    <string name="password_submit">Atualizar senha</string>
+    <string name="error_current_password_incorrect">Senha incorreta</string>
+    <string name="error_new_password_same">A nova senha não deve ser igual à atual</string>
+
+    <!-- Fase 7: Telefone (RF-B3 / RN-06) -->
+    <string name="phone_title">Número de telefone</string>
+    <string name="phone_label">Telefone</string>
+    <string name="phone_placeholder">Número</string>
+    <string name="phone_helper">Enviaremos um código para o número que você informar</string>
+    <string name="phone_next">Próximo</string>
+    <string name="phone_code_title">Verifique suas mensagens</string>
+    <string name="phone_code_sent_to">Enviamos um código de 6 dígitos para</string>
+    <string name="phone_verify">Verificar</string>
+    <string name="phone_not_your_number">Esse não é seu número?</string>
+    <string name="edit_phone_verified">Verificado</string>
+    <string name="error_invalid_phone">Número inválido, tente novamente</string>
+    <string name="error_sms_unavailable">Não conseguimos enviar o SMS. Tente novamente mais tarde.</string>
+
+    <!-- Fase 4/7: tempos relativos com plurais (§5.2) -->
+    <string name="relative_just_now">Agora mesmo</string>
+    <plurals name="relative_minutes">
+        <item quantity="one">há %1$d minuto</item>
+        <item quantity="other">há %1$d minutos</item>
+    </plurals>
+    <plurals name="relative_hours">
+        <item quantity="one">há %1$d hora</item>
+        <item quantity="other">há %1$d horas</item>
+    </plurals>
+    <plurals name="relative_days">
+        <item quantity="one">há %1$d dia</item>
+        <item quantity="other">há %1$d dias</item>
+    </plurals>
+    <plurals name="relative_months">
+        <item quantity="one">há %1$d mês</item>
+        <item quantity="other">há %1$d meses</item>
+    </plurals>
 </resources>

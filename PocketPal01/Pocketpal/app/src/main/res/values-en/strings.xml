@@ -389,4 +389,59 @@
     <string name="currency_title">Currency</string>
 
     <string name="common_save">Save</string>
+
+    <!-- Phase 4: Security (RF-B4 / RF-B5, pp. 21, 53 and 66) -->
+    <string name="security_title">Security</string>
+    <string name="security_section_password">PASSWORD</string>
+    <string name="security_section_sessions">ACTIVE SESSIONS</string>
+    <string name="security_change_password">Change password</string>
+    <string name="password_last_update">Last update: %1$s</string>
+    <string name="security_google_only">Your account uses Google, so you don\'t have a password to change.</string>
+    <string name="security_device_active">Active</string>
+    <string name="security_revoke">Close</string>
+    <string name="security_revoke_title">Close this session?</string>
+    <string name="security_revoke_body">This device will have to sign in again to access your account.</string>
+    <string name="security_revoke_confirm">Yes, close session</string>
+    <string name="password_title">Change password</string>
+    <string name="password_subtitle">For your security, enter your current password before creating a new one.</string>
+    <string name="password_current">Current password</string>
+    <string name="password_new">New password</string>
+    <string name="password_confirm">Confirm new password</string>
+    <string name="password_forgot">Forgot your password?</string>
+    <string name="password_submit">Update password</string>
+    <string name="error_current_password_incorrect">Incorrect password</string>
+    <string name="error_new_password_same">The new password must be different from the current one</string>
+
+    <!-- Phase 7: Phone (RF-B3 / RN-06, pp. 8, 17 and 18) -->
+    <string name="phone_title">Phone number</string>
+    <string name="phone_label">Phone</string>
+    <string name="phone_placeholder">Number</string>
+    <string name="phone_helper">We\'ll send a code to the number you enter</string>
+    <string name="phone_next">Next</string>
+    <string name="phone_code_title">Check your messages</string>
+    <string name="phone_code_sent_to">We sent a 6-digit code to</string>
+    <string name="phone_verify">Verify</string>
+    <string name="phone_not_your_number">Not your number?</string>
+    <string name="edit_phone_verified">Verified</string>
+    <string name="error_invalid_phone">Invalid number, try again</string>
+    <string name="error_sms_unavailable">We couldn\'t send the SMS. Try again later.</string>
+
+    <!-- Phase 4/7: relative times with plurals (§5.2) -->
+    <string name="relative_just_now">A moment ago</string>
+    <plurals name="relative_minutes">
+        <item quantity="one">%1$d minute ago</item>
+        <item quantity="other">%1$d minutes ago</item>
+    </plurals>
+    <plurals name="relative_hours">
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+    <plurals name="relative_days">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+    <plurals name="relative_months">
+        <item quantity="one">%1$d month ago</item>
+        <item quantity="other">%1$d months ago</item>
+    </plurals>
 </resources>

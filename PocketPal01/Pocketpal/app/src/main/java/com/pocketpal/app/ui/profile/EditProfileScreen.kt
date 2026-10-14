@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.*
@@ -45,6 +46,8 @@ fun EditProfileScreen(
     event: ProfileViewModel.Event?,
     onBack: () -> Unit,
     onSave: (fullName: String, country: String, currency: String) -> Unit,
+    phone: String? = null,
+    onOpenPhone: () -> Unit = {},
     onAvatarBytes: (ByteArray?) -> Unit,
     onRemoveAvatar: () -> Unit,
     onErrorShown: () -> Unit,
@@ -165,17 +168,44 @@ fun EditProfileScreen(
                 .clip(RoundedCornerShape(12.dp))
                 .background(pocketColors.Card)
                 .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(12.dp))
+                .clickable(onClick = onOpenPhone)
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                stringResource(R.string.edit_phone_add),
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
-                color = pocketColors.Coral,
-                modifier = Modifier.weight(1f),
+            if (!phone.isNullOrBlank()) {
+                Text(
+                    phone,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = pocketColors.Ink,
+                )
+                Spacer(Modifier.width(8.dp))
+                Icon(
+                    Icons.Outlined.CheckCircle,
+                    null,
+                    tint = pocketColors.Teal,
+                    modifier = Modifier.size(16.dp),
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    stringResource(R.string.edit_phone_verified),
+                    fontSize = 12.sp,
+                    color = pocketColors.Teal,
+                )
+            } else {
+                Text(
+                    stringResource(R.string.edit_phone_add),
+                    fontSize = 15.sp,
+                    color = pocketColors.Coral,
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            Icon(
+                Icons.Outlined.ChevronRight,
+                null,
+                tint = pocketColors.Gray,
+                modifier = Modifier.size(22.dp),
             )
-            Icon(Icons.Outlined.ChevronRight, null, tint = pocketColors.Coral, modifier = Modifier.size(22.dp))
         }
 
         SectionHeader(stringResource(R.string.edit_section_location))

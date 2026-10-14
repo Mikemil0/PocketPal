@@ -24,6 +24,7 @@ import com.pocketpal.app.ui.profile.AboutScreen
 import com.pocketpal.app.ui.profile.CategoriesScreen
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.CategoryFormScreen
+import com.pocketpal.app.ui.profile.ChangePasswordScreen
 import com.pocketpal.app.ui.profile.CurrencyScreen
 import com.pocketpal.app.ui.profile.DateFormatScreen
 import com.pocketpal.app.ui.profile.EditProfileScreen
@@ -34,9 +35,14 @@ import com.pocketpal.app.ui.profile.HelpScreen
 import com.pocketpal.app.ui.profile.LanguageScreen
 import com.pocketpal.app.ui.profile.NotificationSettingsViewModel
 import com.pocketpal.app.ui.profile.NotificationsScreen
+import com.pocketpal.app.ui.profile.PhoneCodeScreen
+import com.pocketpal.app.ui.profile.PhoneScreen
+import com.pocketpal.app.ui.profile.PhoneViewModel
 import com.pocketpal.app.ui.profile.PreferencesScreen
 import com.pocketpal.app.ui.profile.PreferencesViewModel
 import com.pocketpal.app.ui.profile.ProfileHomeScreen
+import com.pocketpal.app.ui.profile.SecurityScreen
+import com.pocketpal.app.ui.profile.SecurityViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.screens.*
 
@@ -80,6 +86,12 @@ object Routes {
     const val ProfileLanguage = "profile/language"
     const val ProfileDateFormat = "profile/date-format"
 
+    // Fase 4 y 7 (§7.5): seguridad y teléfono
+    const val ProfileSecurity = "profile/security"
+    const val ProfilePassword = "profile/password"
+    const val ProfilePhone = "profile/phone"
+    const val ProfilePhoneCode = "profile/phone/code"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -93,6 +105,8 @@ fun PocketNavHost(
     exportVm: ExportViewModel,
     preferencesVm: PreferencesViewModel,
     notificationsVm: NotificationSettingsViewModel,
+    securityVm: SecurityViewModel,
+    phoneVm: PhoneViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -131,6 +145,8 @@ fun PocketNavHost(
      */
     fun afterAuth() {
         vm.consume()
+        // §8.5: al entrar con sesión se registra o actualiza este dispositivo.
+        securityVm.registerCurrentDevice()
         if (vm.isOnboardingDone()) goToPermission(0) else nav.navigate(Routes.Tutorial)
     }
     fun startGoogle() = vm.signInWithGoogle { getGoogleIdToken(context, SupabaseProvider.GOOGLE_WEB_CLIENT_ID) }
@@ -226,7 +242,10 @@ fun PocketNavHost(
         composable(Routes.AccountCreated) { AccountCreatedScreen(onContinue = { nav.navigate(Routes.Tutorial) }) }
         composable(Routes.Tutorial) { TutorialScreen(onFinish = { goToPermission(0) }) }
         composable(Routes.Home) {
-            LaunchedEffect(Unit) { profileVm.refresh() }
+            LaunchedEffect(Unit) {
+                profileVm.refresh()
+                securityVm.registerCurrentDevice()
+            }
             val profileState by profileVm.state.collectAsStateWithLifecycle()
             val data = (profileState as? ProfileViewModel.UiState.Content)?.data
             HomeScreen(
@@ -250,6 +269,7 @@ fun PocketNavHost(
                     error = error,
                     onBack = ::back,
                     onOpenPersonalData = { nav.navigate(Routes.ProfileEdit) },
+                    onOpenSecurity = { nav.navigate(Routes.ProfileSecurity) },
                     onOpenCategories = { nav.navigate(Routes.ProfileCategories) },
                     onOpenExport = { nav.navigate(Routes.ProfileExport) },
                     onOpenHelp = { nav.navigate(Routes.ProfileHelp) },
@@ -274,6 +294,8 @@ fun PocketNavHost(
                     event = event,
                     onBack = ::back,
                     onSave = profileVm::savePersonalData,
+                    phone = (profileState as? ProfileViewModel.UiState.Content)?.data?.phone,
+                    onOpenPhone = { nav.navigate(Routes.ProfilePhone) },
                     onAvatarBytes = profileVm::setAvatar,
                     onRemoveAvatar = profileVm::removeAvatar,
                     onErrorShown = profileVm::consumeError,
@@ -385,15 +407,18 @@ fun PocketNavHost(
                 LaunchedEffect(Unit) { notificationsVm.refresh() }
                 val nState by notificationsVm.state.collectAsStateWithLifecycle()
                 val nError by notificationsVm.error.collectAsStateWithLifecycle()
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
                 NotificationsScreen(
                     state = nState,
                     error = nError,
+                    smsEnabled = !(profileState as? ProfileViewModel.UiState.Content)?.data?.phone.isNullOrBlank(),
                     onBack = ::back,
                     onToggleDailyReminder = notificationsVm::toggleDailyReminder,
                     onToggleWeeklySummary = notificationsVm::toggleWeeklySummary,
                     onToggleBudgetAlert = notificationsVm::toggleBudgetAlert,
                     onToggleGoalsProgress = notificationsVm::toggleGoalsProgress,
                     onToggleChannelEmail = notificationsVm::toggleChannelEmail,
+                    onToggleChannelSms = notificationsVm::toggleChannelSms,
                     onThresholdChange = notificationsVm::setBudgetThreshold,
                     onErrorShown = notificationsVm::consumeError,
                 )
@@ -437,6 +462,108 @@ fun PocketNavHost(
                     current = pState.dateFormat,
                     onBack = ::back,
                     onSave = { preferencesVm.setDateFormat(it); nav.popBackStack() },
+                )
+            }
+
+            // Fase 4 (RF-B4 / RF-B5): seguridad, cambiar contraseña y sesiones activas.
+            composable(Routes.ProfileSecurity) {
+                LaunchedEffect(Unit) { securityVm.refresh() }
+                val sState by securityVm.state.collectAsStateWithLifecycle()
+                val sError by securityVm.error.collectAsStateWithLifecycle()
+                SecurityScreen(
+                    state = sState,
+                    error = sError,
+                    onBack = ::back,
+                    onChangePassword = { nav.navigate(Routes.ProfilePassword) },
+                    onRevokeDevice = securityVm::revokeDevice,
+                    onErrorShown = securityVm::consumeError,
+                )
+            }
+            composable(Routes.ProfilePassword) {
+                val saving by securityVm.saving.collectAsStateWithLifecycle()
+                val formError by securityVm.formError.collectAsStateWithLifecycle()
+                val pError by securityVm.error.collectAsStateWithLifecycle()
+                val event by securityVm.event.collectAsStateWithLifecycle()
+                LaunchedEffect(event) {
+                    if (event == SecurityViewModel.Event.PasswordChanged) {
+                        securityVm.consumeEvent()
+                        securityVm.refresh()
+                        nav.popBackStack()
+                    }
+                }
+                ChangePasswordScreen(
+                    saving = saving,
+                    formError = formError,
+                    error = pError,
+                    onBack = ::back,
+                    onChangePassword = securityVm::changePassword,
+                    onForgotPassword = { go(Routes.ForgotEmail) },
+                    onFormErrorShown = securityVm::consumeFormError,
+                    onErrorShown = securityVm::consumeError,
+                )
+            }
+
+            // Fase 7 (RF-B3 / RN-06): teléfono con verificación por SMS.
+            composable(Routes.ProfilePhone) {
+                val pState by phoneVm.state.collectAsStateWithLifecycle()
+                val pError by phoneVm.error.collectAsStateWithLifecycle()
+                val fError by phoneVm.formError.collectAsStateWithLifecycle()
+                val event by phoneVm.event.collectAsStateWithLifecycle()
+                LaunchedEffect(event) {
+                    if (event == PhoneViewModel.Event.CodeSent) {
+                        phoneVm.consumeEvent()
+                        nav.navigate(Routes.ProfilePhoneCode)
+                    } else if (event != null) {
+                        phoneVm.consumeEvent()
+                    }
+                }
+                PhoneScreen(
+                    prefix = pState.prefix,
+                    number = pState.number,
+                    sending = pState.sending,
+                    formError = fError,
+                    error = pError,
+                    onBack = ::back,
+                    onPrefixChange = phoneVm::setPrefix,
+                    onNumberChange = phoneVm::setNumber,
+                    onNext = phoneVm::sendCode,
+                    onFormErrorShown = phoneVm::consumeFormError,
+                    onErrorShown = phoneVm::consumeError,
+                )
+            }
+            composable(Routes.ProfilePhoneCode) {
+                val pState by phoneVm.state.collectAsStateWithLifecycle()
+                val expires by phoneVm.codeExpiresAt.collectAsStateWithLifecycle()
+                val pError by phoneVm.error.collectAsStateWithLifecycle()
+                val fError by phoneVm.formError.collectAsStateWithLifecycle()
+                val event by phoneVm.event.collectAsStateWithLifecycle()
+                LaunchedEffect(event) {
+                    when (event) {
+                        PhoneViewModel.Event.Verified -> {
+                            phoneVm.consumeEvent()
+                            profileVm.refresh()
+                            nav.popBackStack()
+                        }
+                        PhoneViewModel.Event.CodeResent -> phoneVm.consumeEvent()
+                        else -> Unit
+                    }
+                }
+                PhoneCodeScreen(
+                    prefix = pState.prefix,
+                    number = pState.number,
+                    code = pState.code,
+                    codeExpiresAt = expires,
+                    sending = pState.sending,
+                    verifying = pState.verifying,
+                    formError = fError,
+                    error = pError,
+                    onBack = ::back,
+                    onCodeChange = phoneVm::setCode,
+                    onVerify = phoneVm::verifyCode,
+                    onResend = phoneVm::resend,
+                    onNotYourNumber = { phoneVm.backToNumber(); nav.popBackStack() },
+                    onFormErrorShown = phoneVm::consumeFormError,
+                    onErrorShown = phoneVm::consumeError,
                 )
             }
         }

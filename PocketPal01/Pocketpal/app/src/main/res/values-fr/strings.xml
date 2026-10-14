@@ -386,4 +386,59 @@
     <string name="currency_title">Devise</string>
 
     <string name="common_save">Enregistrer</string>
+
+    <!-- Phase 4 : Sécurité (RF-B4 / RF-B5) -->
+    <string name="security_title">Sécurité</string>
+    <string name="security_section_password">MOT DE PASSE</string>
+    <string name="security_section_sessions">SESSIONS ACTIVES</string>
+    <string name="security_change_password">Changer le mot de passe</string>
+    <string name="password_last_update">Dernière mise à jour : %1$s</string>
+    <string name="security_google_only">Votre compte utilise Google, vous n\'avez donc pas de mot de passe à changer.</string>
+    <string name="security_device_active">Active</string>
+    <string name="security_revoke">Fermer</string>
+    <string name="security_revoke_title">Fermer cette session ?</string>
+    <string name="security_revoke_body">Cet appareil devra se reconnecter pour accéder à votre compte.</string>
+    <string name="security_revoke_confirm">Oui, fermer la session</string>
+    <string name="password_title">Changer le mot de passe</string>
+    <string name="password_subtitle">Pour votre sécurité, saisissez votre mot de passe actuel avant d\'en créer un nouveau.</string>
+    <string name="password_current">Mot de passe actuel</string>
+    <string name="password_new">Nouveau mot de passe</string>
+    <string name="password_confirm">Confirmer le nouveau mot de passe</string>
+    <string name="password_forgot">Mot de passe oublié ?</string>
+    <string name="password_submit">Mettre à jour le mot de passe</string>
+    <string name="error_current_password_incorrect">Mot de passe incorrect</string>
+    <string name="error_new_password_same">Le nouveau mot de passe doit être différent de l\'actuel</string>
+
+    <!-- Phase 7 : Téléphone (RF-B3 / RN-06) -->
+    <string name="phone_title">Numéro de téléphone</string>
+    <string name="phone_label">Téléphone</string>
+    <string name="phone_placeholder">Numéro</string>
+    <string name="phone_helper">Nous enverrons un code au numéro que vous indiquerez</string>
+    <string name="phone_next">Suivant</string>
+    <string name="phone_code_title">Vérifiez vos messages</string>
+    <string name="phone_code_sent_to">Nous avons envoyé un code à 6 chiffres à</string>
+    <string name="phone_verify">Vérifier</string>
+    <string name="phone_not_your_number">Ce n\'est pas votre numéro ?</string>
+    <string name="edit_phone_verified">Vérifié</string>
+    <string name="error_invalid_phone">Numéro invalide, réessayez</string>
+    <string name="error_sms_unavailable">Impossible d\'envoyer le SMS. Réessayez plus tard.</string>
+
+    <!-- Phase 4/7 : temps relatifs avec pluriels (§5.2) -->
+    <string name="relative_just_now">À l\'instant</string>
+    <plurals name="relative_minutes">
+        <item quantity="one">il y a %1$d minute</item>
+        <item quantity="other">il y a %1$d minutes</item>
+    </plurals>
+    <plurals name="relative_hours">
+        <item quantity="one">il y a %1$d heure</item>
+        <item quantity="other">il y a %1$d heures</item>
+    </plurals>
+    <plurals name="relative_days">
+        <item quantity="one">il y a %1$d jour</item>
+        <item quantity="other">il y a %1$d jours</item>
+    </plurals>
+    <plurals name="relative_months">
+        <item quantity="one">il y a %1$d mois</item>
+        <item quantity="other">il y a %1$d mois</item>
+    </plurals>
 </resources>

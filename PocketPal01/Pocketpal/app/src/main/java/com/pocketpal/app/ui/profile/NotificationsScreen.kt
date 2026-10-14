@@ -49,12 +49,14 @@ import kotlinx.coroutines.delay
 fun NotificationsScreen(
     state: NotificationSettingsViewModel.UiState,
     error: ErrorType?,
+    smsEnabled: Boolean,
     onBack: () -> Unit,
     onToggleDailyReminder: () -> Unit,
     onToggleWeeklySummary: () -> Unit,
     onToggleBudgetAlert: () -> Unit,
     onToggleGoalsProgress: () -> Unit,
     onToggleChannelEmail: () -> Unit,
+    onToggleChannelSms: () -> Unit,
     onThresholdChange: (Int) -> Unit,
     onErrorShown: () -> Unit,
 ) {
@@ -154,12 +156,12 @@ fun NotificationsScreen(
                 onClick = onToggleChannelEmail,
                 modifier = Modifier.weight(1f),
             )
-            // RN-07: sin teléfono verificado (Fase 7) el canal SMS no se puede habilitar.
+            // RN-07: el canal SMS solo se habilita con un teléfono verificado (Fase 7).
             ChannelChip(
                 label = stringResource(R.string.notif_channel_sms),
                 selected = data?.channelSms ?: false,
-                enabled = false,
-                onClick = {},
+                enabled = smsEnabled,
+                onClick = onToggleChannelSms,
                 modifier = Modifier.weight(1f),
             )
         }

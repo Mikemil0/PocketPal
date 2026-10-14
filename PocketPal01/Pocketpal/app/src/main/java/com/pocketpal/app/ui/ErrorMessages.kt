@@ -33,6 +33,10 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.CategoryNameEmpty -> R.string.error_category_name_empty
     ErrorType.CategoryNameTooLong -> R.string.error_category_name_too_long
     ErrorType.InvalidMonthlyLimit -> R.string.error_invalid_monthly_limit
+    ErrorType.CurrentPasswordIncorrect -> R.string.error_current_password_incorrect
+    ErrorType.NewPasswordSameAsCurrent -> R.string.error_new_password_same
+    ErrorType.InvalidPhone -> R.string.error_invalid_phone
+    ErrorType.SmsUnavailable -> R.string.error_sms_unavailable
     ErrorType.Unknown -> R.string.error_unknown
 }
 

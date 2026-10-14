@@ -85,6 +85,7 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     // Fase 3: Storage para la foto de perfil (D-09: bucket público avatars)
     implementation("io.github.jan-tennert.supabase:storage-kt")
+    implementation("io.github.jan-tennert.supabase:functions-kt")
     implementation("io.ktor:ktor-client-okhttp:3.1.3")
 
 // Navegación y lifecycle

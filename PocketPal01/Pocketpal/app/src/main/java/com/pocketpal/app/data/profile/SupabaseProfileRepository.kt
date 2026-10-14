@@ -29,6 +29,14 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
 
     override fun currentEmail(): String? = supabase.auth.currentUserOrNull()?.email
 
+    /**
+     * Teléfono verificado (RN-06). `UserInfo.phone` es `String` no nulable y
+     * Supabase devuelve `""` cuando no hay teléfono: se normaliza a `null` para que
+     * la UI no lo tome como "verificado" (§14, fila 86).
+     */
+    override fun currentPhone(): String? =
+        supabase.auth.currentUserOrNull()?.phone?.takeIf { it.isNotBlank() }
+
     override suspend fun savePersonalData(fullName: String, country: String, currency: String): Profile? {
         val userId = currentUserId() ?: return null
         supabase.postgrest.from("profiles")

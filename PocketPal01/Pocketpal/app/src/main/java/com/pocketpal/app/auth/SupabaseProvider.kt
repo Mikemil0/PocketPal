@@ -4,6 +4,7 @@ import com.pocketpal.app.BuildConfig
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 
@@ -36,6 +37,8 @@ object SupabaseProvider {
             // Fase 3: foto de perfil en el bucket `avatars` (D-09). Sin este install,
             // `supabase.storage` lanza "Plugin storage not installed".
             install(Storage)
+            // Fase 4: Edge Function revoke-device (D-01 opción B, sesiones activas)
+            install(Functions)
         }
     }
 }

@@ -51,6 +51,7 @@ fun ProfileHomeScreen(
     error: ErrorType?,
     onBack: () -> Unit,
     onOpenPersonalData: () -> Unit,
+    onOpenSecurity: () -> Unit,
     onOpenCategories: () -> Unit,
     onOpenExport: () -> Unit,
     onOpenHelp: () -> Unit,
@@ -161,7 +162,7 @@ fun ProfileHomeScreen(
                 title = stringResource(R.string.profile_row_security),
                 subtitle = stringResource(R.string.profile_row_security_sub),
                 dividerAbove = true,
-                onClick = comingSoon,
+                onClick = onOpenSecurity,
             )
             SettingsRow(
                 icon = Icons.Outlined.Notifications,
