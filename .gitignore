@@ -23,3 +23,6 @@ captures/
 .DS_Store
 
 Docs/
+
+# Zips de entregas
+*.zip
