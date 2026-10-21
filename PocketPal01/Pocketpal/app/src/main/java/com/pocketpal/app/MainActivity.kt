@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.profile.CategoriesViewModel
@@ -105,10 +106,17 @@ class MainActivity : AppCompatActivity() {
                         initializer { GoalsViewModel(container.goalRepository) }
                     }
                 )
+                // Módulo 3 · Flujo 2: formulario de meta (crear) y pantalla "Meta creada".
+                val goalFormVm: GoalFormViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { GoalFormViewModel(container.goalRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
                     goalsVm = goalsVm,
+                    goalFormVm = goalFormVm,
                 )
             }
         }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 2: Crear meta -->
+<resources>
+    <string name="goal_new_title">Create new goal</string>
+    <string name="goal_name_label">NAME</string>
+    <string name="goal_name_hint">E.g. Beach trip</string>
+    <string name="goal_amount_label">AMOUNT</string>
+    <string name="goal_initial_saved_label">ALREADY SAVED (OPTIONAL)</string>
+    <string name="goal_color_label">COLOR</string>
+    <string name="goal_deadline_section">DEADLINE</string>
+    <string name="goal_deadline_toggle">Set a deadline</string>
+    <string name="goal_deadline_toggle_sub">We\'ll suggest how much to save each month</string>
+    <string name="goal_save">Save</string>
+    <string name="goal_discard_title">Discard your changes?</string>
+    <string name="goal_discard_body">If you leave now, what you typed will be lost.</string>
+    <string name="goal_discard_confirm">Discard</string>
+    <string name="goal_created_title">Goal created!</string>
+    <string name="goal_created_body">\"%1$s\" is under way with %2$s saved.</string>
+    <string name="goal_created_remaining">Remaining</string>
+    <string name="goal_created_deadline">Deadline</string>
+    <string name="goal_created_suggested">Suggested saving</string>
+    <string name="goal_created_per_month">%1$s/month</string>
+    <string name="goal_created_see_goals">See my goals</string>
+    <string name="goal_created_another">Create another goal</string>
+</resources>

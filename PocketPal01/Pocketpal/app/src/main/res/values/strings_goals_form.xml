@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 2: Crear meta -->
+<resources>
+    <string name="goal_new_title">Crear nueva meta</string>
+    <string name="goal_name_label">NOMBRE</string>
+    <string name="goal_name_hint">Ej: Viaje a la playa</string>
+    <string name="goal_amount_label">MONTO</string>
+    <string name="goal_initial_saved_label">YA TENGO AHORRADO (OPCIONAL)</string>
+    <string name="goal_color_label">COLOR</string>
+    <string name="goal_deadline_section">FECHA LÍMITE</string>
+    <string name="goal_deadline_toggle">Ponerle fecha límite</string>
+    <string name="goal_deadline_toggle_sub">Te sugerimos cuánto ahorrar por mes</string>
+    <string name="goal_save">Guardar</string>
+    <string name="goal_discard_title">¿Quieres descartar los cambios?</string>
+    <string name="goal_discard_body">Si sales ahora, se perderá lo que escribiste.</string>
+    <string name="goal_discard_confirm">Descartar</string>
+    <string name="goal_created_title">¡Meta creada!</string>
+    <string name="goal_created_body">\"%1$s\" ya está en marcha con %2$s ahorrados.</string>
+    <string name="goal_created_remaining">Faltan</string>
+    <string name="goal_created_deadline">Fecha límite</string>
+    <string name="goal_created_suggested">Sugerido ahorrar</string>
+    <string name="goal_created_per_month">%1$s/mes</string>
+    <string name="goal_created_see_goals">Ver mis metas</string>
+    <string name="goal_created_another">Crear otra meta</string>
+</resources>

@@ -19,6 +19,9 @@ import androidx.navigation.navArgument
 import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.goals.GoalCreatedScreen
+import com.pocketpal.app.ui.goals.GoalFormScreen
+import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
 import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.ui.profile.AboutLicensesScreen
@@ -96,6 +99,8 @@ object Routes {
 
     // Módulo 3 · Metas
     const val Goals = "goals"
+    const val GoalNew = "goals/create"
+    const val GoalCreated = "goals/created"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -113,6 +118,7 @@ fun PocketNavHost(
     securityVm: SecurityViewModel,
     phoneVm: PhoneViewModel,
     goalsVm: GoalsViewModel,
+    goalFormVm: GoalFormViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -282,10 +288,59 @@ fun PocketNavHost(
                 onSelectTab = goalsVm::selectTab,
                 onSelectSort = goalsVm::selectSort,
                 onMove = goalsVm::move,
-                onCreate = { /* Flujo 2: abre "Crear nueva meta" */ },
+                onCreate = { nav.navigate(Routes.GoalNew) },
                 onOpen = { /* Flujo 3: abre el detalle de la meta */ },
                 onErrorShown = goalsVm::consumeError,
             )
+        }
+
+        // Módulo 3 · Flujo 2: crear meta → "Meta creada".
+        composable(Routes.GoalNew) {
+            LaunchedEffect(Unit) { goalFormVm.prepareNew() }
+            val saving by goalFormVm.saving.collectAsStateWithLifecycle()
+            val formError by goalFormVm.error.collectAsStateWithLifecycle()
+            val formEvent by goalFormVm.event.collectAsStateWithLifecycle()
+            // Se lee para que el aviso de nombre repetido se recalcule cuando llegan las metas.
+            val existing by goalFormVm.existing.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(formEvent) {
+                if (formEvent is GoalFormViewModel.Event.Created) {
+                    goalFormVm.consumeEvent()
+                    goalsVm.refresh()
+                    // El formulario sale de la pila: "atrás" desde "Meta creada" va a la lista.
+                    nav.navigate(Routes.GoalCreated) { popUpTo(Routes.GoalNew) { inclusive = true } }
+                }
+            }
+            GoalFormScreen(
+                currency = profileCurrency(profileState),
+                datePreference = prefs.dateFormat,
+                isDuplicateName = { name -> existing.isNotEmpty() && goalFormVm.isDuplicateName(name) },
+                saving = saving,
+                error = formError,
+                onBack = ::back,
+                onSave = goalFormVm::create,
+                onErrorShown = goalFormVm::consumeError,
+            )
+        }
+        composable(Routes.GoalCreated) {
+            val created by goalFormVm.created.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val goal = created
+            if (goal == null) {
+                LaunchedEffect(Unit) { nav.popBackStack() }
+            } else {
+                GoalCreatedScreen(
+                    goal = goal,
+                    currency = profileCurrency(profileState),
+                    onSeeGoals = {
+                        nav.navigate(Routes.Goals) { popUpTo(Routes.Goals) { inclusive = true } }
+                    },
+                    onCreateAnother = {
+                        nav.navigate(Routes.GoalNew) { popUpTo(Routes.GoalCreated) { inclusive = true } }
+                    },
+                )
+            }
         }
 
         // §7.5: grafo anidado del módulo Perfil. ProfileViewModel es único y
