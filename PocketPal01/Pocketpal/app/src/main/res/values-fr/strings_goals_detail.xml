@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 3: Detalle de la meta y aportes -->
+<resources>
+    <string name="goal_detail_not_found">Cet objectif n\'existe plus</string>
+    <string name="goal_detail_back_to_list">Retour à mes objectifs</string>
+    <string name="goal_detail_retry">Réessayer</string>
+    <string name="goal_detail_add">Ajouter un versement</string>
+    <string name="goal_detail_history">HISTORIQUE DES VERSEMENTS</string>
+    <string name="goal_detail_history_empty">Aucun versement pour l\'instant. Ajoute le premier !</string>
+    <string name="goal_detail_initial">Épargne initiale</string>
+    <string name="goal_detail_contribution">Versement</string>
+    <string name="goal_detail_plus">+%1$s</string>
+    <string name="goal_celebration_title">Tu as réussi ! 🎉</string>
+    <string name="goal_celebration_body">Tu as atteint « %1$s » : %2$s. Tu le trouveras dans Terminés.</string>
+    <string name="goal_celebration_ok">Super !</string>
+    <string name="contribution_title">Ajouter un versement</string>
+    <string name="contribution_amount_label">MONTANT</string>
+    <string name="contribution_date_label">DATE</string>
+    <string name="contribution_note_label">MOTIF (FACULTATIF)</string>
+    <string name="contribution_note_hint">Ex. : Prime de décembre</string>
+    <string name="contribution_new_total">Nouveau total épargné</string>
+    <string name="contribution_save">Ajouter un versement</string>
+</resources>

@@ -19,7 +19,10 @@ import androidx.navigation.navArgument
 import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.goals.AddContributionScreen
 import com.pocketpal.app.ui.goals.GoalCreatedScreen
+import com.pocketpal.app.ui.goals.GoalDetailScreen
+import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormScreen
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
@@ -101,10 +104,14 @@ object Routes {
     const val Goals = "goals"
     const val GoalNew = "goals/create"
     const val GoalCreated = "goals/created"
+    const val GoalDetail = "goals/detail/{id}"
+    const val GoalContribute = "goals/detail/{id}/contribute"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
+    fun goalDetail(id: String) = "goals/detail/$id"
+    fun goalContribute(id: String) = "goals/detail/$id/contribute"
 }
 
 @Composable
@@ -119,6 +126,7 @@ fun PocketNavHost(
     phoneVm: PhoneViewModel,
     goalsVm: GoalsViewModel,
     goalFormVm: GoalFormViewModel,
+    goalDetailVm: GoalDetailViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -269,7 +277,7 @@ fun PocketNavHost(
                 goals = (goalsState as? GoalsViewModel.UiState.Content)?.data?.active.orEmpty(),
                 onOpenProfile = { nav.navigate(Routes.Profile) },
                 onOpenGoals = { nav.navigate(Routes.Goals) },
-                onOpenGoal = { nav.navigate(Routes.Goals) },
+                onOpenGoal = { id -> nav.navigate(Routes.goalDetail(id)) },
                 onSignOut = vm::signOut,
             )
         }
@@ -289,7 +297,7 @@ fun PocketNavHost(
                 onSelectSort = goalsVm::selectSort,
                 onMove = goalsVm::move,
                 onCreate = { nav.navigate(Routes.GoalNew) },
-                onOpen = { /* Flujo 3: abre el detalle de la meta */ },
+                onOpen = { id -> nav.navigate(Routes.goalDetail(id)) },
                 onErrorShown = goalsVm::consumeError,
             )
         }
@@ -322,6 +330,63 @@ fun PocketNavHost(
                 onSave = goalFormVm::create,
                 onErrorShown = goalFormVm::consumeError,
             )
+        }
+        // Módulo 3 · Flujo 3: detalle de la meta, historial y "Agregar aporte".
+        composable(
+            Routes.GoalDetail,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            LaunchedEffect(id) { goalDetailVm.load(id) }
+            val detailState by goalDetailVm.state.collectAsStateWithLifecycle()
+            val detailError by goalDetailVm.error.collectAsStateWithLifecycle()
+            val celebration by goalDetailVm.celebration.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            GoalDetailScreen(
+                state = detailState,
+                error = detailError,
+                celebration = celebration,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onAddContribution = { nav.navigate(Routes.goalContribute(id)) },
+                onRetry = goalDetailVm::refresh,
+                onErrorShown = goalDetailVm::consumeError,
+                onDismissCelebration = goalDetailVm::dismissCelebration,
+            )
+        }
+        composable(
+            Routes.GoalContribute,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) {
+            val detailState by goalDetailVm.state.collectAsStateWithLifecycle()
+            val saving by goalDetailVm.saving.collectAsStateWithLifecycle()
+            val detailError by goalDetailVm.error.collectAsStateWithLifecycle()
+            val detailEvent by goalDetailVm.event.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(detailEvent) {
+                if (detailEvent is GoalDetailViewModel.Event.ContributionAdded) {
+                    goalDetailVm.consumeEvent()
+                    goalsVm.refresh()
+                    // Vuelve al detalle; si la meta se cumplió, allí aparece la celebración.
+                    nav.popBackStack()
+                }
+            }
+            val goal = (detailState as? GoalDetailViewModel.UiState.Content)?.data?.goal
+            if (goal == null) {
+                LaunchedEffect(Unit) { nav.popBackStack() }
+            } else {
+                AddContributionScreen(
+                    goal = goal,
+                    currency = profileCurrency(profileState),
+                    datePreference = prefs.dateFormat,
+                    saving = saving,
+                    error = detailError,
+                    onBack = ::back,
+                    onSave = goalDetailVm::addContribution,
+                    onErrorShown = goalDetailVm::consumeError,
+                )
+            }
         }
         composable(Routes.GoalCreated) {
             val created by goalFormVm.created.collectAsStateWithLifecycle()

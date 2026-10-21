@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 3: Detalle de la meta y aportes -->
+<resources>
+    <string name="goal_detail_not_found">Esta meta ya no existe</string>
+    <string name="goal_detail_back_to_list">Volver a mis metas</string>
+    <string name="goal_detail_retry">Reintentar</string>
+    <string name="goal_detail_add">Agregar aporte</string>
+    <string name="goal_detail_history">HISTORIAL DE APORTES</string>
+    <string name="goal_detail_history_empty">Aún no hay aportes. ¡Agrega el primero!</string>
+    <string name="goal_detail_initial">Ahorro inicial</string>
+    <string name="goal_detail_contribution">Aporte</string>
+    <string name="goal_detail_plus">+%1$s</string>
+    <string name="goal_celebration_title">¡Lo lograste! 🎉</string>
+    <string name="goal_celebration_body">Completaste \"%1$s\" y llegaste a %2$s. La encontrarás en Completadas.</string>
+    <string name="goal_celebration_ok">¡Genial!</string>
+    <string name="contribution_title">Agregar aporte</string>
+    <string name="contribution_amount_label">MONTO</string>
+    <string name="contribution_date_label">FECHA</string>
+    <string name="contribution_note_label">MOTIVO (OPCIONAL)</string>
+    <string name="contribution_note_hint">Ej: Prima de diciembre</string>
+    <string name="contribution_new_total">Nuevo total ahorrado</string>
+    <string name="contribution_save">Agregar aporte</string>
+</resources>

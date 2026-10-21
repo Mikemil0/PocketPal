@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
@@ -112,11 +113,18 @@ class MainActivity : AppCompatActivity() {
                         initializer { GoalFormViewModel(container.goalRepository) }
                     }
                 )
+                // Módulo 3 · Flujo 3: detalle de la meta y aportes (compartido con "Agregar aporte").
+                val goalDetailVm: GoalDetailViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { GoalDetailViewModel(container.goalRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
                     goalsVm = goalsVm,
                     goalFormVm = goalFormVm,
+                    goalDetailVm = goalDetailVm,
                 )
             }
         }

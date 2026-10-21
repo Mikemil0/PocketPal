@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 3: Detalle de la meta y aportes -->
+<resources>
+    <string name="goal_detail_not_found">Esta meta não existe mais</string>
+    <string name="goal_detail_back_to_list">Voltar às minhas metas</string>
+    <string name="goal_detail_retry">Tentar novamente</string>
+    <string name="goal_detail_add">Adicionar aporte</string>
+    <string name="goal_detail_history">HISTÓRICO DE APORTES</string>
+    <string name="goal_detail_history_empty">Ainda não há aportes. Adicione o primeiro!</string>
+    <string name="goal_detail_initial">Valor inicial</string>
+    <string name="goal_detail_contribution">Aporte</string>
+    <string name="goal_detail_plus">+%1$s</string>
+    <string name="goal_celebration_title">Você conseguiu! 🎉</string>
+    <string name="goal_celebration_body">Você concluiu \"%1$s\" e chegou a %2$s. Ela está em Concluídas.</string>
+    <string name="goal_celebration_ok">Ótimo!</string>
+    <string name="contribution_title">Adicionar aporte</string>
+    <string name="contribution_amount_label">VALOR</string>
+    <string name="contribution_date_label">DATA</string>
+    <string name="contribution_note_label">MOTIVO (OPCIONAL)</string>
+    <string name="contribution_note_hint">Ex.: 13º salário</string>
+    <string name="contribution_new_total">Novo total guardado</string>
+    <string name="contribution_save">Adicionar aporte</string>
+</resources>
