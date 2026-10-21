@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Metas: textos compartidos (base). Cada flujo tiene su propio archivo strings_goals_*.xml -->
+<resources>
+    <!-- Errores (RN-M1 a RN-M6) -->
+    <string name="error_goal_name_empty">Ingresa un nombre para la meta</string>
+    <string name="error_goal_name_too_long">El nombre no puede tener más de 30 caracteres</string>
+    <string name="error_duplicate_goal">Ya tienes una meta con este nombre</string>
+    <string name="error_invalid_goal_amount">El monto de la meta debe ser mayor que $0</string>
+    <string name="error_initial_saved_too_high">Lo que ya tienes ahorrado debe ser menor que el monto de la meta</string>
+    <string name="error_deadline_in_past">La fecha límite debe ser posterior a hoy</string>
+    <string name="error_goal_amount_below_saved">El monto no puede ser menor a lo que ya ahorraste</string>
+    <string name="error_invalid_contribution_amount">El aporte debe ser mayor que $0</string>
+    <string name="error_contribution_date_future">La fecha del aporte no puede ser futura</string>
+    <string name="error_contribution_note_too_long">El motivo no puede tener más de 80 caracteres</string>
+
+    <!-- Progreso y fechas -->
+    <string name="goal_deadline_label">Fecha límite: %1$s</string>
+    <string name="goal_no_deadline">Sin fecha límite</string>
+    <string name="goal_deadline_passed">La fecha límite ya pasó</string>
+    <plurals name="goal_days_left">
+        <item quantity="one">Falta %1$d día</item>
+        <item quantity="other">Faltan %1$d días</item>
+    </plurals>
+    <string name="goal_saved_of">de %1$s</string>
+    <string name="goal_percent_saved">%1$d%% ahorrado</string>
+    <string name="goal_remaining">Faltan %1$s</string>
+    <string name="goal_suggestion">Ahorra %1$s/mes para llegar a tiempo</string>
+    <string name="goal_completed_badge">¡Meta cumplida!</string>
+    <string name="goal_date_ok">Aceptar</string>
+
+    <!-- Accesibilidad -->
+    <string name="a11y_goal_icon">Ícono de la meta</string>
+    <string name="a11y_edit_goal">Editar meta</string>
+    <string name="a11y_pick_date">Elegir fecha</string>
+</resources>

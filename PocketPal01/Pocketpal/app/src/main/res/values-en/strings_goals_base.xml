@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Module 3 · Goals: shared texts (base). -->
+<resources>
+    <string name="error_goal_name_empty">Enter a name for the goal</string>
+    <string name="error_goal_name_too_long">The name can\'t be longer than 30 characters</string>
+    <string name="error_duplicate_goal">You already have a goal with this name</string>
+    <string name="error_invalid_goal_amount">The goal amount must be greater than $0</string>
+    <string name="error_initial_saved_too_high">What you have already saved must be less than the goal amount</string>
+    <string name="error_deadline_in_past">The deadline must be after today</string>
+    <string name="error_goal_amount_below_saved">The amount can\'t be less than what you have already saved</string>
+    <string name="error_invalid_contribution_amount">The contribution must be greater than $0</string>
+    <string name="error_contribution_date_future">The contribution date can\'t be in the future</string>
+    <string name="error_contribution_note_too_long">The reason can\'t be longer than 80 characters</string>
+
+    <string name="goal_deadline_label">Deadline: %1$s</string>
+    <string name="goal_no_deadline">No deadline</string>
+    <string name="goal_deadline_passed">The deadline has passed</string>
+    <plurals name="goal_days_left">
+        <item quantity="one">%1$d day left</item>
+        <item quantity="other">%1$d days left</item>
+    </plurals>
+    <string name="goal_saved_of">of %1$s</string>
+    <string name="goal_percent_saved">%1$d%% saved</string>
+    <string name="goal_remaining">%1$s to go</string>
+    <string name="goal_suggestion">Save %1$s/month to make it on time</string>
+    <string name="goal_completed_badge">Goal reached!</string>
+    <string name="goal_date_ok">OK</string>
+
+    <string name="a11y_goal_icon">Goal icon</string>
+    <string name="a11y_edit_goal">Edit goal</string>
+    <string name="a11y_pick_date">Pick a date</string>
+</resources>

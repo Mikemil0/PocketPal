@@ -7,6 +7,8 @@ import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
 import com.pocketpal.app.data.device.DeviceRepository
 import com.pocketpal.app.data.device.SupabaseDeviceRepository
+import com.pocketpal.app.data.goal.GoalRepository
+import com.pocketpal.app.data.goal.SupabaseGoalRepository
 import com.pocketpal.app.data.notification.NotificationSettingsRepository
 import com.pocketpal.app.data.notification.SupabaseNotificationSettingsRepository
 import com.pocketpal.app.data.phone.PhoneRepository
@@ -52,6 +54,9 @@ class AppContainer(context: Context) {
 
     /** Fase 7: verificación de teléfono por SMS (RF-B3). */
     val phoneRepository: PhoneRepository = SupabasePhoneRepository(supabase)
+
+    /** Módulo 3: metas de ahorro y sus aportes sobre `goals` y `goal_contributions`. */
+    val goalRepository: GoalRepository = SupabaseGoalRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))

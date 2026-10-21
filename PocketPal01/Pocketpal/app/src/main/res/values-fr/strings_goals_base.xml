@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Module 3 · Objectifs : textes partagés (base). -->
+<resources>
+    <string name="error_goal_name_empty">Saisis un nom pour l\'objectif</string>
+    <string name="error_goal_name_too_long">Le nom ne peut pas dépasser 30 caractères</string>
+    <string name="error_duplicate_goal">Tu as déjà un objectif avec ce nom</string>
+    <string name="error_invalid_goal_amount">Le montant de l\'objectif doit être supérieur à 0 $</string>
+    <string name="error_initial_saved_too_high">Ce que tu as déjà épargné doit être inférieur au montant de l\'objectif</string>
+    <string name="error_deadline_in_past">L\'échéance doit être postérieure à aujourd\'hui</string>
+    <string name="error_goal_amount_below_saved">Le montant ne peut pas être inférieur à ce que tu as déjà épargné</string>
+    <string name="error_invalid_contribution_amount">Le versement doit être supérieur à 0 $</string>
+    <string name="error_contribution_date_future">La date du versement ne peut pas être future</string>
+    <string name="error_contribution_note_too_long">Le motif ne peut pas dépasser 80 caractères</string>
+
+    <string name="goal_deadline_label">Échéance : %1$s</string>
+    <string name="goal_no_deadline">Sans échéance</string>
+    <string name="goal_deadline_passed">L\'échéance est passée</string>
+    <plurals name="goal_days_left">
+        <item quantity="one">%1$d jour restant</item>
+        <item quantity="other">%1$d jours restants</item>
+    </plurals>
+    <string name="goal_saved_of">sur %1$s</string>
+    <string name="goal_percent_saved">%1$d %% épargné</string>
+    <string name="goal_remaining">Il manque %1$s</string>
+    <string name="goal_suggestion">Épargne %1$s/mois pour y arriver à temps</string>
+    <string name="goal_completed_badge">Objectif atteint !</string>
+    <string name="goal_date_ok">OK</string>
+
+    <string name="a11y_goal_icon">Icône de l\'objectif</string>
+    <string name="a11y_edit_goal">Modifier l\'objectif</string>
+    <string name="a11y_pick_date">Choisir une date</string>
+</resources>

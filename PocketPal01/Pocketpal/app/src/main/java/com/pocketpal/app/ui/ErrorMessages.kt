@@ -37,6 +37,16 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.NewPasswordSameAsCurrent -> R.string.error_new_password_same
     ErrorType.InvalidPhone -> R.string.error_invalid_phone
     ErrorType.SmsUnavailable -> R.string.error_sms_unavailable
+    ErrorType.GoalNameEmpty -> R.string.error_goal_name_empty
+    ErrorType.GoalNameTooLong -> R.string.error_goal_name_too_long
+    ErrorType.DuplicateGoalName -> R.string.error_duplicate_goal
+    ErrorType.InvalidGoalAmount -> R.string.error_invalid_goal_amount
+    ErrorType.InitialSavedTooHigh -> R.string.error_initial_saved_too_high
+    ErrorType.DeadlineInPast -> R.string.error_deadline_in_past
+    ErrorType.GoalAmountBelowSaved -> R.string.error_goal_amount_below_saved
+    ErrorType.InvalidContributionAmount -> R.string.error_invalid_contribution_amount
+    ErrorType.ContributionDateInFuture -> R.string.error_contribution_date_future
+    ErrorType.ContributionNoteTooLong -> R.string.error_contribution_note_too_long
     ErrorType.Unknown -> R.string.error_unknown
 }
 

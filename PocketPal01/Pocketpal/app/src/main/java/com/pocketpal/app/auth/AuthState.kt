@@ -13,6 +13,10 @@ enum class ErrorType {
     DuplicateCategoryName, CategoryNameEmpty, CategoryNameTooLong, InvalidMonthlyLimit,
     // Fase 4 y 7: seguridad (RN-04) y teléfono (RF-B3)
     CurrentPasswordIncorrect, NewPasswordSameAsCurrent, InvalidPhone, SmsUnavailable,
+    // Módulo 3: metas (RN-M1 a RN-M6)
+    GoalNameEmpty, GoalNameTooLong, DuplicateGoalName, InvalidGoalAmount, InitialSavedTooHigh,
+    DeadlineInPast, GoalAmountBelowSaved,
+    InvalidContributionAmount, ContributionDateInFuture, ContributionNoteTooLong,
 }
 
 /** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */

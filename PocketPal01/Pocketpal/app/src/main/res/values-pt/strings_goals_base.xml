@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Metas: textos compartilhados (base). -->
+<resources>
+    <string name="error_goal_name_empty">Digite um nome para a meta</string>
+    <string name="error_goal_name_too_long">O nome não pode ter mais de 30 caracteres</string>
+    <string name="error_duplicate_goal">Você já tem uma meta com este nome</string>
+    <string name="error_invalid_goal_amount">O valor da meta deve ser maior que $0</string>
+    <string name="error_initial_saved_too_high">O que você já economizou deve ser menor que o valor da meta</string>
+    <string name="error_deadline_in_past">O prazo deve ser posterior a hoje</string>
+    <string name="error_goal_amount_below_saved">O valor não pode ser menor do que você já economizou</string>
+    <string name="error_invalid_contribution_amount">O aporte deve ser maior que $0</string>
+    <string name="error_contribution_date_future">A data do aporte não pode ser futura</string>
+    <string name="error_contribution_note_too_long">O motivo não pode ter mais de 80 caracteres</string>
+
+    <string name="goal_deadline_label">Prazo: %1$s</string>
+    <string name="goal_no_deadline">Sem prazo</string>
+    <string name="goal_deadline_passed">O prazo já passou</string>
+    <plurals name="goal_days_left">
+        <item quantity="one">Falta %1$d dia</item>
+        <item quantity="other">Faltam %1$d dias</item>
+    </plurals>
+    <string name="goal_saved_of">de %1$s</string>
+    <string name="goal_percent_saved">%1$d%% economizado</string>
+    <string name="goal_remaining">Faltam %1$s</string>
+    <string name="goal_suggestion">Economize %1$s/mês para chegar a tempo</string>
+    <string name="goal_completed_badge">Meta alcançada!</string>
+    <string name="goal_date_ok">Aceitar</string>
+
+    <string name="a11y_goal_icon">Ícone da meta</string>
+    <string name="a11y_edit_goal">Editar meta</string>
+    <string name="a11y_pick_date">Escolher data</string>
+</resources>
