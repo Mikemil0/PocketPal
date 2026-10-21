@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Fluxo 1 (Ver metas) -->
+<resources>
+    <string name="goals_title">Metas</string>
+    <string name="goals_total_label">Total economizado em todas as suas metas</string>
+    <string name="goals_header">SUAS METAS (%1$d)</string>
+    <string name="goals_tab_active">Ativas</string>
+    <string name="goals_tab_completed">Concluídas</string>
+    <string name="goals_create">Criar nova meta</string>
+    <string name="goals_amount_of">%1$s / %2$s</string>
+    <string name="goals_percent">%1$d%%</string>
+    <string name="goals_empty_active_title">Você ainda não tem metas</string>
+    <string name="goals_empty_active_hint">Crie sua primeira meta de economia e comece a avançar.</string>
+    <string name="goals_empty_completed_title">Você ainda não concluiu nenhuma meta</string>
+    <string name="goals_empty_completed_hint" formatted="false">Quando uma meta chegar a 100%, ela aparecerá aqui.</string>
+    <string name="goals_sort_title">Ordenar por</string>
+    <string name="goals_sort_manual">Minha ordem</string>
+    <string name="goals_sort_closest">Mais perto de concluir</string>
+    <string name="goals_sort_deadline">Prazo mais próximo</string>
+    <string name="goals_sort_recent">Mais recentes</string>
+    <string name="home_goals_title">Metas de economia</string>
+    <string name="home_goals_empty">Crie sua primeira meta</string>
+    <string name="a11y_filter_goals">Ordenar metas</string>
+    <string name="a11y_reorder_goal">Reordenar meta</string>
+    <string name="a11y_open_goals">Ver todas as metas</string>
+</resources>

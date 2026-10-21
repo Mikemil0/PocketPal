@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.ExportViewModel
@@ -97,9 +98,17 @@ class MainActivity : AppCompatActivity() {
                         initializer { PhoneViewModel(container.phoneRepository) }
                     }
                 )
+                // Módulo 3 · Flujo 1: lista de metas; scope de actividad para compartirla
+                // entre el Home (tarjetas de metas) y la pantalla "Metas".
+                val goalsVm: GoalsViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { GoalsViewModel(container.goalRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
+                    goalsVm = goalsVm,
                 )
             }
         }

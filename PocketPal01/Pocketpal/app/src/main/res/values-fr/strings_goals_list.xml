@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Module 3 · Flux 1 (Voir les objectifs) -->
+<resources>
+    <string name="goals_title">Objectifs</string>
+    <string name="goals_total_label">Total épargné sur tous tes objectifs</string>
+    <string name="goals_header">TES OBJECTIFS (%1$d)</string>
+    <string name="goals_tab_active">Actifs</string>
+    <string name="goals_tab_completed">Terminés</string>
+    <string name="goals_create">Créer un objectif</string>
+    <string name="goals_amount_of">%1$s / %2$s</string>
+    <string name="goals_percent">%1$d %%</string>
+    <string name="goals_empty_active_title">Tu n\'as pas encore d\'objectifs</string>
+    <string name="goals_empty_active_hint">Crée ton premier objectif d\'épargne et commence à avancer.</string>
+    <string name="goals_empty_completed_title">Tu n\'as encore terminé aucun objectif</string>
+    <string name="goals_empty_completed_hint" formatted="false">Quand un objectif atteindra 100 %, il apparaîtra ici.</string>
+    <string name="goals_sort_title">Trier par</string>
+    <string name="goals_sort_manual">Mon ordre</string>
+    <string name="goals_sort_closest">Les plus proches du but</string>
+    <string name="goals_sort_deadline">Échéance la plus proche</string>
+    <string name="goals_sort_recent">Les plus récents</string>
+    <string name="home_goals_title">Objectifs d\'épargne</string>
+    <string name="home_goals_empty">Crée ton premier objectif</string>
+    <string name="a11y_filter_goals">Trier les objectifs</string>
+    <string name="a11y_reorder_goal">Réordonner l\'objectif</string>
+    <string name="a11y_open_goals">Voir tous les objectifs</string>
+</resources>

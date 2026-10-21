@@ -1,10 +1,12 @@
 package com.pocketpal.app.data.profile
 
+import com.pocketpal.app.data.goal.Goal
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.storage
 import io.ktor.http.ContentType
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -25,7 +27,21 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
             .decodeSingleOrNull()
     }
 
-    override suspend fun getStats() = ProfileStats()
+    /**
+     * Módulo 3: "Metas activas" cuenta las metas sin `completed_at` (RLS: solo las propias).
+     * "Gastos registrados" sigue en 0 hasta que exista la tabla `movements`.
+     * Si la tabla `goals` aún no existe o falla la consulta, el perfil igual carga (con 0).
+     */
+    override suspend fun getStats(): ProfileStats {
+        val activeGoals = try {
+            supabase.postgrest.from("goals").select().decodeList<Goal>().count { !it.isCompleted }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            0
+        }
+        return ProfileStats(activeGoals = activeGoals)
+    }
 
     override fun currentEmail(): String? = supabase.auth.currentUserOrNull()?.email
 

@@ -19,6 +19,8 @@ import androidx.navigation.navArgument
 import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.goals.GoalsScreen
+import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.ui.profile.AboutLicensesScreen
 import com.pocketpal.app.ui.profile.AboutScreen
 import com.pocketpal.app.ui.profile.CategoriesScreen
@@ -92,6 +94,9 @@ object Routes {
     const val ProfilePhone = "profile/phone"
     const val ProfilePhoneCode = "profile/phone/code"
 
+    // Módulo 3 · Metas
+    const val Goals = "goals"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -107,6 +112,7 @@ fun PocketNavHost(
     notificationsVm: NotificationSettingsViewModel,
     securityVm: SecurityViewModel,
     phoneVm: PhoneViewModel,
+    goalsVm: GoalsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -245,15 +251,40 @@ fun PocketNavHost(
             LaunchedEffect(Unit) {
                 profileVm.refresh()
                 securityVm.registerCurrentDevice()
+                goalsVm.refresh()
             }
             val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val goalsState by goalsVm.state.collectAsStateWithLifecycle()
             val data = (profileState as? ProfileViewModel.UiState.Content)?.data
             HomeScreen(
                 name = data?.fullName.orEmpty(),
                 email = data?.email.orEmpty(),
                 avatarUrl = data?.avatarUrl,
+                goals = (goalsState as? GoalsViewModel.UiState.Content)?.data?.active.orEmpty(),
                 onOpenProfile = { nav.navigate(Routes.Profile) },
+                onOpenGoals = { nav.navigate(Routes.Goals) },
+                onOpenGoal = { nav.navigate(Routes.Goals) },
                 onSignOut = vm::signOut,
+            )
+        }
+
+        // Módulo 3 · Flujo 1: lista de metas (activas/completadas, filtro y reordenar).
+        composable(Routes.Goals) {
+            LaunchedEffect(Unit) { goalsVm.refresh() }
+            val goalsState by goalsVm.state.collectAsStateWithLifecycle()
+            val goalsError by goalsVm.error.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            GoalsScreen(
+                state = goalsState,
+                error = goalsError,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onSelectTab = goalsVm::selectTab,
+                onSelectSort = goalsVm::selectSort,
+                onMove = goalsVm::move,
+                onCreate = { /* Flujo 2: abre "Crear nueva meta" */ },
+                onOpen = { /* Flujo 3: abre el detalle de la meta */ },
+                onErrorShown = goalsVm::consumeError,
             )
         }
 

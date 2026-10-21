@@ -12,23 +12,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
+import com.pocketpal.app.data.goal.Goal
 import com.pocketpal.app.ui.components.Avatar
 import com.pocketpal.app.ui.components.ScrollableScreen
-import com.pocketpal.app.ui.theme.PocketColors
+import com.pocketpal.app.ui.goals.HomeGoalsSection
 import com.pocketpal.app.ui.theme.pocketColors
 
 /**
  * RF-A1: ícono circular de 40 dp arriba a la derecha — la foto del perfil si existe;
  * si no, un círculo con la inicial del nombre (o la del correo). Al tocarlo abre
- * "Mi perfil". El resto del Home no cambia (D-14: el enlace de cerrar sesión se
- * mantiene hasta retirarlo al final del módulo).
+ * "Mi perfil".
+ *
+ * Módulo 3 (flujo 1): debajo del saludo aparece la sección "Metas de ahorro" con las
+ * metas activas; la flecha abre la lista completa.
  */
 @Composable
 fun HomeScreen(
     name: String,
     email: String,
     avatarUrl: String?,
+    goals: List<Goal>,
     onOpenProfile: () -> Unit,
+    onOpenGoals: () -> Unit,
+    onOpenGoal: (String) -> Unit,
     onSignOut: () -> Unit,
 ) {
     val firstName = name.trim().substringBefore(" ")
@@ -42,6 +48,12 @@ fun HomeScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(stringResource(R.string.home_subtitle), fontSize = 14.sp, color = pocketColors.Muted, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(32.dp))
+            HomeGoalsSection(
+                goals = goals,
+                onOpenGoals = onOpenGoals,
+                onOpenGoal = onOpenGoal,
+            )
             Spacer(Modifier.height(40.dp))
             Text(stringResource(R.string.home_sign_out), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Coral,
                 modifier = Modifier.clickable(onClick = onSignOut))
