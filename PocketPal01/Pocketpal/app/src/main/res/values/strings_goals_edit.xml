@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 4: Editar y eliminar meta -->
+<resources>
+    <string name="goal_edit_title">Editar meta</string>
+    <string name="goal_edit_save">Guardar cambios</string>
+    <string name="goal_edit_saved_info">Llevas ahorrado %1$s. El monto no puede ser menor.</string>
+    <string name="goal_delete">Eliminar meta</string>
+    <string name="goal_delete_title">¿Eliminar \"%1$s\"?</string>
+    <string name="goal_delete_body_empty">La meta se borrará y no podrás recuperarla.</string>
+    <string name="goal_delete_confirm">Eliminar</string>
+    <plurals name="goal_delete_body">
+        <item quantity="one">Se borrará también su aporte. No podrás recuperarla.</item>
+        <item quantity="other">Se borrarán también sus %1$d aportes. No podrás recuperarla.</item>
+    </plurals>
+</resources>

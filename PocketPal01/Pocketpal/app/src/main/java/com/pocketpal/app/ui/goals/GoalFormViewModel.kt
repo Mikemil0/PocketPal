@@ -20,6 +20,10 @@ import java.time.LocalDate
  * Flujo 2 · Crear meta: valida el formulario (RN-M1 a RN-M4), guarda la meta (y su
  * ahorro inicial) y deja lista la meta creada para la pantalla "Meta creada".
  *
+ * Flujo 4 · Editar y eliminar: el mismo formulario se abre con los datos de la meta
+ * ([prepareEdit]); al editar no se puede bajar el monto por debajo de lo ya ahorrado
+ * (RN-M5) y eliminar borra también sus aportes (ON DELETE CASCADE en la base).
+ *
  * [today] se recibe como función para poder fijar la fecha en las pruebas.
  */
 class GoalFormViewModel(
@@ -30,6 +34,8 @@ class GoalFormViewModel(
     /** Eventos de una sola vez que la pantalla consume. */
     sealed interface Event {
         data class Created(val goal: Goal) : Event
+        data class Updated(val goal: Goal) : Event
+        data object Deleted : Event
     }
 
     /** Metas existentes, para avisar en vivo si el nombre ya está usado (RN-M1). */
@@ -49,6 +55,17 @@ class GoalFormViewModel(
     private val _created = MutableStateFlow<Goal?>(null)
     val created: StateFlow<Goal?> = _created.asStateFlow()
 
+    /** Meta que se está editando (flujo 4); `null` = se está creando una nueva. */
+    private val _editing = MutableStateFlow<Goal?>(null)
+    val editing: StateFlow<Goal?> = _editing.asStateFlow()
+
+    /** Cuántos aportes tiene la meta en edición (para el aviso de "Eliminar meta"). */
+    private val _contributionsCount = MutableStateFlow(0)
+    val contributionsCount: StateFlow<Int> = _contributionsCount.asStateFlow()
+
+    private val _deleting = MutableStateFlow(false)
+    val deleting: StateFlow<Boolean> = _deleting.asStateFlow()
+
     fun consumeError() { _error.value = null }
     fun consumeEvent() { _event.value = null }
 
@@ -56,11 +73,44 @@ class GoalFormViewModel(
     fun prepareNew() {
         _error.value = null
         _event.value = null
+        _editing.value = null
+        _contributionsCount.value = 0
         loadExisting()
     }
 
-    /** ¿El nombre ya lo usa otra meta? (para el aviso en vivo bajo el campo NOMBRE). */
-    fun isDuplicateName(name: String, excludeId: String? = null): Boolean =
+    /**
+     * Flujo 4 · Se llama al tocar el lápiz ✏️: trae la meta [id] y sus aportes para
+     * prellenar el formulario "Editar meta".
+     */
+    fun prepareEdit(id: String) {
+        _error.value = null
+        _event.value = null
+        if (_editing.value?.id != id) _editing.value = null
+        loadExisting()
+        viewModelScope.launch {
+            try {
+                val goal = repository.get(id)
+                if (goal == null) {
+                    _error.value = ErrorType.Unknown
+                    return@launch
+                }
+                _contributionsCount.value = repository.contributions(id).size
+                _editing.value = goal
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            }
+        }
+    }
+
+    /**
+     * ¿El nombre ya lo usa otra meta? (para el aviso en vivo bajo el campo NOMBRE).
+     * Al editar, la meta en edición no cuenta como repetida de sí misma.
+     */
+    fun isDuplicateName(name: String, excludeId: String? = _editing.value?.id): Boolean =
         name.isNotBlank() && GoalRules.isDuplicateName(name, _existing.value, excludeId)
 
     /**
@@ -92,6 +142,65 @@ class GoalFormViewModel(
                 _error.value = ErrorType.Unknown
             } finally {
                 _saving.value = false
+            }
+        }
+    }
+
+    /**
+     * Flujo 4 · Guarda los cambios de la meta en edición. Lo ahorrado no se toca aquí
+     * (solo cambia con aportes), por eso "Ya tengo ahorrado" no aparece al editar.
+     */
+    fun update(draft: GoalDraft) {
+        val goal = _editing.value ?: return
+        val clean = draft.copy(name = draft.name.trim(), initialSaved = 0.0)
+        val problem = GoalRules.validateGoal(
+            clean, _existing.value, today(),
+            excludeId = goal.id,
+            currentSaved = goal.savedAmount,
+        )
+        if (problem != null) {
+            _error.value = problem
+            return
+        }
+        _saving.value = true
+        viewModelScope.launch {
+            try {
+                val updated = repository.update(goal.id, clean)
+                _existing.value = _existing.value.map { if (it.id == updated.id) updated else it }
+                _editing.value = updated
+                _event.value = Event.Updated(updated)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: DuplicateGoalNameException) {
+                _error.value = ErrorType.DuplicateGoalName
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            } finally {
+                _saving.value = false
+            }
+        }
+    }
+
+    /** Flujo 4 · Elimina la meta en edición (y, en cascada, todos sus aportes). */
+    fun delete() {
+        val goal = _editing.value ?: return
+        _deleting.value = true
+        viewModelScope.launch {
+            try {
+                repository.delete(goal.id)
+                _existing.value = _existing.value.filterNot { it.id == goal.id }
+                _editing.value = null
+                _event.value = Event.Deleted
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            } finally {
+                _deleting.value = false
             }
         }
     }

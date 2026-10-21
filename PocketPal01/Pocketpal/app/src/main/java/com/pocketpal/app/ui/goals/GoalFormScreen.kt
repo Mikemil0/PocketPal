@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,10 +42,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.pocketpal.app.R
 import com.pocketpal.app.auth.ErrorType
+import com.pocketpal.app.data.goal.Goal
 import com.pocketpal.app.data.goal.GoalDraft
+import com.pocketpal.app.ui.MoneyFormat
 import com.pocketpal.app.ui.components.AuthScaffold
 import com.pocketpal.app.ui.components.CategoryColors
 import com.pocketpal.app.ui.components.CategoryIcon
+import com.pocketpal.app.ui.components.ConfirmSheet
 import com.pocketpal.app.ui.components.ErrorBanner
 import com.pocketpal.app.ui.components.PocketOutlinedTextField
 import com.pocketpal.app.ui.components.PocketPrimaryButton
@@ -58,6 +63,10 @@ import java.time.LocalDate
  * NOMBRE, MONTO, YA TENGO AHORRADO (opcional), ícono, color (5) y FECHA LÍMITE
  * opcional con calendario. Si el usuario sale con cambios sin guardar aparece
  * "¿Quieres descartar los cambios?".
+ *
+ * Flujo 4 · Si llega [editing], el mismo formulario sirve para "Editar meta": viene
+ * prellenado, no muestra "Ya tengo ahorrado" (lo ahorrado solo cambia con aportes) y
+ * abajo aparece "Eliminar meta", que pide confirmación con [ConfirmSheet].
  */
 @Composable
 fun GoalFormScreen(
@@ -69,20 +78,33 @@ fun GoalFormScreen(
     onBack: () -> Unit,
     onSave: (GoalDraft) -> Unit,
     onErrorShown: () -> Unit,
+    editing: Goal? = null,
+    contributionsCount: Int = 0,
+    deleting: Boolean = false,
+    onDelete: (() -> Unit)? = null,
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var iconId by rememberSaveable { mutableStateOf(CategoryIcon.Savings.id) }
-    var colorHex by rememberSaveable { mutableStateOf(CategoryColors.default) }
-    var targetDigits by rememberSaveable { mutableStateOf("") }
+    // Valores de partida: vacíos al crear, los de la meta al editar.
+    val initialName = editing?.name.orEmpty()
+    val initialIcon = editing?.icon ?: CategoryIcon.Savings.id
+    val initialColor = editing?.color ?: CategoryColors.default
+    val initialTarget = editing?.targetAmount?.toLong()?.toString().orEmpty()
+    val initialDeadline = editing?.deadline
+
+    var name by rememberSaveable { mutableStateOf(initialName) }
+    var iconId by rememberSaveable { mutableStateOf(initialIcon) }
+    var colorHex by rememberSaveable { mutableStateOf(initialColor) }
+    var targetDigits by rememberSaveable { mutableStateOf(initialTarget) }
     var savedDigits by rememberSaveable { mutableStateOf("") }
-    var deadlineEnabled by rememberSaveable { mutableStateOf(false) }
-    var deadlineIso by rememberSaveable { mutableStateOf<String?>(null) }
+    var deadlineEnabled by rememberSaveable { mutableStateOf(initialDeadline != null) }
+    var deadlineIso by rememberSaveable { mutableStateOf(initialDeadline) }
     var showDiscard by remember { mutableStateOf(false) }
+    var showDelete by remember { mutableStateOf(false) }
 
     val today = LocalDate.now()
     val deadline = deadlineIso?.let(LocalDate::parse)
-    val dirty = name.isNotBlank() || targetDigits.isNotEmpty() || savedDigits.isNotEmpty() || deadlineEnabled ||
-        iconId != CategoryIcon.Savings.id || colorHex != CategoryColors.default
+    val dirty = name != initialName || targetDigits != initialTarget || savedDigits.isNotEmpty() ||
+        deadlineEnabled != (initialDeadline != null) || (deadlineEnabled && deadlineIso != initialDeadline) ||
+        iconId != initialIcon || colorHex != initialColor
 
     // Error de validación o de red: se queda visible hasta que el usuario cambie algo.
     var shownError by remember { mutableStateOf<ErrorType?>(null) }
@@ -94,7 +116,7 @@ fun GoalFormScreen(
     }
 
     fun requestBack() {
-        if (dirty && !saving) showDiscard = true else onBack()
+        if (dirty && !saving && !deleting) showDiscard = true else onBack()
     }
     BackHandler(onBack = ::requestBack)
 
@@ -106,7 +128,7 @@ fun GoalFormScreen(
         backTint = pocketColors.Coral,
     ) {
         Text(
-            stringResource(R.string.goal_new_title),
+            stringResource(if (editing != null) R.string.goal_edit_title else R.string.goal_new_title),
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
             color = pocketColors.Ink,
@@ -143,12 +165,23 @@ fun GoalFormScreen(
             currency = currency,
         )
 
-        GoalFieldLabel(stringResource(R.string.goal_initial_saved_label))
-        MoneyField(
-            digits = savedDigits,
-            onDigitsChange = { savedDigits = it; shownError = null },
-            currency = currency,
-        )
+        if (editing == null) {
+            GoalFieldLabel(stringResource(R.string.goal_initial_saved_label))
+            MoneyField(
+                digits = savedDigits,
+                onDigitsChange = { savedDigits = it; shownError = null },
+                currency = currency,
+            )
+        } else {
+            // Al editar, lo ahorrado se muestra como referencia (el monto no puede ser menor).
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.goal_edit_saved_info, MoneyFormat.format(editing.savedAmount, currency)),
+                fontSize = 12.sp,
+                color = pocketColors.Muted,
+                modifier = Modifier.padding(start = 4.dp),
+            )
+        }
 
         Spacer(Modifier.height(20.dp))
         IconGrid(selected = iconId, onSelect = { iconId = it })
@@ -185,7 +218,7 @@ fun GoalFormScreen(
 
         Spacer(Modifier.height(24.dp))
         PocketPrimaryButton(
-            text = stringResource(R.string.goal_save),
+            text = stringResource(if (editing != null) R.string.goal_edit_save else R.string.goal_save),
             onClick = {
                 onSave(
                     GoalDraft(
@@ -198,10 +231,42 @@ fun GoalFormScreen(
                     )
                 )
             },
-            enabled = name.isNotBlank() && targetDigits.isNotEmpty() && !isDuplicate,
+            enabled = name.isNotBlank() && targetDigits.isNotEmpty() && !isDuplicate && !deleting,
             loading = saving,
         )
+        if (editing != null && onDelete != null) {
+            Spacer(Modifier.height(12.dp))
+            PocketPrimaryButton(
+                text = stringResource(R.string.goal_delete),
+                onClick = { showDelete = true },
+                enabled = !saving,
+                loading = deleting,
+                icon = Icons.Outlined.DeleteOutline,
+                containerColor = pocketColors.Card,
+                contentColor = pocketColors.ErrorRed,
+                border = androidx.compose.foundation.BorderStroke(1.dp, pocketColors.ErrorRed),
+            )
+        }
         Spacer(Modifier.height(24.dp))
+    }
+
+    if (showDelete && editing != null && onDelete != null) {
+        ConfirmSheet(
+            icon = Icons.Outlined.DeleteOutline,
+            title = stringResource(R.string.goal_delete_title, editing.name),
+            body = if (contributionsCount > 0) {
+                pluralStringResource(R.plurals.goal_delete_body, contributionsCount, contributionsCount)
+            } else {
+                stringResource(R.string.goal_delete_body_empty)
+            },
+            confirmText = stringResource(R.string.goal_delete_confirm),
+            cancelText = stringResource(R.string.common_cancel),
+            onConfirm = {
+                showDelete = false
+                onDelete()
+            },
+            onDismiss = { showDelete = false },
+        )
     }
 
     if (showDiscard) {

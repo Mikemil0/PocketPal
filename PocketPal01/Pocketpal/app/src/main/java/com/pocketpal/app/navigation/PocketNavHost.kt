@@ -1,12 +1,18 @@
 package com.pocketpal.app.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -53,6 +59,7 @@ import com.pocketpal.app.ui.profile.SecurityScreen
 import com.pocketpal.app.ui.profile.SecurityViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.screens.*
+import com.pocketpal.app.ui.theme.pocketColors
 
 object Routes {
     const val Splash = "splash"
@@ -106,12 +113,14 @@ object Routes {
     const val GoalCreated = "goals/created"
     const val GoalDetail = "goals/detail/{id}"
     const val GoalContribute = "goals/detail/{id}/contribute"
+    const val GoalEdit = "goals/detail/{id}/edit"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
     fun goalDetail(id: String) = "goals/detail/$id"
     fun goalContribute(id: String) = "goals/detail/$id/contribute"
+    fun goalEdit(id: String) = "goals/detail/$id/edit"
 }
 
 @Composable
@@ -352,6 +361,7 @@ fun PocketNavHost(
                 onRetry = goalDetailVm::refresh,
                 onErrorShown = goalDetailVm::consumeError,
                 onDismissCelebration = goalDetailVm::dismissCelebration,
+                onEdit = { nav.navigate(Routes.goalEdit(id)) },
             )
         }
         composable(
@@ -386,6 +396,71 @@ fun PocketNavHost(
                     onSave = goalDetailVm::addContribution,
                     onErrorShown = goalDetailVm::consumeError,
                 )
+            }
+        }
+        // Módulo 3 · Flujo 4: editar la meta (mismo formulario prellenado) y eliminarla.
+        composable(
+            Routes.GoalEdit,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            LaunchedEffect(id) { goalFormVm.prepareEdit(id) }
+            val editing by goalFormVm.editing.collectAsStateWithLifecycle()
+            val contributionsCount by goalFormVm.contributionsCount.collectAsStateWithLifecycle()
+            val saving by goalFormVm.saving.collectAsStateWithLifecycle()
+            val deleting by goalFormVm.deleting.collectAsStateWithLifecycle()
+            val formError by goalFormVm.error.collectAsStateWithLifecycle()
+            val formEvent by goalFormVm.event.collectAsStateWithLifecycle()
+            val existing by goalFormVm.existing.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(formEvent) {
+                when (formEvent) {
+                    is GoalFormViewModel.Event.Updated -> {
+                        goalFormVm.consumeEvent()
+                        goalsVm.refresh()
+                        goalDetailVm.refresh()
+                        nav.popBackStack()
+                    }
+                    GoalFormViewModel.Event.Deleted -> {
+                        goalFormVm.consumeEvent()
+                        goalsVm.refresh()
+                        // Se sale del formulario y del detalle de la meta borrada: queda la lista.
+                        nav.navigate(Routes.Goals) { popUpTo(Routes.Goals) { inclusive = true } }
+                    }
+                    else -> Unit
+                }
+            }
+            val goal = editing?.takeIf { it.id == id }
+            // Si no se pudo cargar la meta (sin internet o ya no existe), se vuelve al detalle.
+            LaunchedEffect(goal, formError) {
+                if (goal == null && formError != null) {
+                    goalFormVm.consumeError()
+                    nav.popBackStack()
+                }
+            }
+            if (goal == null) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = pocketColors.Coral)
+                }
+            } else {
+                // key: si cambia la meta, el formulario se vuelve a prellenar desde cero.
+                key(goal.id) {
+                    GoalFormScreen(
+                        currency = profileCurrency(profileState),
+                        datePreference = prefs.dateFormat,
+                        isDuplicateName = { name -> existing.isNotEmpty() && goalFormVm.isDuplicateName(name) },
+                        saving = saving,
+                        error = formError,
+                        onBack = ::back,
+                        onSave = goalFormVm::update,
+                        onErrorShown = goalFormVm::consumeError,
+                        editing = goal,
+                        contributionsCount = contributionsCount,
+                        deleting = deleting,
+                        onDelete = goalFormVm::delete,
+                    )
+                }
             }
         }
         composable(Routes.GoalCreated) {

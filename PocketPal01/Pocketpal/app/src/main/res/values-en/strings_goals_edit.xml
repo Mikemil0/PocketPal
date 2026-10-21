@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 3 · Flujo 4: Editar y eliminar meta -->
+<resources>
+    <string name="goal_edit_title">Edit goal</string>
+    <string name="goal_edit_save">Save changes</string>
+    <string name="goal_edit_saved_info">You\'ve saved %1$s. The amount can\'t be lower.</string>
+    <string name="goal_delete">Delete goal</string>
+    <string name="goal_delete_title">Delete \"%1$s\"?</string>
+    <string name="goal_delete_body_empty">The goal will be deleted and can\'t be recovered.</string>
+    <string name="goal_delete_confirm">Delete</string>
+    <plurals name="goal_delete_body">
+        <item quantity="one">Its contribution will also be deleted. It can\'t be recovered.</item>
+        <item quantity="other">Its %1$d contributions will also be deleted. It can\'t be recovered.</item>
+    </plurals>
+</resources>
