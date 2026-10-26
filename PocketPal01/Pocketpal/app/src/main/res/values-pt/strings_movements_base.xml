@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Movimientos: textos compartidos (base). Cada flujo tiene su propio strings_movements_*.xml -->
+<resources>
+    <string name="movements_title">Movimentações</string>
+    <string name="error_invalid_date_range">A data final deve ser posterior à inicial (no máximo um ano)</string>
+    <string name="error_receipt_failed">Não foi possível criar o comprovante. Tente novamente</string>
+    <string name="a11y_movement_category">Categoria da movimentação</string>
+    <string name="movement_kind_income">Receita</string>
+    <string name="movement_kind_expense">Despesa</string>
+    <string name="movement_no_category">Sem categoria</string>
+    <string name="movements_today">Hoje</string>
+    <string name="movements_yesterday">Ontem</string>
+    <string name="movements_empty_title">Não há movimentações\nneste período</string>
+    <string name="movements_empty_body">Quando você gastar ou receber dinheiro, verá aqui.</string>
+    <string name="movements_go_home">Voltar ao início</string>
+    <string name="movements_retry">Tentar novamente</string>
+    <string name="movements_error_title">Ops… não conseguimos carregar\nsuas movimentações</string>
+    <string name="movements_error_body">Houve um problema ao obter as informações. Tente novamente.</string>
+</resources>

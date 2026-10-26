@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Movimientos: textos compartidos (base). Cada flujo tiene su propio strings_movements_*.xml -->
+<resources>
+    <string name="movements_title">Movimientos</string>
+    <string name="error_invalid_date_range">La fecha final debe ser posterior a la inicial (máximo un año)</string>
+    <string name="error_receipt_failed">No pudimos crear el comprobante. Intenta de nuevo</string>
+    <string name="a11y_movement_category">Categoría del movimiento</string>
+    <string name="movement_kind_income">Ingreso</string>
+    <string name="movement_kind_expense">Gasto</string>
+    <string name="movement_no_category">Sin categoría</string>
+    <string name="movements_today">Hoy</string>
+    <string name="movements_yesterday">Ayer</string>
+    <string name="movements_empty_title">No hay movimientos\nen este período</string>
+    <string name="movements_empty_body">Cuando realices un gasto o recibas un ingreso, lo verás aquí.</string>
+    <string name="movements_go_home">Volver al inicio</string>
+    <string name="movements_retry">Reintentar</string>
+    <string name="movements_error_title">Ups… no pudimos cargar\ntus movimientos</string>
+    <string name="movements_error_body">Hubo un problema al obtener la información. Intenta nuevamente.</string>
+</resources>

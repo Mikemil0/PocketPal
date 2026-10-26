@@ -17,6 +17,8 @@ enum class ErrorType {
     GoalNameEmpty, GoalNameTooLong, DuplicateGoalName, InvalidGoalAmount, InitialSavedTooHigh,
     DeadlineInPast, GoalAmountBelowSaved,
     InvalidContributionAmount, ContributionDateInFuture, ContributionNoteTooLong,
+    // Módulo 4 · Movimientos
+    InvalidDateRange, ReceiptFailed,
 }
 
 /** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */

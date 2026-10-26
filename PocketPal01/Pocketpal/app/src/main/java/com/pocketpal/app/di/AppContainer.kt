@@ -9,6 +9,8 @@ import com.pocketpal.app.data.device.DeviceRepository
 import com.pocketpal.app.data.device.SupabaseDeviceRepository
 import com.pocketpal.app.data.goal.GoalRepository
 import com.pocketpal.app.data.goal.SupabaseGoalRepository
+import com.pocketpal.app.data.movement.MovementRepository
+import com.pocketpal.app.data.movement.SupabaseMovementRepository
 import com.pocketpal.app.data.notification.NotificationSettingsRepository
 import com.pocketpal.app.data.notification.SupabaseNotificationSettingsRepository
 import com.pocketpal.app.data.phone.PhoneRepository
@@ -57,6 +59,9 @@ class AppContainer(context: Context) {
 
     /** Módulo 3: metas de ahorro y sus aportes sobre `goals` y `goal_contributions`. */
     val goalRepository: GoalRepository = SupabaseGoalRepository(supabase)
+
+    /** Módulo 4: movimientos (gastos e ingresos) sobre `movements`; solo lectura por ahora. */
+    val movementRepository: MovementRepository = SupabaseMovementRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))

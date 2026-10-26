@@ -47,6 +47,8 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.InvalidContributionAmount -> R.string.error_invalid_contribution_amount
     ErrorType.ContributionDateInFuture -> R.string.error_contribution_date_future
     ErrorType.ContributionNoteTooLong -> R.string.error_contribution_note_too_long
+    ErrorType.InvalidDateRange -> R.string.error_invalid_date_range
+    ErrorType.ReceiptFailed -> R.string.error_receipt_failed
     ErrorType.Unknown -> R.string.error_unknown
 }
 

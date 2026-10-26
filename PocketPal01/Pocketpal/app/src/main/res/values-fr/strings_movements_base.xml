@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Movimientos: textos compartidos (base). Cada flujo tiene su propio strings_movements_*.xml -->
+<resources>
+    <string name="movements_title">Mouvements</string>
+    <string name="error_invalid_date_range">La date de fin doit être après la date de début (un an maximum)</string>
+    <string name="error_receipt_failed">Impossible de créer le reçu. Réessaie</string>
+    <string name="a11y_movement_category">Catégorie du mouvement</string>
+    <string name="movement_kind_income">Revenu</string>
+    <string name="movement_kind_expense">Dépense</string>
+    <string name="movement_no_category">Sans catégorie</string>
+    <string name="movements_today">Aujourd\'hui</string>
+    <string name="movements_yesterday">Hier</string>
+    <string name="movements_empty_title">Aucun mouvement\nsur cette période</string>
+    <string name="movements_empty_body">Quand tu dépenses ou reçois de l\'argent, tu le verras ici.</string>
+    <string name="movements_go_home">Retour à l\'accueil</string>
+    <string name="movements_retry">Réessayer</string>
+    <string name="movements_error_title">Oups… impossible de charger\ntes mouvements</string>
+    <string name="movements_error_body">Un problème est survenu lors du chargement. Réessaie.</string>
+</resources>

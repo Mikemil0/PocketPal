@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Movimientos: textos compartidos (base). Cada flujo tiene su propio strings_movements_*.xml -->
+<resources>
+    <string name="movements_title">Transactions</string>
+    <string name="error_invalid_date_range">The end date must be after the start date (one year at most)</string>
+    <string name="error_receipt_failed">We couldn\'t create the receipt. Try again</string>
+    <string name="a11y_movement_category">Transaction category</string>
+    <string name="movement_kind_income">Income</string>
+    <string name="movement_kind_expense">Expense</string>
+    <string name="movement_no_category">No category</string>
+    <string name="movements_today">Today</string>
+    <string name="movements_yesterday">Yesterday</string>
+    <string name="movements_empty_title">No transactions\nin this period</string>
+    <string name="movements_empty_body">When you spend or receive money, you\'ll see it here.</string>
+    <string name="movements_go_home">Back to home</string>
+    <string name="movements_retry">Retry</string>
+    <string name="movements_error_title">Oops… we couldn\'t load\nyour transactions</string>
+    <string name="movements_error_body">There was a problem getting the information. Please try again.</string>
+</resources>
