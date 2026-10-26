@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 1: lista principal y Movimientos recientes del inicio -->
+<resources>
+    <string name="movements_month_total">Total del mes</string>
+    <string name="movements_change_up">↑ %1$d%% vs. mes anterior</string>
+    <string name="movements_change_down">↓ %1$d%% vs. mes anterior</string>
+    <string name="movements_month_summary">Resumen del mes</string>
+    <string name="movements_income">Ingresos</string>
+    <string name="movements_expenses">Gastos</string>
+    <string name="movements_by_category">Por categoría</string>
+    <string name="movements_filter_today">Hoy</string>
+    <string name="movements_filter_week">7 días</string>
+    <string name="movements_filter_month">Este mes</string>
+    <string name="movements_day_header">%1$s, %2$s</string>
+    <string name="a11y_search_movements">Buscar movimientos</string>
+    <string name="a11y_filter_dates">Filtrar por fechas</string>
+    <string name="home_movements_title">Movimientos recientes</string>
+    <string name="home_movements_see_all">ver todos</string>
+    <string name="home_movements_empty">Aún no tienes movimientos</string>
+</resources>

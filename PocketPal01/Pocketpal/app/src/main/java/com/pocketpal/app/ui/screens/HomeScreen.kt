@@ -13,9 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.data.goal.Goal
+import com.pocketpal.app.data.movement.Movement
+import com.pocketpal.app.data.movement.MovementCategory
 import com.pocketpal.app.ui.components.Avatar
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.goals.HomeGoalsSection
+import com.pocketpal.app.ui.movements.HomeMovementsSection
 import com.pocketpal.app.ui.theme.pocketColors
 
 /**
@@ -25,6 +28,8 @@ import com.pocketpal.app.ui.theme.pocketColors
  *
  * Módulo 3 (flujo 1): debajo del saludo aparece la sección "Metas de ahorro" con las
  * metas activas; la flecha abre la lista completa.
+ *
+ * Módulo 4 (flujo 1): debajo de las metas, "Movimientos recientes" con "ver todos".
  */
 @Composable
 fun HomeScreen(
@@ -36,6 +41,11 @@ fun HomeScreen(
     onOpenGoals: () -> Unit,
     onOpenGoal: (String) -> Unit,
     onSignOut: () -> Unit,
+    movements: List<Movement> = emptyList(),
+    movementCategories: Map<String, MovementCategory> = emptyMap(),
+    currency: String = "COP",
+    onOpenMovements: () -> Unit = {},
+    onOpenMovement: (String) -> Unit = {},
 ) {
     val firstName = name.trim().substringBefore(" ")
 
@@ -53,6 +63,14 @@ fun HomeScreen(
                 goals = goals,
                 onOpenGoals = onOpenGoals,
                 onOpenGoal = onOpenGoal,
+            )
+            Spacer(Modifier.height(24.dp))
+            HomeMovementsSection(
+                movements = movements,
+                categories = movementCategories,
+                currency = currency,
+                onSeeAll = onOpenMovements,
+                onOpenMovement = onOpenMovement,
             )
             Spacer(Modifier.height(40.dp))
             Text(stringResource(R.string.home_sign_out), fontSize = 13.sp, fontWeight = FontWeight.Medium, color = pocketColors.Coral,

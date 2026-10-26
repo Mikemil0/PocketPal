@@ -1,6 +1,7 @@
 package com.pocketpal.app.data.profile
 
 import com.pocketpal.app.data.goal.Goal
+import com.pocketpal.app.data.movement.Movement
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
@@ -29,8 +30,8 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
 
     /**
      * Módulo 3: "Metas activas" cuenta las metas sin `completed_at` (RLS: solo las propias).
-     * "Gastos registrados" sigue en 0 hasta que exista la tabla `movements`.
-     * Si la tabla `goals` aún no existe o falla la consulta, el perfil igual carga (con 0).
+     * Módulo 4: "Gastos registrados" cuenta los movimientos de tipo gasto (`kind = expense`).
+     * Si una tabla aún no existe o falla la consulta, el perfil igual carga (con 0).
      */
     override suspend fun getStats(): ProfileStats {
         val activeGoals = try {
@@ -40,7 +41,17 @@ class SupabaseProfileRepository(private val supabase: SupabaseClient) : ProfileR
         } catch (e: Exception) {
             0
         }
-        return ProfileStats(activeGoals = activeGoals)
+        val registeredExpenses = try {
+            supabase.postgrest.from("movements")
+                .select { filter { eq("kind", "expense") } }
+                .decodeList<Movement>()
+                .size
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            0
+        }
+        return ProfileStats(registeredExpenses = registeredExpenses, activeGoals = activeGoals)
     }
 
     override fun currentEmail(): String? = supabase.auth.currentUserOrNull()?.email

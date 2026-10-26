@@ -33,6 +33,8 @@ import com.pocketpal.app.ui.goals.GoalFormScreen
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementsScreen
+import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.ui.profile.AboutLicensesScreen
 import com.pocketpal.app.ui.profile.AboutScreen
 import com.pocketpal.app.ui.profile.CategoriesScreen
@@ -115,6 +117,9 @@ object Routes {
     const val GoalContribute = "goals/detail/{id}/contribute"
     const val GoalEdit = "goals/detail/{id}/edit"
 
+    // Módulo 4 · Movimientos
+    const val Movements = "movements"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -136,6 +141,7 @@ fun PocketNavHost(
     goalsVm: GoalsViewModel,
     goalFormVm: GoalFormViewModel,
     goalDetailVm: GoalDetailViewModel,
+    movementsVm: MovementsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -275,9 +281,11 @@ fun PocketNavHost(
                 profileVm.refresh()
                 securityVm.registerCurrentDevice()
                 goalsVm.refresh()
+                movementsVm.refreshRecent()
             }
             val profileState by profileVm.state.collectAsStateWithLifecycle()
             val goalsState by goalsVm.state.collectAsStateWithLifecycle()
+            val recentMovements by movementsVm.home.collectAsStateWithLifecycle()
             val data = (profileState as? ProfileViewModel.UiState.Content)?.data
             HomeScreen(
                 name = data?.fullName.orEmpty(),
@@ -288,6 +296,33 @@ fun PocketNavHost(
                 onOpenGoals = { nav.navigate(Routes.Goals) },
                 onOpenGoal = { id -> nav.navigate(Routes.goalDetail(id)) },
                 onSignOut = vm::signOut,
+                movements = recentMovements.movements,
+                movementCategories = recentMovements.categories,
+                currency = profileCurrency(profileState),
+                onOpenMovements = { nav.navigate(Routes.Movements) },
+                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+            )
+        }
+
+        // Módulo 4 · Flujo 1: lista principal de movimientos (resumen, filtros y lista por día).
+        composable(Routes.Movements) {
+            LaunchedEffect(Unit) { movementsVm.refresh() }
+            val movementsState by movementsVm.state.collectAsStateWithLifecycle()
+            val movementsError by movementsVm.error.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            MovementsScreen(
+                state = movementsState,
+                error = movementsError,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onSearch = { /* Módulo 4 · Flujo 2: abre "Buscar movimientos" */ },
+                onOpenCategories = { /* Módulo 4 · Flujo 3: abre "Movimientos por categorías" */ },
+                onOpenCalendar = { /* Módulo 4 · Flujo 3: abre el calendario */ },
+                onSelectFilter = movementsVm::selectFilter,
+                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+                onRetry = movementsVm::refresh,
+                onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+                onErrorShown = movementsVm::consumeError,
             )
         }
 

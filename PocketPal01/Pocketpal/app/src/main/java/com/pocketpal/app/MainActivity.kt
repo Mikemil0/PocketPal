@@ -16,6 +16,7 @@ import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.ExportViewModel
@@ -119,12 +120,19 @@ class MainActivity : AppCompatActivity() {
                         initializer { GoalDetailViewModel(container.goalRepository) }
                     }
                 )
+                // Módulo 4 · Flujo 1: lista de movimientos; compartido con "Movimientos recientes" del inicio.
+                val movementsVm: MovementsViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { MovementsViewModel(container.movementRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
                     goalsVm = goalsVm,
                     goalFormVm = goalFormVm,
                     goalDetailVm = goalDetailVm,
+                    movementsVm = movementsVm,
                 )
             }
         }
