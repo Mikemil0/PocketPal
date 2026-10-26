@@ -16,6 +16,7 @@ import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.profile.CategoriesViewModel
@@ -126,6 +127,12 @@ class MainActivity : AppCompatActivity() {
                         initializer { MovementsViewModel(container.movementRepository) }
                     }
                 )
+                // Módulo 4 · Flujo 2: búsqueda de movimientos.
+                val movementSearchVm: MovementSearchViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { MovementSearchViewModel(container.movementRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -133,6 +140,7 @@ class MainActivity : AppCompatActivity() {
                     goalFormVm = goalFormVm,
                     goalDetailVm = goalDetailVm,
                     movementsVm = movementsVm,
+                    movementSearchVm = movementSearchVm,
                 )
             }
         }

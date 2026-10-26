@@ -33,6 +33,8 @@ import com.pocketpal.app.ui.goals.GoalFormScreen
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementSearchScreen
+import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsScreen
 import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.ui.profile.AboutLicensesScreen
@@ -119,6 +121,7 @@ object Routes {
 
     // Módulo 4 · Movimientos
     const val Movements = "movements"
+    const val MovementSearch = "movements/search"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -142,6 +145,7 @@ fun PocketNavHost(
     goalFormVm: GoalFormViewModel,
     goalDetailVm: GoalDetailViewModel,
     movementsVm: MovementsViewModel,
+    movementSearchVm: MovementSearchViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -315,7 +319,7 @@ fun PocketNavHost(
                 error = movementsError,
                 currency = profileCurrency(profileState),
                 onBack = ::back,
-                onSearch = { /* Módulo 4 · Flujo 2: abre "Buscar movimientos" */ },
+                onSearch = { nav.navigate(Routes.MovementSearch) },
                 onOpenCategories = { /* Módulo 4 · Flujo 3: abre "Movimientos por categorías" */ },
                 onOpenCalendar = { /* Módulo 4 · Flujo 3: abre el calendario */ },
                 onSelectFilter = movementsVm::selectFilter,
@@ -323,6 +327,23 @@ fun PocketNavHost(
                 onRetry = movementsVm::refresh,
                 onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
                 onErrorShown = movementsVm::consumeError,
+            )
+        }
+
+        // Módulo 4 · Flujo 2: buscar movimientos (texto + Todos / Gastos / Ingresos).
+        composable(Routes.MovementSearch) {
+            LaunchedEffect(Unit) { movementSearchVm.prepare() }
+            val searchState by movementSearchVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            MovementSearchScreen(
+                state = searchState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onQueryChange = movementSearchVm::onQueryChange,
+                onClear = movementSearchVm::clear,
+                onSelectKind = movementSearchVm::selectKind,
+                onRetry = movementSearchVm::retry,
+                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
             )
         }
 

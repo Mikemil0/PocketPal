@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 2: buscar movimientos -->
+<resources>
+    <string name="search_title">Search transactions</string>
+    <string name="search_hint">E.g. market, Spotify, taxi</string>
+    <string name="search_all">All</string>
+    <string name="search_expenses">Expenses</string>
+    <string name="search_incomes">Income</string>
+    <string name="search_min_chars">Type at least 2 letters to search</string>
+    <string name="search_no_results">We found no transactions for \"%1$s\"</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for \"%2$s\"</item>
+        <item quantity="other">%1$d results for \"%2$s\"</item>
+    </plurals>
+    <string name="a11y_clear_search">Clear search</string>
+</resources>

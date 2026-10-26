@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 2: buscar movimientos -->
+<resources>
+    <string name="search_title">Rechercher des mouvements</string>
+    <string name="search_hint">Ex. : marché, Spotify, taxi</string>
+    <string name="search_all">Tous</string>
+    <string name="search_expenses">Dépenses</string>
+    <string name="search_incomes">Revenus</string>
+    <string name="search_min_chars">Écris au moins 2 lettres pour rechercher</string>
+    <string name="search_no_results">Aucun mouvement trouvé pour « %1$s »</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d résultat pour « %2$s »</item>
+        <item quantity="other">%1$d résultats pour « %2$s »</item>
+    </plurals>
+    <string name="a11y_clear_search">Effacer la recherche</string>
+</resources>
