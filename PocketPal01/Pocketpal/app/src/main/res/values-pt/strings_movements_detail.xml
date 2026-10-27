@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 4: detalle, recurrente y comprobante -->
+<resources>
+    <string name="detail_title">Detalhe da movimentação</string>
+    <string name="detail_category">Categoria</string>
+    <string name="detail_date">Data</string>
+    <string name="detail_kind">Tipo</string>
+    <string name="detail_description">Descrição</string>
+    <string name="detail_frequency">Frequência</string>
+    <string name="detail_next_charge">Próxima cobrança</string>
+    <string name="detail_dai_title">Dai te ajuda</string>
+    <string name="dai_of_budget">Esta despesa representa %1$d%% do seu orçamento em %2$s.</string>
+    <string name="dai_of_category">Esta despesa representa %1$d%% do que você gastou em %2$s este mês.</string>
+    <string name="dai_of_month_spending">Esta despesa representa %1$d%% dos seus gastos do mês.</string>
+    <string name="dai_of_month_income">Esta receita representa %1$d%% do que você recebeu este mês.</string>
+    <string name="detail_share">Compartilhar</string>
+    <string name="detail_download">Baixar</string>
+    <string name="detail_share_chooser">Compartilhar comprovante</string>
+    <string name="detail_receipt_saved">Comprovante salvo em Downloads/PocketPal</string>
+    <string name="detail_not_found">Esta movimentação não existe mais</string>
+    <string name="detail_back_to_list">Voltar às movimentações</string>
+    <string name="receipt_heading">Comprovante de movimentação · PocketPal</string>
+    <string name="receipt_footer">Gerado com PocketPal</string>
+    <string name="recurrence_weekly">Semanal</string>
+    <string name="recurrence_monthly">Mensal</string>
+    <string name="recurrence_yearly">Anual</string>
+    <string name="recurring_banner_title">Movimentação recorrente</string>
+    <string name="recurring_repeats_weekly">Repete toda semana</string>
+    <string name="recurring_repeats_monthly">Repete todo mês</string>
+    <string name="recurring_repeats_yearly">Repete todo ano</string>
+    <string name="recurring_see_details">Ver mais detalhes</string>
+</resources>

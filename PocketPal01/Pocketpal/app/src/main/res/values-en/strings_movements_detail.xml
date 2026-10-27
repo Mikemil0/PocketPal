@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 4: detalle, recurrente y comprobante -->
+<resources>
+    <string name="detail_title">Transaction details</string>
+    <string name="detail_category">Category</string>
+    <string name="detail_date">Date</string>
+    <string name="detail_kind">Type</string>
+    <string name="detail_description">Description</string>
+    <string name="detail_frequency">Frequency</string>
+    <string name="detail_next_charge">Next charge</string>
+    <string name="detail_dai_title">Dai helps you</string>
+    <string name="dai_of_budget">This expense is %1$d%% of your %2$s budget.</string>
+    <string name="dai_of_category">This expense is %1$d%% of what you spent on %2$s this month.</string>
+    <string name="dai_of_month_spending">This expense is %1$d%% of your spending this month.</string>
+    <string name="dai_of_month_income">This income is %1$d%% of what you received this month.</string>
+    <string name="detail_share">Share</string>
+    <string name="detail_download">Download</string>
+    <string name="detail_share_chooser">Share receipt</string>
+    <string name="detail_receipt_saved">Receipt saved in Downloads/PocketPal</string>
+    <string name="detail_not_found">This transaction no longer exists</string>
+    <string name="detail_back_to_list">Back to transactions</string>
+    <string name="receipt_heading">Transaction receipt · PocketPal</string>
+    <string name="receipt_footer">Generated with PocketPal</string>
+    <string name="recurrence_weekly">Weekly</string>
+    <string name="recurrence_monthly">Monthly</string>
+    <string name="recurrence_yearly">Yearly</string>
+    <string name="recurring_banner_title">Recurring transaction</string>
+    <string name="recurring_repeats_weekly">Repeats every week</string>
+    <string name="recurring_repeats_monthly">Repeats every month</string>
+    <string name="recurring_repeats_yearly">Repeats every year</string>
+    <string name="recurring_see_details">See more details</string>
+</resources>

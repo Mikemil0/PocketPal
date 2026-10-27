@@ -9,11 +9,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -33,14 +35,20 @@ import com.pocketpal.app.ui.goals.GoalFormScreen
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.R
 import com.pocketpal.app.ui.movements.MovementCalendarScreen
 import com.pocketpal.app.ui.movements.MovementCalendarViewModel
 import com.pocketpal.app.ui.movements.MovementCategoriesScreen
 import com.pocketpal.app.ui.movements.MovementCategoriesViewModel
+import com.pocketpal.app.ui.movements.MovementDetailScreen
+import com.pocketpal.app.ui.movements.MovementDetailViewModel
+import com.pocketpal.app.ui.movements.MovementReceipt
 import com.pocketpal.app.ui.movements.MovementSearchScreen
 import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsScreen
 import com.pocketpal.app.ui.movements.MovementsViewModel
+import com.pocketpal.app.ui.movements.RecurringMovementScreen
+import kotlinx.coroutines.launch
 import com.pocketpal.app.ui.profile.AboutLicensesScreen
 import com.pocketpal.app.ui.profile.AboutScreen
 import com.pocketpal.app.ui.profile.CategoriesScreen
@@ -128,6 +136,8 @@ object Routes {
     const val MovementSearch = "movements/search"
     const val MovementCategories = "movements/categories"
     const val MovementCalendar = "movements/calendar"
+    const val MovementDetail = "movements/detail/{id}"
+    const val MovementFullDetail = "movements/detail/{id}/full"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -135,6 +145,8 @@ object Routes {
     fun goalDetail(id: String) = "goals/detail/$id"
     fun goalContribute(id: String) = "goals/detail/$id/contribute"
     fun goalEdit(id: String) = "goals/detail/$id/edit"
+    fun movementDetail(id: String) = "movements/detail/$id"
+    fun movementFullDetail(id: String) = "movements/detail/$id/full"
 }
 
 @Composable
@@ -154,6 +166,7 @@ fun PocketNavHost(
     movementSearchVm: MovementSearchViewModel,
     movementCategoriesVm: MovementCategoriesViewModel,
     movementCalendarVm: MovementCalendarViewModel,
+    movementDetailVm: MovementDetailViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -312,7 +325,7 @@ fun PocketNavHost(
                 movementCategories = recentMovements.categories,
                 currency = profileCurrency(profileState),
                 onOpenMovements = { nav.navigate(Routes.Movements) },
-                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+                onOpenMovement = { id -> nav.navigate(Routes.movementDetail(id)) },
             )
         }
 
@@ -331,7 +344,7 @@ fun PocketNavHost(
                 onOpenCategories = { nav.navigate(Routes.MovementCategories) },
                 onOpenCalendar = { nav.navigate(Routes.MovementCalendar) },
                 onSelectFilter = movementsVm::selectFilter,
-                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+                onOpenMovement = { id -> nav.navigate(Routes.movementDetail(id)) },
                 onRetry = movementsVm::refresh,
                 onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
                 onErrorShown = movementsVm::consumeError,
@@ -351,7 +364,51 @@ fun PocketNavHost(
                 onClear = movementSearchVm::clear,
                 onSelectKind = movementSearchVm::selectKind,
                 onRetry = movementSearchVm::retry,
-                onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+                onOpenMovement = { id -> nav.navigate(Routes.movementDetail(id)) },
+            )
+        }
+
+        // Módulo 4 · Flujo 4: detalle. Si es recurrente se ve primero "Movimiento recurrente"
+        // y "Ver más detalles" abre el detalle completo.
+        composable(
+            Routes.MovementDetail,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            LaunchedEffect(id) { movementDetailVm.load(id) }
+            val detailState by movementDetailVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val recurring = (detailState as? MovementDetailViewModel.UiState.Content)?.data?.movement?.isRecurring == true
+            if (recurring) {
+                RecurringMovementScreen(
+                    state = detailState,
+                    currency = profileCurrency(profileState),
+                    onBack = ::back,
+                    onRetry = movementDetailVm::refresh,
+                    onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+                    onSeeDetails = { nav.navigate(Routes.movementFullDetail(id)) },
+                )
+            } else {
+                MovementDetailRoute(
+                    vm = movementDetailVm,
+                    currency = profileCurrency(profileState),
+                    onBack = ::back,
+                    onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+                )
+            }
+        }
+        composable(
+            Routes.MovementFullDetail,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            LaunchedEffect(id) { movementDetailVm.load(id) }
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            MovementDetailRoute(
+                vm = movementDetailVm,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
             )
         }
 
@@ -897,6 +954,47 @@ fun PocketNavHost(
             }
         }
     }
+}
+
+/**
+ * Módulo 4 · Flujo 4: pantalla de detalle con sus dos acciones de Android.
+ * Compartir abre el menú del sistema; Descargar crea el PDF en segundo plano y avisa
+ * al ViewModel si quedó guardado.
+ */
+@Composable
+private fun MovementDetailRoute(
+    vm: MovementDetailViewModel,
+    currency: String,
+    onBack: () -> Unit,
+    onGoHome: () -> Unit,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var downloading by remember { mutableStateOf(false) }
+    val state by vm.state.collectAsStateWithLifecycle()
+    val receipt by vm.receipt.collectAsStateWithLifecycle()
+    val chooserTitle = stringResource(R.string.detail_share_chooser)
+    MovementDetailScreen(
+        state = state,
+        currency = currency,
+        downloading = downloading,
+        receiptResult = receipt,
+        onBack = onBack,
+        onRetry = vm::refresh,
+        onGoHome = onGoHome,
+        onShare = { content -> MovementReceipt.share(context, content, chooserTitle) },
+        onDownload = { content ->
+            if (!downloading) {
+                downloading = true
+                scope.launch {
+                    val saved = MovementReceipt.savePdf(context, content)
+                    downloading = false
+                    vm.onReceiptResult(saved)
+                }
+            }
+        },
+        onReceiptShown = vm::consumeReceipt,
+    )
 }
 
 /** Moneda del perfil para formatear montos (RN-09); COP mientras no cargue. */

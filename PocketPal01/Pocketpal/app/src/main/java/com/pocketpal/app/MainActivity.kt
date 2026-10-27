@@ -18,6 +18,7 @@ import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
 import com.pocketpal.app.ui.movements.MovementCalendarViewModel
 import com.pocketpal.app.ui.movements.MovementCategoriesViewModel
+import com.pocketpal.app.ui.movements.MovementDetailViewModel
 import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
@@ -146,6 +147,12 @@ class MainActivity : AppCompatActivity() {
                         initializer { MovementCalendarViewModel(container.movementRepository) }
                     }
                 )
+                // Módulo 4 · Flujo 4: detalle del movimiento (normal y recurrente).
+                val movementDetailVm: MovementDetailViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { MovementDetailViewModel(container.movementRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -156,6 +163,7 @@ class MainActivity : AppCompatActivity() {
                     movementSearchVm = movementSearchVm,
                     movementCategoriesVm = movementCategoriesVm,
                     movementCalendarVm = movementCalendarVm,
+                    movementDetailVm = movementDetailVm,
                 )
             }
         }
