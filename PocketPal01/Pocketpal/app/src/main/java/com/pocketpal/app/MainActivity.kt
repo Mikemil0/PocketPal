@@ -16,6 +16,8 @@ import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementCalendarViewModel
+import com.pocketpal.app.ui.movements.MovementCategoriesViewModel
 import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsViewModel
 import com.pocketpal.app.navigation.PocketNavHost
@@ -133,6 +135,17 @@ class MainActivity : AppCompatActivity() {
                         initializer { MovementSearchViewModel(container.movementRepository) }
                     }
                 )
+                // Módulo 4 · Flujo 3: gastos por categoría y calendario de fechas.
+                val movementCategoriesVm: MovementCategoriesViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { MovementCategoriesViewModel(container.movementRepository) }
+                    }
+                )
+                val movementCalendarVm: MovementCalendarViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { MovementCalendarViewModel(container.movementRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -141,6 +154,8 @@ class MainActivity : AppCompatActivity() {
                     goalDetailVm = goalDetailVm,
                     movementsVm = movementsVm,
                     movementSearchVm = movementSearchVm,
+                    movementCategoriesVm = movementCategoriesVm,
+                    movementCalendarVm = movementCalendarVm,
                 )
             }
         }

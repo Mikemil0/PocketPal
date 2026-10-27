@@ -6,6 +6,11 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
+import com.pocketpal.app.data.movement.Movement
+import com.pocketpal.app.data.movement.MovementRules
+import kotlinx.coroutines.CancellationException
+import java.time.YearMonth
+import java.time.ZoneId
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.util.UUID
@@ -98,9 +103,32 @@ class SupabaseCategoryRepository(private val supabase: SupabaseClient) : Categor
     override suspend fun nameExists(kind: CategoryKind, name: String, excludeId: String?): Boolean =
         list(kind).any { it.id != excludeId && normalize(it.name) == normalize(name) }
 
+    /**
+     * Módulo 4: cuántos movimientos y cuánto suma cada categoría **en el mes actual**
+     * (el mismo período del límite mensual). Si la consulta falla, la lista de
+     * categorías igual se muestra, con 0 / $0.
+     */
     override suspend fun getCategoryTotals(): Map<String, CategoryStats> {
-        // §6: `movements` no existe hasta el Módulo 3; la UI muestra 0 / $0.
-        return emptyMap()
+        val zone = ZoneId.systemDefault()
+        val (from, to) = MovementRules.toInstants(MovementRules.monthRange(YearMonth.now(zone)), zone)
+        val movements = try {
+            supabase.postgrest.from("movements")
+                .select {
+                    filter {
+                        gte("occurred_at", from.toString())
+                        lt("occurred_at", to.toString())
+                    }
+                }
+                .decodeList<Movement>()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            return emptyMap()
+        }
+        return movements
+            .filter { it.categoryId != null }
+            .groupBy { it.categoryId!! }
+            .mapValues { (_, list) -> CategoryStats(movementCount = list.size, total = list.sumOf { it.amount }) }
     }
 
     private fun currentUserId(): String? = supabase.auth.currentUserOrNull()?.id

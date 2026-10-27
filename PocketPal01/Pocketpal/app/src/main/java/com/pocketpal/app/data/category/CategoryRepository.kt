@@ -36,9 +36,9 @@ interface CategoryRepository {
     suspend fun nameExists(kind: CategoryKind, name: String, excludeId: String? = null): Boolean
 
     /**
-     * Movimientos y total de cada categoría (§6: "dependencia con módulos
-     * futuros"). La tabla `movements` no existe hasta el Módulo 3, así que esta
-     * interfaz devuelve **vacío / 0** y la UI muestra "0 movimientos" y "$0".
+     * Movimientos y total de cada categoría en el mes actual. Desde el Módulo 4 se
+     * calcula con la tabla `movements`; una categoría sin movimientos no aparece en
+     * el mapa y la UI muestra "0 movimientos" y "$0".
      */
     suspend fun getCategoryTotals(): Map<String, CategoryStats>
 }

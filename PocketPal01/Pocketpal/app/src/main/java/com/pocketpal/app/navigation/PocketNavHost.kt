@@ -33,6 +33,10 @@ import com.pocketpal.app.ui.goals.GoalFormScreen
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsScreen
 import com.pocketpal.app.ui.goals.GoalsViewModel
+import com.pocketpal.app.ui.movements.MovementCalendarScreen
+import com.pocketpal.app.ui.movements.MovementCalendarViewModel
+import com.pocketpal.app.ui.movements.MovementCategoriesScreen
+import com.pocketpal.app.ui.movements.MovementCategoriesViewModel
 import com.pocketpal.app.ui.movements.MovementSearchScreen
 import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsScreen
@@ -122,6 +126,8 @@ object Routes {
     // Módulo 4 · Movimientos
     const val Movements = "movements"
     const val MovementSearch = "movements/search"
+    const val MovementCategories = "movements/categories"
+    const val MovementCalendar = "movements/calendar"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -146,6 +152,8 @@ fun PocketNavHost(
     goalDetailVm: GoalDetailViewModel,
     movementsVm: MovementsViewModel,
     movementSearchVm: MovementSearchViewModel,
+    movementCategoriesVm: MovementCategoriesViewModel,
+    movementCalendarVm: MovementCalendarViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -320,8 +328,8 @@ fun PocketNavHost(
                 currency = profileCurrency(profileState),
                 onBack = ::back,
                 onSearch = { nav.navigate(Routes.MovementSearch) },
-                onOpenCategories = { /* Módulo 4 · Flujo 3: abre "Movimientos por categorías" */ },
-                onOpenCalendar = { /* Módulo 4 · Flujo 3: abre el calendario */ },
+                onOpenCategories = { nav.navigate(Routes.MovementCategories) },
+                onOpenCalendar = { nav.navigate(Routes.MovementCalendar) },
                 onSelectFilter = movementsVm::selectFilter,
                 onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
                 onRetry = movementsVm::refresh,
@@ -344,6 +352,45 @@ fun PocketNavHost(
                 onSelectKind = movementSearchVm::selectKind,
                 onRetry = movementSearchVm::retry,
                 onOpenMovement = { /* Módulo 4 · Flujo 4: abre el detalle del movimiento */ },
+            )
+        }
+
+        // Módulo 4 · Flujo 3: gastos del mes por categoría.
+        composable(Routes.MovementCategories) {
+            LaunchedEffect(Unit) { movementCategoriesVm.refresh() }
+            val categoriesState by movementCategoriesVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            MovementCategoriesScreen(
+                state = categoriesState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onRetry = movementCategoriesVm::refresh,
+                onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+            )
+        }
+
+        // Módulo 4 · Flujo 3: calendario para elegir un rango de fechas.
+        composable(Routes.MovementCalendar) {
+            LaunchedEffect(Unit) { movementCalendarVm.open(movementsVm.currentRange()) }
+            val calendarState by movementCalendarVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            MovementCalendarScreen(
+                state = calendarState,
+                weekStart = prefs.weekStart,
+                canGoNext = calendarState.month.isBefore(java.time.YearMonth.now()),
+                onBack = ::back,
+                onPreviousMonth = movementCalendarVm::previousMonth,
+                onNextMonth = movementCalendarVm::nextMonth,
+                onTapDay = movementCalendarVm::tapDay,
+                onLast30Days = movementCalendarVm::selectLast30Days,
+                onCustom = movementCalendarVm::selectCustom,
+                onApply = {
+                    // El rango vuelve a la lista principal, que se recarga con esas fechas.
+                    movementCalendarVm.confirm()?.let { range ->
+                        movementsVm.selectRange(range)
+                        nav.popBackStack()
+                    }
+                },
             )
         }
 
