@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 4 · Flujo 3: por categorías y calendario -->
+<resources>
+    <string name="mov_categories_title">Movimentações por categoria</string>
+    <string name="mov_categories_month_label">Gastos este mês</string>
+    <string name="mov_categories_change_less">↓ %1$d%% a menos que o mês passado</string>
+    <string name="mov_categories_change_more">↑ %1$d%% a mais que o mês passado</string>
+    <string name="mov_categories_header">Categorias</string>
+    <string name="mov_categories_others">Outros</string>
+    <string name="calendar_pick_start">Escolha o primeiro dia</string>
+    <string name="calendar_last_30">Últimos 30 dias</string>
+    <string name="calendar_custom">Personalizado</string>
+    <string name="calendar_apply">Ver movimentações</string>
+    <string name="a11y_previous_month">Mês anterior</string>
+    <string name="a11y_next_month">Próximo mês</string>
+</resources>
