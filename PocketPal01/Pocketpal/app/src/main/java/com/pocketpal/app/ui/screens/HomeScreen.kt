@@ -15,6 +15,8 @@ import com.pocketpal.app.R
 import com.pocketpal.app.data.goal.Goal
 import com.pocketpal.app.data.movement.Movement
 import com.pocketpal.app.data.movement.MovementCategory
+import com.pocketpal.app.ui.budgets.BudgetsViewModel
+import com.pocketpal.app.ui.budgets.HomeBudgetsSection
 import com.pocketpal.app.ui.components.Avatar
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.goals.HomeGoalsSection
@@ -30,6 +32,8 @@ import com.pocketpal.app.ui.theme.pocketColors
  * metas activas; la flecha abre la lista completa.
  *
  * Módulo 4 (flujo 1): debajo de las metas, "Movimientos recientes" con "ver todos".
+ *
+ * Módulo 5 (flujo 1): entre las metas y los movimientos, la tarjeta "Presupuestos".
  */
 @Composable
 fun HomeScreen(
@@ -46,6 +50,10 @@ fun HomeScreen(
     currency: String = "COP",
     onOpenMovements: () -> Unit = {},
     onOpenMovement: (String) -> Unit = {},
+    budgets: BudgetsViewModel.HomeBudgets = BudgetsViewModel.HomeBudgets(),
+    onOpenBudgets: () -> Unit = {},
+    onOpenBudget: (String) -> Unit = {},
+    onCreateBudget: () -> Unit = {},
 ) {
     val firstName = name.trim().substringBefore(" ")
 
@@ -63,6 +71,14 @@ fun HomeScreen(
                 goals = goals,
                 onOpenGoals = onOpenGoals,
                 onOpenGoal = onOpenGoal,
+            )
+            Spacer(Modifier.height(24.dp))
+            HomeBudgetsSection(
+                home = budgets,
+                currency = currency,
+                onSeeAll = onOpenBudgets,
+                onOpen = onOpenBudget,
+                onCreate = onCreateBudget,
             )
             Spacer(Modifier.height(24.dp))
             HomeMovementsSection(

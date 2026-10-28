@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Flujo 1 — lista de presupuestos e inicio -->
+<resources>
+    <string name="budgets_title">Orçamentos</string>
+    <string name="budgets_total_limit">Orçado</string>
+    <string name="budgets_total_spent">Gasto</string>
+    <plurals name="budgets_active_count">
+        <item quantity="one">%1$d categoria ativa</item>
+        <item quantity="other">%1$d categorias ativas</item>
+    </plurals>
+    <string name="budgets_empty">Você ainda não tem orçamentos.\nComece já!</string>
+    <string name="budgets_create">Criar novo orçamento</string>
+    <string name="home_budgets_see_all">ver todos</string>
+    <string name="home_budgets_empty">Você ainda não tem orçamentos.\nComece já!</string>
+    <string name="home_budgets_add_more">Precisa orçar outra categoria?\nFaça agora!</string>
+</resources>

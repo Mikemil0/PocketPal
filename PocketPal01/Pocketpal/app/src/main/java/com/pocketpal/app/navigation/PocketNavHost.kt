@@ -27,6 +27,8 @@ import androidx.navigation.navArgument
 import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.budgets.BudgetsScreen
+import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.AddContributionScreen
 import com.pocketpal.app.ui.goals.GoalCreatedScreen
 import com.pocketpal.app.ui.goals.GoalDetailScreen
@@ -139,6 +141,9 @@ object Routes {
     const val MovementDetail = "movements/detail/{id}"
     const val MovementFullDetail = "movements/detail/{id}/full"
 
+    // Módulo 5 · Presupuestos
+    const val Budgets = "budgets"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -167,6 +172,7 @@ fun PocketNavHost(
     movementCategoriesVm: MovementCategoriesViewModel,
     movementCalendarVm: MovementCalendarViewModel,
     movementDetailVm: MovementDetailViewModel,
+    budgetsVm: BudgetsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -307,10 +313,12 @@ fun PocketNavHost(
                 securityVm.registerCurrentDevice()
                 goalsVm.refresh()
                 movementsVm.refreshRecent()
+                budgetsVm.refresh()
             }
             val profileState by profileVm.state.collectAsStateWithLifecycle()
             val goalsState by goalsVm.state.collectAsStateWithLifecycle()
             val recentMovements by movementsVm.home.collectAsStateWithLifecycle()
+            val homeBudgets by budgetsVm.home.collectAsStateWithLifecycle()
             val data = (profileState as? ProfileViewModel.UiState.Content)?.data
             HomeScreen(
                 name = data?.fullName.orEmpty(),
@@ -326,6 +334,23 @@ fun PocketNavHost(
                 currency = profileCurrency(profileState),
                 onOpenMovements = { nav.navigate(Routes.Movements) },
                 onOpenMovement = { id -> nav.navigate(Routes.movementDetail(id)) },
+                budgets = homeBudgets,
+                onOpenBudgets = { nav.navigate(Routes.Budgets) },
+            )
+        }
+
+        // Módulo 5 · Flujo 1: lista de presupuestos (presupuestado, gastado y una tarjeta por categoría).
+        composable(Routes.Budgets) {
+            LaunchedEffect(Unit) { budgetsVm.refresh() }
+            val budgetsState by budgetsVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            BudgetsScreen(
+                state = budgetsState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onCreate = {},
+                onOpen = {},
+                onRetry = budgetsVm::refresh,
             )
         }
 

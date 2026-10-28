@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
@@ -153,6 +154,15 @@ class MainActivity : AppCompatActivity() {
                         initializer { MovementDetailViewModel(container.movementRepository) }
                     }
                 )
+                // Módulo 5 · Flujo 1: presupuestos; compartido con la tarjeta del inicio. El período
+                // semanal empieza el día elegido en Preferencias → "Inicio de semana".
+                val budgetsVm: BudgetsViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            BudgetsViewModel(container.budgetRepository, weekStart = { preferencesVm.state.value.weekStart })
+                        }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -164,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                     movementCategoriesVm = movementCategoriesVm,
                     movementCalendarVm = movementCalendarVm,
                     movementDetailVm = movementDetailVm,
+                    budgetsVm = budgetsVm,
                 )
             }
         }
