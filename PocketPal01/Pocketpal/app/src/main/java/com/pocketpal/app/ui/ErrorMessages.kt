@@ -49,6 +49,11 @@ fun ErrorType.messageRes(): Int = when (this) {
     ErrorType.ContributionNoteTooLong -> R.string.error_contribution_note_too_long
     ErrorType.InvalidDateRange -> R.string.error_invalid_date_range
     ErrorType.ReceiptFailed -> R.string.error_receipt_failed
+    ErrorType.BudgetCategoryRequired -> R.string.error_budget_category_required
+    ErrorType.BudgetNameEmpty -> R.string.error_budget_name_empty
+    ErrorType.BudgetNameTooLong -> R.string.error_budget_name_too_long
+    ErrorType.InvalidBudgetAmount -> R.string.error_invalid_budget_amount
+    ErrorType.DuplicateBudget -> R.string.error_duplicate_budget
     ErrorType.Unknown -> R.string.error_unknown
 }
 

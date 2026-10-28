@@ -19,6 +19,8 @@ enum class ErrorType {
     InvalidContributionAmount, ContributionDateInFuture, ContributionNoteTooLong,
     // Módulo 4 · Movimientos
     InvalidDateRange, ReceiptFailed,
+    // Módulo 5 · Presupuestos
+    BudgetCategoryRequired, BudgetNameEmpty, BudgetNameTooLong, InvalidBudgetAmount, DuplicateBudget,
 }
 
 /** Las dos variantes del antiguo `WeakPassword` (RF-A3: mensaje específico por regla). */

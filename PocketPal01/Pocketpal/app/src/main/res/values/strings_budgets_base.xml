@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Presupuestos — base (tarjetas, errores) -->
+<resources>
+    <string name="budget_spent_of_limit">%1$s de %2$s</string>
+    <string name="budget_percent">%1$d%%</string>
+    <string name="budget_limit_monthly">Límite mensual</string>
+    <string name="budget_limit_weekly">Límite semanal</string>
+    <string name="budgets_error_title">Ups… no pudimos cargar tus presupuestos</string>
+    <string name="budgets_error_body">Revisa tu conexión a internet e inténtalo de nuevo.</string>
+    <string name="budgets_retry">Reintentar</string>
+    <string name="error_budget_category_required">Elige una categoría para el presupuesto</string>
+    <string name="error_budget_name_empty">Escribe un nombre para el presupuesto</string>
+    <string name="error_budget_name_too_long">El nombre puede tener máximo 30 caracteres</string>
+    <string name="error_invalid_budget_amount">Escribe un monto límite mayor a $0</string>
+    <string name="error_duplicate_budget">Ya tienes un presupuesto con este nombre en la misma categoría</string>
+</resources>

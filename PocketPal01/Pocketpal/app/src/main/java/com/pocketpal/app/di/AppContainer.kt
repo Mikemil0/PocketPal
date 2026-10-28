@@ -3,6 +3,8 @@ package com.pocketpal.app.di
 import android.content.Context
 import android.os.Build
 import com.pocketpal.app.auth.SupabaseProvider
+import com.pocketpal.app.data.budget.BudgetRepository
+import com.pocketpal.app.data.budget.SupabaseBudgetRepository
 import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
 import com.pocketpal.app.data.device.DeviceRepository
@@ -62,6 +64,9 @@ class AppContainer(context: Context) {
 
     /** Módulo 4: movimientos (gastos e ingresos) sobre `movements`; solo lectura por ahora. */
     val movementRepository: MovementRepository = SupabaseMovementRepository(supabase)
+
+    /** Módulo 5: presupuestos sobre `budgets`; lo gastado sale de `movements`. */
+    val budgetRepository: BudgetRepository = SupabaseBudgetRepository(supabase)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))
