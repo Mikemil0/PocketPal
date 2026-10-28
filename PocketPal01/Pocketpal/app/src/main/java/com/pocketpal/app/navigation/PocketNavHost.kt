@@ -1,7 +1,9 @@
 package com.pocketpal.app.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -34,6 +37,7 @@ import com.pocketpal.app.ui.budgets.BudgetDetailViewModel
 import com.pocketpal.app.ui.budgets.BudgetFormScreen
 import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetHistoryScreen
+import com.pocketpal.app.ui.budgets.BudgetsErrorState
 import com.pocketpal.app.ui.budgets.BudgetsScreen
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.AddContributionScreen
@@ -155,6 +159,7 @@ object Routes {
     const val BudgetCreated = "budgets/created"
     const val BudgetDetail = "budgets/detail/{id}"
     const val BudgetHistory = "budgets/detail/{id}/history"
+    const val BudgetEdit = "budgets/detail/{id}/edit"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -166,6 +171,7 @@ object Routes {
     fun movementFullDetail(id: String) = "movements/detail/$id/full"
     fun budgetDetail(id: String) = "budgets/detail/$id"
     fun budgetHistory(id: String) = "budgets/detail/$id/history"
+    fun budgetEdit(id: String) = "budgets/detail/$id/edit"
 }
 
 @Composable
@@ -369,6 +375,7 @@ fun PocketNavHost(
                 onCreate = { nav.navigate(Routes.BudgetNew) },
                 onOpen = { id -> nav.navigate(Routes.budgetDetail(id)) },
                 onRetry = budgetsVm::refresh,
+                onEdit = { id -> nav.navigate(Routes.budgetEdit(id)) },
             )
         }
 
@@ -388,6 +395,7 @@ fun PocketNavHost(
                 onOpenHistory = { nav.navigate(Routes.budgetHistory(id)) },
                 onOpenMovement = { movementId -> nav.navigate(Routes.movementDetail(movementId)) },
                 onRetry = budgetDetailVm::refresh,
+                onEdit = { nav.navigate(Routes.budgetEdit(id)) },
             )
         }
         composable(
@@ -403,6 +411,75 @@ fun PocketNavHost(
                 onBack = ::back,
                 onRetry = budgetDetailVm::loadHistory,
             )
+        }
+
+        // Módulo 5 · Flujo 4: "Editar presupuesto" (mismo formulario) y "Eliminar presupuesto".
+        composable(
+            Routes.BudgetEdit,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            var prepared by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(id) {
+                if (!prepared) {
+                    budgetFormVm.prepareEdit(id)
+                    prepared = true
+                }
+            }
+            val editing by budgetFormVm.editing.collectAsStateWithLifecycle()
+            val selectedId by budgetFormVm.selectedCategoryId.collectAsStateWithLifecycle()
+            val categories by budgetFormVm.categories.collectAsStateWithLifecycle()
+            val budgets by budgetFormVm.budgets.collectAsStateWithLifecycle()
+            val saving by budgetFormVm.saving.collectAsStateWithLifecycle()
+            val deleting by budgetFormVm.deleting.collectAsStateWithLifecycle()
+            val formError by budgetFormVm.error.collectAsStateWithLifecycle()
+            val formEvent by budgetFormVm.event.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(formEvent) {
+                when (formEvent) {
+                    is BudgetFormViewModel.Event.Updated -> {
+                        budgetFormVm.consumeEvent()
+                        budgetsVm.refresh()
+                        budgetDetailVm.refresh()
+                        nav.popBackStack()
+                    }
+                    BudgetFormViewModel.Event.Deleted -> {
+                        budgetFormVm.consumeEvent()
+                        budgetsVm.refresh()
+                        // El detalle ya no existe: se vuelve a la lista (o al inicio si se llegó desde allí).
+                        if (!nav.popBackStack(Routes.Budgets, inclusive = false)) {
+                            nav.popBackStack(Routes.Home, inclusive = false)
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+            val budget = editing
+            if ((budget == null || budget.id != id) && formError != null) {
+                // No se pudo traer el presupuesto (sin internet o ya no existe).
+                Box(Modifier.fillMaxSize().background(pocketColors.Cream).padding(24.dp)) {
+                    BudgetsErrorState(onRetry = { budgetFormVm.prepareEdit(id) })
+                }
+            } else if (budget == null || budget.id != id) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = pocketColors.Coral)
+                }
+            } else {
+                BudgetFormScreen(
+                    category = categories.firstOrNull { it.id == selectedId },
+                    currency = profileCurrency(profileState),
+                    isDuplicate = budgets.isNotEmpty() && budgetFormVm.isDuplicate(),
+                    saving = saving,
+                    error = formError,
+                    onBack = ::back,
+                    onChangeCategory = { nav.navigate(Routes.BudgetCategory) },
+                    onSave = budgetFormVm::update,
+                    onErrorShown = budgetFormVm::consumeError,
+                    editing = budget,
+                    deleting = deleting,
+                    onDelete = budgetFormVm::delete,
+                )
+            }
         }
 
         // Módulo 5 · Flujo 2: "Nuevo presupuesto" → "Elegir categoría" → "Presupuesto creado".

@@ -45,6 +45,8 @@ import com.pocketpal.app.ui.theme.pocketColors
  * Arriba, la franja azul con "Presupuestado" (suma de los límites) y "Gastado" (suma de lo
  * gastado en el período de cada uno). Abajo, "N categorías activas", una tarjeta por
  * presupuesto y el botón "Crear nuevo presupuesto".
+ *
+ * Flujo 4 · Dejar presionada una tarjeta abre "Editar presupuesto" ([onEdit]).
  */
 @Composable
 fun BudgetsScreen(
@@ -54,6 +56,7 @@ fun BudgetsScreen(
     onCreate: () -> Unit,
     onOpen: (String) -> Unit,
     onRetry: () -> Unit,
+    onEdit: (String) -> Unit = {},
 ) {
     val content = (state as? BudgetsViewModel.UiState.Content)?.data
 
@@ -133,6 +136,7 @@ fun BudgetsScreen(
                                 status = status,
                                 currency = currency,
                                 onClick = { onOpen(status.budget.id) },
+                                onLongClick = { onEdit(status.budget.id) },
                             )
                             Spacer(Modifier.height(10.dp))
                         }

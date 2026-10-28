@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Flujo 4 — editar y eliminar presupuesto -->
+<resources>
+    <string name="budget_edit_title">Editar presupuesto</string>
+    <string name="budget_delete">Eliminar presupuesto</string>
+    <string name="budget_delete_title">¿Eliminar presupuesto?</string>
+    <string name="budget_delete_body">Se eliminará “%1$s” y perderás el historial de seguimiento de este presupuesto. Los gastos ya registrados no se verán afectados.</string>
+    <string name="budget_delete_confirm">Sí, eliminar</string>
+</resources>

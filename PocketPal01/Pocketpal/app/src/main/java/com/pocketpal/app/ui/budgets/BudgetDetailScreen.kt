@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +53,8 @@ import java.time.ZoneId
  * Tarjeta con "Límite mensual · Se reinicia en 17 días", "$420.000 de $500.000", la barra,
  * "85% usado" y "Quedan $80.000"; los botones "Registrar gasto" y "Ver historial"; y los
  * gastos del período. Tocar un gasto abre su detalle (Módulo 4).
+ *
+ * Flujo 4 · Tocar la tarjeta del límite abre "Editar presupuesto" ([onEdit]).
  */
 @Composable
 fun BudgetDetailScreen(
@@ -61,6 +64,7 @@ fun BudgetDetailScreen(
     onOpenHistory: () -> Unit,
     onOpenMovement: (String) -> Unit,
     onRetry: () -> Unit,
+    onEdit: () -> Unit = {},
 ) {
     val title = (state as? BudgetDetailViewModel.UiState.Content)?.data?.status?.budget?.name.orEmpty()
 
@@ -84,6 +88,7 @@ fun BudgetDetailScreen(
                 currency = currency,
                 onOpenHistory = onOpenHistory,
                 onOpenMovement = onOpenMovement,
+                onEdit = onEdit,
             )
         }
         Spacer(Modifier.height(24.dp))
@@ -96,6 +101,7 @@ private fun DetailContent(
     currency: String,
     onOpenHistory: () -> Unit,
     onOpenMovement: (String) -> Unit,
+    onEdit: () -> Unit,
 ) {
     val status = detail.status
     val context = LocalContext.current
@@ -108,6 +114,7 @@ private fun DetailContent(
             .clip(RoundedCornerShape(16.dp))
             .background(pocketColors.Card)
             .border(1.dp, pocketColors.Coral, RoundedCornerShape(16.dp))
+            .clickable(onClick = onEdit)
             .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

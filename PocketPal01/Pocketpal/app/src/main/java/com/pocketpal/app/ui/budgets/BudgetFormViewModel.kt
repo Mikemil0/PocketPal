@@ -28,6 +28,10 @@ import java.time.ZoneId
  *   pantalla ("Elegir categoría") y el formulario la necesita al volver.
  * - Valida con [BudgetRules.validate] antes de ir a la base; la base es la autoridad del
  *   "un presupuesto por categoría" (índice único) y su rechazo se traduce al mismo error.
+ *
+ * Flujo 4 · El mismo formulario sirve para "Editar presupuesto" ([prepareEdit], [update])
+ * y desde allí se elimina ([delete]). Al editar, la categoría propia sigue disponible y el
+ * presupuesto no choca consigo mismo.
  */
 class BudgetFormViewModel(
     private val repository: BudgetRepository,
@@ -39,6 +43,8 @@ class BudgetFormViewModel(
     /** Eventos de una sola vez que la pantalla consume. */
     sealed interface Event {
         data class Created(val budget: Budget) : Event
+        data class Updated(val budget: Budget) : Event
+        data object Deleted : Event
     }
 
     /** Categorías de gastos del usuario (Módulo 2). */
@@ -72,6 +78,13 @@ class BudgetFormViewModel(
     private val _created = MutableStateFlow<BudgetStatus?>(null)
     val created: StateFlow<BudgetStatus?> = _created.asStateFlow()
 
+    /** Presupuesto que se está editando (flujo 4); `null` = se está creando uno nuevo. */
+    private val _editing = MutableStateFlow<Budget?>(null)
+    val editing: StateFlow<Budget?> = _editing.asStateFlow()
+
+    private val _deleting = MutableStateFlow(false)
+    val deleting: StateFlow<Boolean> = _deleting.asStateFlow()
+
     fun consumeError() { _error.value = null }
     fun consumeEvent() { _event.value = null }
 
@@ -83,14 +96,43 @@ class BudgetFormViewModel(
         _error.value = null
         _event.value = null
         _selectedCategoryId.value = null
+        _editing.value = null
         load(keepCategoryId = null) { available ->
             _selectedCategoryId.value = available.firstOrNull()?.id
         }
     }
 
+    /**
+     * Flujo 4 · Se llama al abrir "Editar presupuesto": trae el presupuesto [id] para
+     * prellenar el formulario y deja elegida su categoría.
+     */
+    fun prepareEdit(id: String) {
+        _error.value = null
+        _event.value = null
+        if (_editing.value?.id != id) _editing.value = null
+        viewModelScope.launch {
+            try {
+                val budget = repository.get(id)
+                if (budget == null) {
+                    _error.value = ErrorType.Unknown
+                    return@launch
+                }
+                _selectedCategoryId.value = budget.categoryId
+                _editing.value = budget
+                load(keepCategoryId = budget.categoryId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            }
+        }
+    }
+
     /** Categorías que se pueden elegir (sin presupuesto). Vacía = "Ya tienes presupuesto en todas tus categorías". */
     fun availableCategories(): List<MovementCategory> =
-        BudgetRules.availableCategories(_categories.value, _budgets.value)
+        BudgetRules.availableCategories(_categories.value, _budgets.value, keepCategoryId = _editing.value?.categoryId)
 
     fun selectedCategory(): MovementCategory? =
         _categories.value.firstOrNull { it.id == _selectedCategoryId.value }
@@ -103,7 +145,7 @@ class BudgetFormViewModel(
 
     /** ¿La categoría elegida ya tiene otro presupuesto? (aviso en vivo bajo NOMBRE). */
     fun isDuplicate(): Boolean =
-        BudgetRules.isCategoryTaken(_selectedCategoryId.value, _budgets.value)
+        BudgetRules.isCategoryTaken(_selectedCategoryId.value, _budgets.value, excludeBudgetId = _editing.value?.id)
 
     /** Valida y crea el presupuesto con la categoría elegida. */
     fun create(draft: BudgetDraft) {
@@ -130,6 +172,61 @@ class BudgetFormViewModel(
                 _error.value = ErrorType.Unknown
             } finally {
                 _saving.value = false
+            }
+        }
+    }
+
+    /** Flujo 4 · Guarda los cambios del presupuesto en edición (categoría, nombre, límite, período y aviso). */
+    fun update(draft: BudgetDraft) {
+        val budget = _editing.value ?: return
+        val clean = draft.copy(categoryId = _selectedCategoryId.value, name = draft.name.trim())
+        val problem = BudgetRules.validate(clean, _budgets.value, excludeBudgetId = budget.id)
+        if (problem != null) {
+            _error.value = problem
+            return
+        }
+        _saving.value = true
+        viewModelScope.launch {
+            try {
+                val updated = repository.update(budget.id, clean)
+                _budgets.value = _budgets.value.map { if (it.id == updated.id) updated else it }
+                _editing.value = updated
+                _event.value = Event.Updated(updated)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: DuplicateBudgetException) {
+                onDuplicate()
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            } finally {
+                _saving.value = false
+            }
+        }
+    }
+
+    /**
+     * Flujo 4 · Elimina el presupuesto en edición. Solo se borra la fila de `budgets`: los
+     * gastos de `movements` no se tocan ("Los gastos ya registrados no se verán afectados").
+     */
+    fun delete() {
+        val budget = _editing.value ?: return
+        _deleting.value = true
+        viewModelScope.launch {
+            try {
+                repository.delete(budget.id)
+                _budgets.value = _budgets.value.filterNot { it.id == budget.id }
+                _editing.value = null
+                _event.value = Event.Deleted
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                _error.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _error.value = ErrorType.Unknown
+            } finally {
+                _deleting.value = false
             }
         }
     }

@@ -1,10 +1,12 @@
 package com.pocketpal.app.ui.budgets
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.NotificationsNone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
@@ -29,13 +32,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.pocketpal.app.R
 import com.pocketpal.app.auth.ErrorType
+import com.pocketpal.app.data.budget.Budget
 import com.pocketpal.app.data.budget.BudgetDraft
 import com.pocketpal.app.data.budget.BudgetPeriod
 import com.pocketpal.app.data.movement.MovementCategory
@@ -59,6 +71,10 @@ import com.pocketpal.app.ui.theme.pocketColors
  *
  * Al elegir una categoría se proponen su nombre y, si en Mi perfil → Categorías tenía
  * un límite mensual (Módulo 2), ese monto.
+ *
+ * Flujo 4 · Si llega [editing], el mismo formulario es "Editar presupuesto" (Figma
+ * "EDITAR PRE"): viene prellenado y abajo aparece "Eliminar presupuesto", que pide
+ * confirmación (Figma "ELIMINAR PRE").
  */
 @Composable
 fun BudgetFormScreen(
@@ -71,11 +87,16 @@ fun BudgetFormScreen(
     onChangeCategory: () -> Unit,
     onSave: (BudgetDraft) -> Unit,
     onErrorShown: () -> Unit,
+    editing: Budget? = null,
+    deleting: Boolean = false,
+    onDelete: (() -> Unit)? = null,
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var amountDigits by rememberSaveable { mutableStateOf("") }
-    var period by rememberSaveable { mutableStateOf(BudgetPeriod.Monthly) }
-    var alert by rememberSaveable { mutableStateOf(false) }
+    // Vacíos al crear; los del presupuesto al editar (se rellenan cuando llega de la base).
+    var name by rememberSaveable(editing?.id) { mutableStateOf(editing?.name.orEmpty()) }
+    var amountDigits by rememberSaveable(editing?.id) { mutableStateOf(editing?.amountLimit?.toLong()?.toString().orEmpty()) }
+    var period by rememberSaveable(editing?.id) { mutableStateOf(editing?.budgetPeriod ?: BudgetPeriod.Monthly) }
+    var alert by rememberSaveable(editing?.id) { mutableStateOf(editing?.alertEnabled ?: false) }
+    var showDelete by remember { mutableStateOf(false) }
     // Nombre propuesto por la última categoría (para cambiarlo solo si el usuario no lo editó).
     var suggestedName by rememberSaveable { mutableStateOf("") }
     var suggestedAmount by rememberSaveable { mutableStateOf("") }
@@ -101,7 +122,11 @@ fun BudgetFormScreen(
     val duplicate = isDuplicate || shownError == ErrorType.DuplicateBudget
 
     AuthScaffold {
-        BudgetTopBar(stringResource(R.string.budget_new_title), onBack = onBack, centered = true)
+        BudgetTopBar(
+            stringResource(if (editing != null) R.string.budget_edit_title else R.string.budget_new_title),
+            onBack = onBack,
+            centered = true,
+        )
         Spacer(Modifier.height(20.dp))
 
         CategoryHeader(category = category, onChangeCategory = onChangeCategory)
@@ -139,6 +164,11 @@ fun BudgetFormScreen(
             ErrorBanner(stringResource(otherError.messageRes()))
         }
 
+        if (editing != null && onDelete != null) {
+            Spacer(Modifier.height(16.dp))
+            DeleteBudgetButton(onClick = { showDelete = true }, enabled = !saving && !deleting)
+        }
+
         Spacer(Modifier.height(32.dp))
         PocketPrimaryButton(
             text = stringResource(R.string.budget_save),
@@ -153,17 +183,29 @@ fun BudgetFormScreen(
                     )
                 )
             },
-            enabled = category != null && name.isNotBlank() && amountDigits.isNotEmpty() && !duplicate,
+            enabled = category != null && name.isNotBlank() && amountDigits.isNotEmpty() && !duplicate && !deleting,
             loading = saving,
         )
         Spacer(Modifier.height(24.dp))
+    }
+
+    if (showDelete && editing != null && onDelete != null) {
+        DeleteBudgetDialog(
+            name = editing.name,
+            deleting = deleting,
+            onConfirm = {
+                showDelete = false
+                onDelete()
+            },
+            onDismiss = { showDelete = false },
+        )
     }
 }
 
 /** Ícono grande de la categoría y el enlace coral "Cambiar categoría" (o "Elegir categoría"). */
 @Composable
 internal fun CategoryHeader(category: MovementCategory?, onChangeCategory: () -> Unit) {
-    androidx.compose.foundation.layout.Column(
+    Column(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -246,3 +288,83 @@ internal fun AlertToggle(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
         )
     }
 }
+
+/** Botón de borde punteado rojo "Eliminar presupuesto" (Figma "EDITAR PRE"). */
+@Composable
+private fun DeleteBudgetButton(onClick: () -> Unit, enabled: Boolean) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .drawBehind {
+                val stroke = 1.5.dp.toPx()
+                drawRoundRect(
+                    color = DELETE_BORDER,
+                    topLeft = Offset(stroke / 2, stroke / 2),
+                    size = Size(size.width - stroke, size.height - stroke),
+                    cornerRadius = CornerRadius(12.dp.toPx()),
+                    style = Stroke(width = stroke, pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 8f))),
+                )
+            }
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(Icons.Outlined.DeleteOutline, null, tint = pocketColors.Coral, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(6.dp))
+        Text(stringResource(R.string.budget_delete), fontSize = 13.sp, color = pocketColors.Coral)
+    }
+}
+
+/**
+ * "¿Eliminar presupuesto?" (Figma "ELIMINAR PRE"): avisa que se pierde el seguimiento pero
+ * que los gastos ya registrados no se tocan.
+ */
+@Composable
+private fun DeleteBudgetDialog(name: String, deleting: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .background(pocketColors.Card)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(Icons.Outlined.DeleteOutline, null, tint = pocketColors.Coral, modifier = Modifier.size(56.dp))
+            Spacer(Modifier.height(12.dp))
+            Text(
+                stringResource(R.string.budget_delete_title),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = pocketColors.Ink,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.budget_delete_body, name),
+                fontSize = 13.sp,
+                color = pocketColors.Muted,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(20.dp))
+            PocketPrimaryButton(
+                text = stringResource(R.string.budget_delete_confirm),
+                onClick = onConfirm,
+                loading = deleting,
+            )
+            Spacer(Modifier.height(10.dp))
+            PocketPrimaryButton(
+                text = stringResource(R.string.common_cancel),
+                onClick = onDismiss,
+                containerColor = pocketColors.Card,
+                contentColor = pocketColors.Coral,
+                border = BorderStroke(1.dp, pocketColors.Coral),
+            )
+        }
+    }
+}
+
+/** Rojo suave del borde punteado (igual en claro y oscuro). */
+private val DELETE_BORDER = Color(0xFFF4AAAA)
