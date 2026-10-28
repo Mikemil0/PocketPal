@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Flujo 2 — crear presupuesto, elegir categoría y presupuesto creado -->
+<resources>
+    <string name="budget_new_title">Novo orçamento</string>
+    <string name="budget_name_label">NOME</string>
+    <string name="budget_name_hint">Ex.: Alimentação</string>
+    <string name="budget_amount_label">VALOR LIMITE</string>
+    <string name="budget_period_label">PERÍODO</string>
+    <string name="budget_period_monthly">Mensal</string>
+    <string name="budget_period_weekly">Semanal</string>
+    <string name="budget_alert_toggle">Avise-me quando eu estiver perto do limite</string>
+    <string name="budget_save">Salvar</string>
+    <string name="budget_change_category">Trocar categoria</string>
+    <string name="budget_pick_category">Escolher categoria</string>
+    <string name="budget_pick_category_title">Escolher categoria</string>
+    <string name="budget_your_categories">Suas categorias</string>
+    <string name="budget_spent_this_month">%1$s gastos este mês</string>
+    <string name="budget_all_categories_taken">Você já tem orçamento em todas as suas categorias</string>
+    <string name="budget_all_categories_taken_hint">Crie outra categoria de despesas em Meu perfil → Categorias para orçá-la.</string>
+    <string name="budget_created_title">Orçamento criado</string>
+    <string name="budget_created_body_monthly">%1$s já está ativo com um limite mensal de %2$s</string>
+    <string name="budget_created_body_weekly">%1$s já está ativo com um limite semanal de %2$s</string>
+    <string name="budget_created_see_all">Ver meus orçamentos</string>
+    <string name="budget_created_another">Criar outro orçamento</string>
+</resources>

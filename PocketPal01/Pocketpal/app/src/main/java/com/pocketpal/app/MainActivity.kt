@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
@@ -163,6 +164,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 )
+                // Módulo 5 · Flujo 2: formulario, "Elegir categoría" y "Presupuesto creado" comparten este ViewModel.
+                val budgetFormVm: BudgetFormViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            BudgetFormViewModel(container.budgetRepository, weekStart = { preferencesVm.state.value.weekStart })
+                        }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -175,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                     movementCalendarVm = movementCalendarVm,
                     movementDetailVm = movementDetailVm,
                     budgetsVm = budgetsVm,
+                    budgetFormVm = budgetFormVm,
                 )
             }
         }

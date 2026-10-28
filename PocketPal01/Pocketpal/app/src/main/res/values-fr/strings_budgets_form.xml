@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Flujo 2 — crear presupuesto, elegir categoría y presupuesto creado -->
+<resources>
+    <string name="budget_new_title">Nouveau budget</string>
+    <string name="budget_name_label">NOM</string>
+    <string name="budget_name_hint">Ex. : Alimentation</string>
+    <string name="budget_amount_label">MONTANT LIMITE</string>
+    <string name="budget_period_label">PÉRIODE</string>
+    <string name="budget_period_monthly">Mensuel</string>
+    <string name="budget_period_weekly">Hebdomadaire</string>
+    <string name="budget_alert_toggle">Prévenez-moi quand j\'approche de la limite</string>
+    <string name="budget_save">Enregistrer</string>
+    <string name="budget_change_category">Changer de catégorie</string>
+    <string name="budget_pick_category">Choisir une catégorie</string>
+    <string name="budget_pick_category_title">Choisir une catégorie</string>
+    <string name="budget_your_categories">Vos catégories</string>
+    <string name="budget_spent_this_month">%1$s dépensés ce mois-ci</string>
+    <string name="budget_all_categories_taken">Vous avez déjà un budget dans toutes vos catégories</string>
+    <string name="budget_all_categories_taken_hint">Créez une autre catégorie de dépenses dans Mon profil → Catégories pour la budgétiser.</string>
+    <string name="budget_created_title">Budget créé</string>
+    <string name="budget_created_body_monthly">%1$s est maintenant actif avec une limite mensuelle de %2$s</string>
+    <string name="budget_created_body_weekly">%1$s est maintenant actif avec une limite hebdomadaire de %2$s</string>
+    <string name="budget_created_see_all">Voir mes budgets</string>
+    <string name="budget_created_another">Créer un autre budget</string>
+</resources>

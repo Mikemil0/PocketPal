@@ -27,6 +27,10 @@ import androidx.navigation.navArgument
 import com.pocketpal.app.BuildConfig
 import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
+import com.pocketpal.app.ui.budgets.BudgetCategoryPickerScreen
+import com.pocketpal.app.ui.budgets.BudgetCreatedScreen
+import com.pocketpal.app.ui.budgets.BudgetFormScreen
+import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsScreen
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.AddContributionScreen
@@ -143,6 +147,9 @@ object Routes {
 
     // Módulo 5 · Presupuestos
     const val Budgets = "budgets"
+    const val BudgetNew = "budgets/create"
+    const val BudgetCategory = "budgets/category"
+    const val BudgetCreated = "budgets/created"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -173,6 +180,7 @@ fun PocketNavHost(
     movementCalendarVm: MovementCalendarViewModel,
     movementDetailVm: MovementDetailViewModel,
     budgetsVm: BudgetsViewModel,
+    budgetFormVm: BudgetFormViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -336,6 +344,7 @@ fun PocketNavHost(
                 onOpenMovement = { id -> nav.navigate(Routes.movementDetail(id)) },
                 budgets = homeBudgets,
                 onOpenBudgets = { nav.navigate(Routes.Budgets) },
+                onCreateBudget = { nav.navigate(Routes.BudgetNew) },
             )
         }
 
@@ -348,10 +357,92 @@ fun PocketNavHost(
                 state = budgetsState,
                 currency = profileCurrency(profileState),
                 onBack = ::back,
-                onCreate = {},
+                onCreate = { nav.navigate(Routes.BudgetNew) },
                 onOpen = {},
                 onRetry = budgetsVm::refresh,
             )
+        }
+
+        // Módulo 5 · Flujo 2: "Nuevo presupuesto" → "Elegir categoría" → "Presupuesto creado".
+        composable(Routes.BudgetNew) {
+            // Solo la primera vez: al volver de "Elegir categoría" no se borra lo escrito.
+            var prepared by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                if (!prepared) {
+                    budgetFormVm.prepareNew()
+                    prepared = true
+                }
+            }
+            val selectedId by budgetFormVm.selectedCategoryId.collectAsStateWithLifecycle()
+            // Se leen para que el aviso de categoría repetida se recalcule cuando cambian.
+            val categories by budgetFormVm.categories.collectAsStateWithLifecycle()
+            val budgets by budgetFormVm.budgets.collectAsStateWithLifecycle()
+            val saving by budgetFormVm.saving.collectAsStateWithLifecycle()
+            val formError by budgetFormVm.error.collectAsStateWithLifecycle()
+            val formEvent by budgetFormVm.event.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(formEvent) {
+                if (formEvent is BudgetFormViewModel.Event.Created) {
+                    budgetFormVm.consumeEvent()
+                    budgetsVm.refresh()
+                    // El formulario sale de la pila: "atrás" desde "Presupuesto creado" no vuelve a él.
+                    nav.navigate(Routes.BudgetCreated) { popUpTo(Routes.BudgetNew) { inclusive = true } }
+                }
+            }
+            BudgetFormScreen(
+                category = categories.firstOrNull { it.id == selectedId },
+                currency = profileCurrency(profileState),
+                isDuplicate = budgets.isNotEmpty() && budgetFormVm.isDuplicate(),
+                saving = saving,
+                error = formError,
+                onBack = ::back,
+                onChangeCategory = { nav.navigate(Routes.BudgetCategory) },
+                onSave = budgetFormVm::create,
+                onErrorShown = budgetFormVm::consumeError,
+            )
+        }
+        composable(Routes.BudgetCategory) {
+            val selectedId by budgetFormVm.selectedCategoryId.collectAsStateWithLifecycle()
+            val categories by budgetFormVm.categories.collectAsStateWithLifecycle()
+            val budgets by budgetFormVm.budgets.collectAsStateWithLifecycle()
+            val monthSpent by budgetFormVm.monthSpent.collectAsStateWithLifecycle()
+            val loaded by budgetFormVm.loaded.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            BudgetCategoryPickerScreen(
+                categories = remember(categories, budgets) { budgetFormVm.availableCategories() },
+                monthSpent = monthSpent,
+                selectedId = selectedId,
+                loaded = loaded,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onConfirm = { id ->
+                    budgetFormVm.selectCategory(id)
+                    nav.popBackStack()
+                },
+            )
+        }
+        composable(Routes.BudgetCreated) {
+            val created by budgetFormVm.created.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            fun seeBudgets() {
+                // Si se llegó desde la lista se vuelve a ella; si fue desde el inicio, se abre.
+                if (!nav.popBackStack(Routes.Budgets, inclusive = false)) {
+                    nav.navigate(Routes.Budgets) { popUpTo(Routes.Home) }
+                }
+            }
+            val status = created
+            if (status == null) {
+                LaunchedEffect(Unit) { seeBudgets() }
+            } else {
+                BudgetCreatedScreen(
+                    status = status,
+                    currency = profileCurrency(profileState),
+                    onSeeBudgets = ::seeBudgets,
+                    onCreateAnother = {
+                        nav.navigate(Routes.BudgetNew) { popUpTo(Routes.BudgetCreated) { inclusive = true } }
+                    },
+                )
+            }
         }
 
         // Módulo 4 · Flujo 1: lista principal de movimientos (resumen, filtros y lista por día).
