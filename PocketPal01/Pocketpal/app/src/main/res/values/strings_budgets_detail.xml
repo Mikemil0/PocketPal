@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 5 · Flujo 3 — detalle del presupuesto e historial -->
+<resources>
+    <string name="budget_not_found">Este presupuesto ya no existe</string>
+    <plurals name="budget_resets_in">
+        <item quantity="one">Se reinicia en %1$d día</item>
+        <item quantity="other">Se reinicia en %1$d días</item>
+    </plurals>
+    <string name="budget_of_limit">de %1$s</string>
+    <string name="budget_used">%1$d%% usado</string>
+    <string name="budget_remaining">Quedan %1$s</string>
+    <string name="budget_over_by">Te pasaste por %1$s</string>
+    <string name="budget_alert_reached">Ya usaste el %1$d%% de este presupuesto</string>
+    <string name="budget_register_expense">Registrar gasto</string>
+    <string name="budget_register_coming_soon">Registrar gastos llegará pronto con Dai</string>
+    <string name="budget_see_history">Ver historial</string>
+    <string name="budget_movements_month">Movimientos de este mes</string>
+    <string name="budget_movements_week">Movimientos de esta semana</string>
+    <string name="budget_no_movements">Aún no hay gastos en este período</string>
+    <string name="budget_history_title">Historial - %1$s</string>
+    <string name="budget_history_last_months">Últimos 6 meses</string>
+    <string name="budget_history_by_month">Detalles por mes</string>
+    <string name="budget_history_empty">Todavía no hay gastos en esta categoría</string>
+</resources>

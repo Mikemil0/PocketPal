@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.ui.budgets.BudgetDetailViewModel
 import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
@@ -172,6 +173,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 )
+                // Módulo 5 · Flujo 3: detalle del presupuesto y su historial.
+                val budgetDetailVm: BudgetDetailViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            BudgetDetailViewModel(container.budgetRepository, weekStart = { preferencesVm.state.value.weekStart })
+                        }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -185,6 +194,7 @@ class MainActivity : AppCompatActivity() {
                     movementDetailVm = movementDetailVm,
                     budgetsVm = budgetsVm,
                     budgetFormVm = budgetFormVm,
+                    budgetDetailVm = budgetDetailVm,
                 )
             }
         }

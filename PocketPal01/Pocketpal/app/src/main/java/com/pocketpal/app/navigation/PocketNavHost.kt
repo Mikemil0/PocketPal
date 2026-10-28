@@ -29,8 +29,11 @@ import com.pocketpal.app.auth.*
 import com.pocketpal.app.data.category.CategoryKind
 import com.pocketpal.app.ui.budgets.BudgetCategoryPickerScreen
 import com.pocketpal.app.ui.budgets.BudgetCreatedScreen
+import com.pocketpal.app.ui.budgets.BudgetDetailScreen
+import com.pocketpal.app.ui.budgets.BudgetDetailViewModel
 import com.pocketpal.app.ui.budgets.BudgetFormScreen
 import com.pocketpal.app.ui.budgets.BudgetFormViewModel
+import com.pocketpal.app.ui.budgets.BudgetHistoryScreen
 import com.pocketpal.app.ui.budgets.BudgetsScreen
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.goals.AddContributionScreen
@@ -150,6 +153,8 @@ object Routes {
     const val BudgetNew = "budgets/create"
     const val BudgetCategory = "budgets/category"
     const val BudgetCreated = "budgets/created"
+    const val BudgetDetail = "budgets/detail/{id}"
+    const val BudgetHistory = "budgets/detail/{id}/history"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -159,6 +164,8 @@ object Routes {
     fun goalEdit(id: String) = "goals/detail/$id/edit"
     fun movementDetail(id: String) = "movements/detail/$id"
     fun movementFullDetail(id: String) = "movements/detail/$id/full"
+    fun budgetDetail(id: String) = "budgets/detail/$id"
+    fun budgetHistory(id: String) = "budgets/detail/$id/history"
 }
 
 @Composable
@@ -181,6 +188,7 @@ fun PocketNavHost(
     movementDetailVm: MovementDetailViewModel,
     budgetsVm: BudgetsViewModel,
     budgetFormVm: BudgetFormViewModel,
+    budgetDetailVm: BudgetDetailViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -345,6 +353,7 @@ fun PocketNavHost(
                 budgets = homeBudgets,
                 onOpenBudgets = { nav.navigate(Routes.Budgets) },
                 onCreateBudget = { nav.navigate(Routes.BudgetNew) },
+                onOpenBudget = { id -> nav.navigate(Routes.budgetDetail(id)) },
             )
         }
 
@@ -358,8 +367,41 @@ fun PocketNavHost(
                 currency = profileCurrency(profileState),
                 onBack = ::back,
                 onCreate = { nav.navigate(Routes.BudgetNew) },
-                onOpen = {},
+                onOpen = { id -> nav.navigate(Routes.budgetDetail(id)) },
                 onRetry = budgetsVm::refresh,
+            )
+        }
+
+        // Módulo 5 · Flujo 3: detalle del presupuesto (gastado, lo que queda y gastos del período) e historial.
+        composable(
+            Routes.BudgetDetail,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) { entry ->
+            val id = entry.arguments?.getString("id").orEmpty()
+            LaunchedEffect(id) { budgetDetailVm.load(id) }
+            val detailState by budgetDetailVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            BudgetDetailScreen(
+                state = detailState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onOpenHistory = { nav.navigate(Routes.budgetHistory(id)) },
+                onOpenMovement = { movementId -> nav.navigate(Routes.movementDetail(movementId)) },
+                onRetry = budgetDetailVm::refresh,
+            )
+        }
+        composable(
+            Routes.BudgetHistory,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) {
+            LaunchedEffect(Unit) { budgetDetailVm.loadHistory() }
+            val historyState by budgetDetailVm.history.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            BudgetHistoryScreen(
+                state = historyState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onRetry = budgetDetailVm::loadHistory,
             )
         }
 
