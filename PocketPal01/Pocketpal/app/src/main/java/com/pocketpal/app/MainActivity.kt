@@ -16,6 +16,7 @@ import com.pocketpal.app.di.AppContainer
 import com.pocketpal.app.ui.budgets.BudgetDetailViewModel
 import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
+import com.pocketpal.app.ui.dai.DaiChatViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
@@ -181,6 +182,20 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 )
+                // Módulo 6 · Flujo 1: el chat con Dai. Lee el nombre y la moneda del perfil y
+                // el "Inicio de semana" de Preferencias en el momento de responder.
+                val daiChatVm: DaiChatViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            DaiChatViewModel(
+                                container.daiRepository,
+                                userName = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.fullName.orEmpty() },
+                                currency = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.currency ?: "COP" },
+                                weekStart = { preferencesVm.state.value.weekStart },
+                            )
+                        }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -195,6 +210,7 @@ class MainActivity : AppCompatActivity() {
                     budgetsVm = budgetsVm,
                     budgetFormVm = budgetFormVm,
                     budgetDetailVm = budgetDetailVm,
+                    daiChatVm = daiChatVm,
                 )
             }
         }

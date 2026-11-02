@@ -40,6 +40,10 @@ import com.pocketpal.app.ui.budgets.BudgetHistoryScreen
 import com.pocketpal.app.ui.budgets.BudgetsErrorState
 import com.pocketpal.app.ui.budgets.BudgetsScreen
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
+import com.pocketpal.app.ui.dai.DaiCardActions
+import com.pocketpal.app.ui.dai.DaiChatScreen
+import com.pocketpal.app.ui.dai.DaiChatViewModel
+import com.pocketpal.app.ui.dai.DaiWelcomeScreen
 import com.pocketpal.app.ui.goals.AddContributionScreen
 import com.pocketpal.app.ui.goals.GoalCreatedScreen
 import com.pocketpal.app.ui.goals.GoalDetailScreen
@@ -161,6 +165,10 @@ object Routes {
     const val BudgetHistory = "budgets/detail/{id}/history"
     const val BudgetEdit = "budgets/detail/{id}/edit"
 
+    // Módulo 6 · Dai
+    const val Dai = "dai"
+    const val DaiChat = "dai/chat"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -195,6 +203,7 @@ fun PocketNavHost(
     budgetsVm: BudgetsViewModel,
     budgetFormVm: BudgetFormViewModel,
     budgetDetailVm: BudgetDetailViewModel,
+    daiChatVm: DaiChatViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -360,6 +369,37 @@ fun PocketNavHost(
                 onOpenBudgets = { nav.navigate(Routes.Budgets) },
                 onCreateBudget = { nav.navigate(Routes.BudgetNew) },
                 onOpenBudget = { id -> nav.navigate(Routes.budgetDetail(id)) },
+                onOpenDai = { nav.navigate(Routes.Dai) },
+            )
+        }
+
+        // Módulo 6 · Flujo 1: bienvenida de Dai → chat.
+        composable(Routes.Dai) {
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            DaiWelcomeScreen(
+                userName = (profileState as? ProfileViewModel.UiState.Content)?.data?.fullName.orEmpty(),
+                onBack = ::back,
+                onOption = { prompt ->
+                    daiChatVm.send(prompt)
+                    nav.navigate(Routes.DaiChat)
+                },
+                onTalk = { nav.navigate(Routes.DaiChat) },
+            )
+        }
+        composable(Routes.DaiChat) {
+            LaunchedEffect(Unit) { daiChatVm.open() }
+            val chatState by daiChatVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            DaiChatScreen(
+                state = chatState,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onSend = daiChatVm::send,
+                onRetry = daiChatVm::retry,
+                cardActions = DaiCardActions(
+                    onOpenVideo = { query -> openVideoSearch(context, query) },
+                    onCompleteData = { nav.navigate(Routes.Budgets) },
+                ),
             )
         }
 
@@ -1233,6 +1273,14 @@ private fun MovementDetailRoute(
 }
 
 /** Moneda del perfil para formatear montos (RN-09); COP mientras no cargue. */
+/** "Ver video": abre la búsqueda del video recomendado en YouTube (o en el navegador). */
+private fun openVideoSearch(context: android.content.Context, query: String) {
+    val uri = android.net.Uri.parse("https://www.youtube.com/results?search_query=" + android.net.Uri.encode(query))
+    runCatching {
+        context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, uri))
+    }
+}
+
 @Composable
 private fun profileCurrency(state: ProfileViewModel.UiState): String =
     (state as? ProfileViewModel.UiState.Content)?.data?.currency ?: "COP"

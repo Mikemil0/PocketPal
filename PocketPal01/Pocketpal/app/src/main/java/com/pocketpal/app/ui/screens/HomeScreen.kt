@@ -18,6 +18,8 @@ import com.pocketpal.app.data.movement.MovementCategory
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.budgets.HomeBudgetsSection
 import com.pocketpal.app.ui.components.Avatar
+import com.pocketpal.app.ui.dai.DaiAvatar
+import com.pocketpal.app.ui.dai.DaiMood
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.goals.HomeGoalsSection
 import com.pocketpal.app.ui.movements.HomeMovementsSection
@@ -34,6 +36,8 @@ import com.pocketpal.app.ui.theme.pocketColors
  * Módulo 4 (flujo 1): debajo de las metas, "Movimientos recientes" con "ver todos".
  *
  * Módulo 5 (flujo 1): entre las metas y los movimientos, la tarjeta "Presupuestos".
+ *
+ * Módulo 6 (flujo 1): Dai flotando abajo a la derecha; al tocarlo abre su bienvenida.
  */
 @Composable
 fun HomeScreen(
@@ -54,6 +58,7 @@ fun HomeScreen(
     onOpenBudgets: () -> Unit = {},
     onOpenBudget: (String) -> Unit = {},
     onCreateBudget: () -> Unit = {},
+    onOpenDai: (() -> Unit)? = null,
 ) {
     val firstName = name.trim().substringBefore(" ")
 
@@ -110,6 +115,19 @@ fun HomeScreen(
                 size = 40.dp,
                 contentDescription = stringResource(R.string.home_open_profile),
             )
+        }
+
+        // Módulo 6: botón flotante de Dai (en el Figma es el robot de la barra de abajo).
+        if (onOpenDai != null) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
+                    .padding(end = 16.dp, bottom = 16.dp)
+                    .clickable(onClickLabel = stringResource(R.string.home_open_dai), onClick = onOpenDai),
+            ) {
+                DaiAvatar(DaiMood.Online, size = 64.dp)
+            }
         }
     }
 }

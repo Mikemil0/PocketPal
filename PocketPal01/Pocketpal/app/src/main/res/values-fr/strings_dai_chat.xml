@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 1 — bienvenida y chat de Dai -->
+<resources>
+    <string name="home_open_dai">Parler à Dai</string>
+    <string name="dai_tagline">Votre assistant financier</string>
+    <string name="dai_welcome_hello">Bonjour !</string>
+    <string name="dai_welcome_hello_name">Bonjour, %1$s !</string>
+    <string name="dai_welcome_intro">Je suis Dai, votre assistant financier.</string>
+    <string name="dai_welcome_body">Je suis là pour vous aider à comprendre vos dépenses, habitudes et objectifs.</string>
+    <string name="dai_welcome_question">Que voulez-vous faire aujourd\'hui ?</string>
+    <string name="dai_welcome_spending">Revoir mes dépenses</string>
+    <string name="dai_welcome_goals">Revoir mes objectifs</string>
+    <string name="dai_welcome_advice">Recevoir une alerte ou un conseil</string>
+    <string name="dai_welcome_voice">Parler à voix haute</string>
+    <string name="dai_welcome_talk">Parler à Dai</string>
+    <string name="dai_new_title">Comment puis-je vous aider aujourd\'hui ?</string>
+    <string name="dai_new_body">Posez-moi vos questions sur vos finances personnelles.</string>
+    <string name="dai_new_hint_categories">Analysez vos catégories</string>
+    <string name="dai_new_hint_progress">Suivez vos progrès</string>
+    <string name="dai_new_hint_advice">Conseil personnalisé</string>
+    <string name="dai_new_hint_learn">Apprenez avec Dai</string>
+</resources>
