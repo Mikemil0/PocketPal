@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Dai — base (chat, tarjetas) -->
+<resources>
+    <string name="dai_name">Daikoku</string>
+    <string name="dai_subtitle">Dai · Assistente financeiro</string>
+    <string name="a11y_dai">Dai, seu assistente financeiro</string>
+    <string name="dai_input_hint">Escreva uma mensagem…</string>
+    <string name="a11y_dai_voice">Falar com a Dai</string>
+    <string name="a11y_dai_camera">Tirar foto de um recibo</string>
+    <string name="a11y_dai_send">Enviar</string>
+    <string name="dai_card_spent">Gasto acumulado</string>
+    <string name="dai_card_budget">Orçamento</string>
+    <string name="dai_card_used">%1$d%% utilizado</string>
+    <string name="dai_card_top_categories">Principais categorias</string>
+    <string name="dai_card_alert_title">Alerta de gasto</string>
+    <string name="dai_card_alert_body">Nos últimos %1$d dias você gastou %2$s em %3$s.</string>
+    <string name="dai_card_impact">Impacto estimado</string>
+    <string name="dai_card_impact_body">Você pode terminar o mês %1$s acima do orçamento.</string>
+    <string name="dai_card_video">Vídeo recomendado</string>
+    <string name="dai_card_video_meta">%1$d min · Educação financeira</string>
+    <string name="dai_card_watch">Ver vídeo</string>
+    <string name="dai_missing_income">Sua renda mensal</string>
+    <string name="dai_missing_expenses">Seus principais gastos</string>
+    <string name="dai_missing_goals">Suas metas financeiras</string>
+    <string name="dai_complete_data">Completar dados</string>
+    <string name="dai_card_receipt_saved">Movimentação registrada</string>
+    <string name="dai_no_category">Sem categoria</string>
+    <string name="dai_error_title">Ops… a Dai não conseguiu responder</string>
+    <string name="dai_error_body">Verifique sua conexão com a internet e tente novamente.</string>
+    <string name="dai_retry">Tentar novamente</string>
+</resources>

@@ -7,6 +7,8 @@ import com.pocketpal.app.data.budget.BudgetRepository
 import com.pocketpal.app.data.budget.SupabaseBudgetRepository
 import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
+import com.pocketpal.app.data.dai.DaiRepository
+import com.pocketpal.app.data.dai.SupabaseDaiRepository
 import com.pocketpal.app.data.device.DeviceRepository
 import com.pocketpal.app.data.device.SupabaseDeviceRepository
 import com.pocketpal.app.data.goal.GoalRepository
@@ -67,6 +69,13 @@ class AppContainer(context: Context) {
 
     /** Módulo 5: presupuestos sobre `budgets`; lo gastado sale de `movements`. */
     val budgetRepository: BudgetRepository = SupabaseBudgetRepository(supabase)
+
+    /**
+     * Módulo 6: Dai. Guarda la conversación en `dai_messages` y responde con los datos de
+     * movimientos, presupuestos y metas (reutiliza esos repositorios).
+     */
+    val daiRepository: DaiRepository =
+        SupabaseDaiRepository(supabase, movementRepository, budgetRepository, goalRepository)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))
