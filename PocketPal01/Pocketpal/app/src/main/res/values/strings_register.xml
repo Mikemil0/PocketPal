@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 5 — inicio con + y registro por escáner, voz y manual -->
+<resources>
+    <string name="reg_add_title">¿Cómo quieres registrar?</string>
+    <string name="reg_option_scan">Registro mediante escáner</string>
+    <string name="reg_option_voice">Registro por voz</string>
+    <string name="reg_option_manual">Registro manual</string>
+    <string name="reg_confirm_title">Confirmar</string>
+    <string name="reg_voice_heard">Dai entendió: “%1$s”</string>
+    <string name="reg_voice_hint">Monto, categoría, fecha y motivo</string>
+    <string name="reg_voice_manual">Manual</string>
+    <string name="reg_kind_title">ELIGE EL TIPO DE REGISTRO QUE HARÁS</string>
+    <string name="reg_kind_expense">Gasto</string>
+    <string name="reg_kind_income">Ingreso</string>
+    <string name="reg_amount">MONTO</string>
+    <string name="reg_date">FECHA</string>
+    <string name="reg_category">Categoría</string>
+    <string name="reg_category_select">Seleccionar</string>
+    <string name="reg_reason">MOTIVO</string>
+    <string name="reg_reason_hint">Escribe aquí…</string>
+    <string name="reg_save">Guardar</string>
+    <string name="reg_problem_amount">Escribe un monto mayor que 0.</string>
+    <string name="reg_problem_category">Elige una categoría.</string>
+    <string name="reg_problem_date">La fecha no puede ser futura.</string>
+    <string name="reg_categories_title">CATEGORÍAS</string>
+    <string name="reg_categories_subtitle">Elige la categoría del movimiento</string>
+    <string name="reg_categories_empty">Todavía no tienes categorías de este tipo. Créalas en Perfil → Categorías.</string>
+    <string name="reg_discard_title">¿Quieres descartar los cambios?</string>
+    <string name="reg_discard_body">¿Seguro que quieres descartar los cambios?</string>
+    <string name="reg_discard_cancel">Cancelar</string>
+    <string name="reg_discard_confirm">Descartar</string>
+    <string name="reg_success_title">Movimiento registrado correctamente</string>
+    <string name="reg_success_continue">Continuar</string>
+    <string name="reg_success_home">Ir a inicio</string>
+    <string name="home_hello">Hola,</string>
+    <string name="home_hello_default">Nombre</string>
+    <string name="home_available">Disponible este mes</string>
+    <string name="home_income">\u0020Ingresos %1$s</string>
+    <string name="home_expense">\u0020Gastos %1$s</string>
+    <string name="home_nav_home">Inicio</string>
+    <string name="home_nav_goals">Metas</string>
+    <string name="home_nav_budgets">Presupuestos</string>
+    <string name="home_nav_movements">Movimientos</string>
+</resources>

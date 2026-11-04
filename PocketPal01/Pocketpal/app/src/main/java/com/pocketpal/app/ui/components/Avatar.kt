@@ -103,7 +103,7 @@ fun Avatar(
                 Icon(
                     Icons.Outlined.Edit,
                     stringResource(R.string.a11y_change_photo),
-                    tint = Color.White,
+                    tint = pocketColors.Cream, // contrasta con el fondo Ink del badge en ambos temas
                     modifier = Modifier.size(badgeSize * 0.55f),
                 )
             }

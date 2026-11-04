@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 5 — inicio con + y registro por escáner, voz y manual -->
+<resources>
+    <string name="reg_add_title">Comment veux-tu l\'enregistrer ?</string>
+    <string name="reg_option_scan">Enregistrer par scan</string>
+    <string name="reg_option_voice">Enregistrer par la voix</string>
+    <string name="reg_option_manual">Saisie manuelle</string>
+    <string name="reg_confirm_title">Confirmer</string>
+    <string name="reg_voice_heard">Dai a compris : « %1$s »</string>
+    <string name="reg_voice_hint">Montant, catégorie, date et motif</string>
+    <string name="reg_voice_manual">Manuel</string>
+    <string name="reg_kind_title">CHOISIS LE TYPE D\'ENREGISTREMENT</string>
+    <string name="reg_kind_expense">Dépense</string>
+    <string name="reg_kind_income">Revenu</string>
+    <string name="reg_amount">MONTANT</string>
+    <string name="reg_date">DATE</string>
+    <string name="reg_category">Catégorie</string>
+    <string name="reg_category_select">Choisir</string>
+    <string name="reg_reason">MOTIF</string>
+    <string name="reg_reason_hint">Écris ici…</string>
+    <string name="reg_save">Enregistrer</string>
+    <string name="reg_problem_amount">Saisis un montant supérieur à 0.</string>
+    <string name="reg_problem_category">Choisis une catégorie.</string>
+    <string name="reg_problem_date">La date ne peut pas être future.</string>
+    <string name="reg_categories_title">CATÉGORIES</string>
+    <string name="reg_categories_subtitle">Choisis la catégorie</string>
+    <string name="reg_categories_empty">Tu n\'as pas encore de catégories de ce type. Crée-les dans Profil → Catégories.</string>
+    <string name="reg_discard_title">Abandonner les modifications ?</string>
+    <string name="reg_discard_body">Es-tu sûr de vouloir les abandonner ?</string>
+    <string name="reg_discard_cancel">Annuler</string>
+    <string name="reg_discard_confirm">Abandonner</string>
+    <string name="reg_success_title">Mouvement enregistré avec succès</string>
+    <string name="reg_success_continue">Continuer</string>
+    <string name="reg_success_home">Aller à l\'accueil</string>
+    <string name="home_hello">Salut,</string>
+    <string name="home_hello_default">Nom</string>
+    <string name="home_available">Disponible ce mois-ci</string>
+    <string name="home_income">\u0020Revenus %1$s</string>
+    <string name="home_expense">\u0020Dépenses %1$s</string>
+    <string name="home_nav_home">Accueil</string>
+    <string name="home_nav_goals">Objectifs</string>
+    <string name="home_nav_budgets">Budgets</string>
+    <string name="home_nav_movements">Mouvements</string>
+</resources>

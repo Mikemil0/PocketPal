@@ -1,13 +1,15 @@
 package com.pocketpal.app.data.movement
 
 import java.time.Instant
+import java.time.ZoneId
 
 /**
  * Lo que la app puede pedir sobre movimientos. Es una **interfaz**: los ViewModels
  * dependen de ella y no de Supabase. En la app se usa [SupabaseMovementRepository];
  * en las pruebas, un repositorio en memoria (FakeMovementRepository).
  *
- * En este módulo todo es de **lectura**: registrar movimientos lo hará Dai más adelante.
+ * El Módulo 4 era solo de **lectura**; el Módulo 6 (flujo 5) agrega [create] para el
+ * botón **+** del inicio (escáner, voz y manual).
  */
 interface MovementRepository {
 
@@ -28,6 +30,12 @@ interface MovementRepository {
 
     /** Las categorías del usuario (gastos e ingresos) para pintar íconos, colores y nombres. */
     suspend fun categories(): List<MovementCategory>
+
+    /**
+     * Módulo 6 · Flujo 5: guarda un movimiento nuevo en `movements` (a la hora [zone]
+     * del teléfono) y lo devuelve como quedó en la base.
+     */
+    suspend fun create(movement: NewMovement, zone: ZoneId): Movement
 
     companion object {
         const val SEARCH_LIMIT = 50

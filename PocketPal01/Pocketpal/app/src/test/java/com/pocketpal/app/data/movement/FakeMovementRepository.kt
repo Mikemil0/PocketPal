@@ -91,6 +91,22 @@ class FakeMovementRepository(private val zone: ZoneId = ZONE) : MovementReposito
         return categoryList.toList()
     }
 
+    /** Lo que se guardó con [create] (para revisar el `source`). */
+    val created = mutableListOf<NewMovement>()
+
+    override suspend fun create(movement: NewMovement, zone: ZoneId): Movement {
+        checkNetwork()
+        created.add(movement)
+        return add(
+            title = movement.title,
+            amount = movement.amount,
+            date = movement.date,
+            kind = movement.kind,
+            categoryId = movement.categoryId,
+            description = movement.note.ifBlank { null },
+        )
+    }
+
     private fun checkNetwork() {
         if (failNextWithNetwork) {
             failNextWithNetwork = false

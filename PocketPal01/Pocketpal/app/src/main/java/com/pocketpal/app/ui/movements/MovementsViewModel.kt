@@ -69,6 +69,9 @@ class MovementsViewModel(
     data class HomeMovements(
         val movements: List<Movement> = emptyList(),
         val categories: Map<String, MovementCategory> = emptyMap(),
+        /** Módulo 6 · Flujo 5: ingresos y gastos de ESTE mes ("Disponible este mes" del inicio). */
+        val monthIncome: Double = 0.0,
+        val monthExpense: Double = 0.0,
     )
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -133,7 +136,18 @@ class MovementsViewModel(
         viewModelScope.launch {
             try {
                 val categories = repository.categories().associateBy { it.id }
-                _home.value = HomeMovements(repository.recent(MovementRepository.RECENT_LIMIT), categories)
+                // "Disponible este mes" = ingresos − gastos del mes actual.
+                val first = today().withDayOfMonth(1)
+                val month = repository.list(
+                    first.atStartOfDay(zone()).toInstant(),
+                    first.plusMonths(1).atStartOfDay(zone()).toInstant(),
+                )
+                _home.value = HomeMovements(
+                    movements = repository.recent(MovementRepository.RECENT_LIMIT),
+                    categories = categories,
+                    monthIncome = month.filter { it.isIncome }.sumOf { it.amount },
+                    monthExpense = month.filter { it.isExpense }.sumOf { it.amount },
+                )
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

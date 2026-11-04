@@ -162,4 +162,16 @@ class MovementsViewModelTest {
         assertEquals(listOf("Supermercado Carulla", "Salario", "Mercado Central"), home.movements.map { it.title })
         assertEquals("Comida", home.categories["comida"]?.name)
     }
+
+    @Test
+    fun `el inicio suma los ingresos y gastos del mes para Disponible este mes`() = runTest(dispatcher) {
+        val vm = newVm()
+        vm.refreshRecent()
+        advanceUntilIdle()
+        val home = vm.home.value
+        val october = repository.movements.filter { it.localDate(FakeMovementRepository.ZONE)?.monthValue == 10 }
+        assertEquals(october.filter { it.isIncome }.sumOf { it.amount }, home.monthIncome, 0.0)
+        assertEquals(october.filter { it.isExpense }.sumOf { it.amount }, home.monthExpense, 0.0)
+        assertEquals(1_200_000.0, home.monthIncome, 0.0)
+    }
 }

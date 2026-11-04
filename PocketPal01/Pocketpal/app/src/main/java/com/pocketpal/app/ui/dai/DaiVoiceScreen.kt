@@ -83,6 +83,10 @@ fun DaiVoiceScreen(
     onBack: () -> Unit,
     onHeard: (String) -> Unit,
     onKeyboard: () -> Unit,
+    // Flujo 5 ("Registro por voz"): otra pista ("Monto, categoría, fecha y motivo") y el
+    // botón "Manual" en vez de "Escribir". Si son null se usan los textos del chat.
+    hint: String? = null,
+    keyboardLabel: String? = null,
 ) {
     val context = LocalContext.current
     var hasPermission by remember { mutableStateOf(isMicGranted(context)) }
@@ -168,7 +172,7 @@ fun DaiVoiceScreen(
                 problem == VoiceProblem.NotUnderstood -> stringResource(R.string.dai_voice_repeat)
                 problem == VoiceProblem.Connection -> stringResource(R.string.dai_voice_connection)
                 problem == VoiceProblem.Unavailable -> stringResource(R.string.dai_voice_unavailable)
-                else -> stringResource(R.string.dai_voice_hint)
+                else -> hint ?: stringResource(R.string.dai_voice_hint)
             },
             fontSize = 13.sp,
             color = if (problem != null && partial.isBlank()) pocketColors.Coral else Color.White.copy(alpha = 0.85f),
@@ -225,6 +229,7 @@ fun DaiVoiceScreen(
 
     if (problem == VoiceProblem.Permission) {
         MicBlockedDialog(
+            keyboardLabel = keyboardLabel ?: stringResource(R.string.dai_voice_keyboard),
             onOpenSettings = {
                 problem = null
                 context.startActivity(
@@ -259,13 +264,13 @@ private fun VoiceWave(level: Float) {
 
 /** Figma "VOZ ERROR": "Micrófono bloqueado · Actívelo en ajustes del sistema". */
 @Composable
-private fun MicBlockedDialog(onOpenSettings: () -> Unit, onKeyboard: () -> Unit) {
+private fun MicBlockedDialog(keyboardLabel: String, onOpenSettings: () -> Unit, onKeyboard: () -> Unit) {
     Dialog(onDismissRequest = onKeyboard) {
         Column(
             Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(pocketColors.Card)
+                .background(Color.White)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -277,7 +282,7 @@ private fun MicBlockedDialog(onOpenSettings: () -> Unit, onKeyboard: () -> Unit)
             PocketPrimaryButton(text = stringResource(R.string.dai_open_settings_voice), onClick = onOpenSettings, containerColor = pocketColors.Teal)
             Spacer(Modifier.height(10.dp))
             PocketPrimaryButton(
-                text = stringResource(R.string.dai_voice_keyboard),
+                text = keyboardLabel,
                 onClick = onKeyboard,
                 containerColor = Color.White,
                 contentColor = pocketColors.Teal,

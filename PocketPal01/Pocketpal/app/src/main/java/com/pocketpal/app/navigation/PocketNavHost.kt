@@ -48,6 +48,10 @@ import com.pocketpal.app.ui.dai.DaiSettingsScreen
 import com.pocketpal.app.ui.dai.DaiSettingsViewModel
 import com.pocketpal.app.ui.dai.DaiSpeaker
 import com.pocketpal.app.ui.dai.DaiVoiceScreen
+import com.pocketpal.app.ui.register.RegisterFormScreen
+import com.pocketpal.app.ui.register.RegisterOption
+import com.pocketpal.app.ui.register.RegisterSuccessScreen
+import com.pocketpal.app.ui.register.RegisterViewModel
 import com.pocketpal.app.ui.dai.DaiCameraScreen
 import com.pocketpal.app.ui.dai.DaiReceiptReviewScreen
 import com.pocketpal.app.ui.dai.DaiReceiptViewModel
@@ -196,6 +200,14 @@ object Routes {
     const val DaiSettings = "dai/settings"
     const val DaiClearHistory = "dai/settings/clear-history"
 
+    // Módulo 6 · Flujo 5: registrar un movimiento desde el + del inicio.
+    const val RegisterScan = "register/scan"
+    const val RegisterScanReview = "register/scan/review"
+    const val RegisterVoice = "register/voice"
+    const val RegisterConfirm = "register/confirm"
+    const val RegisterManual = "register/manual"
+    const val RegisterSuccess = "register/success"
+
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
     fun helpDetail(index: Int) = "profile/help/$index"
@@ -234,6 +246,7 @@ fun PocketNavHost(
     daiInsightsVm: DaiInsightsViewModel,
     daiReceiptVm: DaiReceiptViewModel,
     daiSettingsVm: DaiSettingsViewModel,
+    registerVm: RegisterViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -416,6 +429,131 @@ fun PocketNavHost(
                 onCreateBudget = { nav.navigate(Routes.BudgetNew) },
                 onOpenBudget = { id -> nav.navigate(Routes.budgetDetail(id)) },
                 onOpenDai = { nav.navigate(Routes.Dai) },
+                // Módulo 6 · Flujo 5: "Disponible este mes" y el + de la barra de abajo.
+                monthIncome = recentMovements.monthIncome,
+                monthExpense = recentMovements.monthExpense,
+                onRegister = { option ->
+                    when (option) {
+                        RegisterOption.Scan -> {
+                            daiReceiptVm.start()
+                            nav.navigate(Routes.RegisterScan)
+                        }
+                        RegisterOption.Voice -> nav.navigate(Routes.RegisterVoice)
+                        RegisterOption.Manual -> {
+                            registerVm.startManual()
+                            nav.navigate(Routes.RegisterManual)
+                        }
+                    }
+                },
+            )
+        }
+
+        // Módulo 6 · Flujo 5 · "Registro mediante escáner": la misma cámara y OCR de Dai (flujo 3),
+        // pero al guardar abre "Movimiento registrado correctamente" en vez del chat.
+        composable(Routes.RegisterScan) {
+            val receipt by daiReceiptVm.state.collectAsStateWithLifecycle()
+            LaunchedEffect(receipt.stage) {
+                if (receipt.stage == DaiReceiptViewModel.Stage.Review) nav.navigate(Routes.RegisterScanReview)
+            }
+            DaiCameraScreen(
+                state = receipt,
+                onBack = ::back,
+                onReading = daiReceiptVm::onReading,
+                onTextRecognized = daiReceiptVm::onTextRecognized,
+                onReadFailed = daiReceiptVm::onReadFailed,
+                // "Cámara bloqueada → Manual": el formulario de registro manual.
+                onManual = {
+                    registerVm.startManual()
+                    nav.navigate(Routes.RegisterManual) { popUpTo(Routes.RegisterScan) { inclusive = true } }
+                },
+                onRetake = daiReceiptVm::retake,
+            )
+        }
+        composable(Routes.RegisterScanReview) {
+            val receipt by daiReceiptVm.state.collectAsStateWithLifecycle()
+            val event by daiReceiptVm.event.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            fun backToCamera() {
+                daiReceiptVm.retake()
+                nav.popBackStack()
+            }
+            androidx.activity.compose.BackHandler(onBack = ::backToCamera)
+            LaunchedEffect(event) {
+                if (event is DaiReceiptViewModel.Event.Saved) {
+                    daiReceiptVm.consumeEvent()
+                    daiChatVm.reload()
+                    movementsVm.refreshRecent()
+                    budgetsVm.refresh()
+                    nav.navigate(Routes.RegisterSuccess) { popUpTo(Routes.Home) }
+                }
+            }
+            DaiReceiptReviewScreen(
+                state = receipt,
+                currency = profileCurrency(profileState),
+                datePreference = prefs.dateFormat,
+                onBack = ::backToCamera,
+                onChange = daiReceiptVm::update,
+                onSave = daiReceiptVm::requestSave,
+                onConfirm = daiReceiptVm::confirmSave,
+                onCancelConfirm = daiReceiptVm::cancelConfirm,
+                onErrorShown = daiReceiptVm::consumeError,
+            )
+        }
+
+        // Módulo 6 · Flujo 5 · "Registro por voz": lo dicho → Dai llena "Confirmar".
+        composable(Routes.RegisterVoice) {
+            DaiVoiceScreen(
+                onBack = ::back,
+                onHeard = { text ->
+                    registerVm.startVoice(text)
+                    nav.navigate(Routes.RegisterConfirm) { popUpTo(Routes.RegisterVoice) { inclusive = true } }
+                },
+                onKeyboard = {
+                    registerVm.startManual()
+                    nav.navigate(Routes.RegisterManual) { popUpTo(Routes.RegisterVoice) { inclusive = true } }
+                },
+                hint = stringResource(R.string.reg_voice_hint),
+                keyboardLabel = stringResource(R.string.reg_voice_manual),
+            )
+        }
+
+        // Módulo 6 · Flujo 5 · "Registro manual" y "Confirmar" (voz): el mismo formulario.
+        listOf(Routes.RegisterManual, Routes.RegisterConfirm).forEach { route ->
+            composable(route) {
+                val register by registerVm.state.collectAsStateWithLifecycle()
+                val event by registerVm.event.collectAsStateWithLifecycle()
+                val profileState by profileVm.state.collectAsStateWithLifecycle()
+                val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+                LaunchedEffect(event) {
+                    if (event is RegisterViewModel.Event.Saved) {
+                        registerVm.consumeEvent()
+                        movementsVm.refreshRecent()
+                        budgetsVm.refresh()
+                        nav.navigate(Routes.RegisterSuccess) { popUpTo(Routes.Home) }
+                    }
+                }
+                RegisterFormScreen(
+                    state = register,
+                    currency = profileCurrency(profileState),
+                    datePreference = prefs.dateFormat,
+                    onExit = ::back,
+                    onKind = registerVm::setKind,
+                    onAmount = registerVm::setAmount,
+                    onDate = registerVm::setDate,
+                    onCategory = registerVm::setCategory,
+                    onReason = registerVm::setReason,
+                    onSave = registerVm::save,
+                    onErrorShown = registerVm::consumeError,
+                )
+            }
+        }
+
+        // Módulo 6 · Flujo 5 · "Movimiento registrado correctamente".
+        composable(Routes.RegisterSuccess) {
+            RegisterSuccessScreen(
+                onContinue = { nav.navigate(Routes.Movements) { popUpTo(Routes.Home) } },
+                onHome = { nav.popBackStack(Routes.Home, inclusive = false) },
             )
         }
 

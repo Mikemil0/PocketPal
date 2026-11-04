@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 5 — inicio con + y registro por escáner, voz y manual -->
+<resources>
+    <string name="reg_add_title">How do you want to record it?</string>
+    <string name="reg_option_scan">Scan a receipt</string>
+    <string name="reg_option_voice">Record by voice</string>
+    <string name="reg_option_manual">Manual entry</string>
+    <string name="reg_confirm_title">Confirm</string>
+    <string name="reg_voice_heard">Dai heard: “%1$s”</string>
+    <string name="reg_voice_hint">Amount, category, date and reason</string>
+    <string name="reg_voice_manual">Manual</string>
+    <string name="reg_kind_title">CHOOSE THE TYPE OF ENTRY</string>
+    <string name="reg_kind_expense">Expense</string>
+    <string name="reg_kind_income">Income</string>
+    <string name="reg_amount">AMOUNT</string>
+    <string name="reg_date">DATE</string>
+    <string name="reg_category">Category</string>
+    <string name="reg_category_select">Select</string>
+    <string name="reg_reason">REASON</string>
+    <string name="reg_reason_hint">Write here…</string>
+    <string name="reg_save">Save</string>
+    <string name="reg_problem_amount">Enter an amount greater than 0.</string>
+    <string name="reg_problem_category">Choose a category.</string>
+    <string name="reg_problem_date">The date can\'t be in the future.</string>
+    <string name="reg_categories_title">CATEGORIES</string>
+    <string name="reg_categories_subtitle">Choose the category</string>
+    <string name="reg_categories_empty">You don\'t have categories of this type yet. Create them in Profile → Categories.</string>
+    <string name="reg_discard_title">Discard your changes?</string>
+    <string name="reg_discard_body">Are you sure you want to discard them?</string>
+    <string name="reg_discard_cancel">Cancel</string>
+    <string name="reg_discard_confirm">Discard</string>
+    <string name="reg_success_title">Transaction recorded successfully</string>
+    <string name="reg_success_continue">Continue</string>
+    <string name="reg_success_home">Go to home</string>
+    <string name="home_hello">Hi,</string>
+    <string name="home_hello_default">Name</string>
+    <string name="home_available">Available this month</string>
+    <string name="home_income">\u0020Income %1$s</string>
+    <string name="home_expense">\u0020Expenses %1$s</string>
+    <string name="home_nav_home">Home</string>
+    <string name="home_nav_goals">Goals</string>
+    <string name="home_nav_budgets">Budgets</string>
+    <string name="home_nav_movements">Transactions</string>
+</resources>

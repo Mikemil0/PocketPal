@@ -20,6 +20,7 @@ import com.pocketpal.app.ui.dai.DaiChatViewModel
 import com.pocketpal.app.ui.dai.DaiInsightsViewModel
 import com.pocketpal.app.ui.dai.DaiReceiptViewModel
 import com.pocketpal.app.ui.dai.DaiSettingsViewModel
+import com.pocketpal.app.ui.register.RegisterViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
@@ -231,6 +232,12 @@ class MainActivity : AppCompatActivity() {
                         initializer { DaiSettingsViewModel(container.daiRepository, container.daiSettings) }
                     }
                 )
+                // Módulo 6 · Flujo 5: registrar un movimiento (manual o por voz) desde el + del inicio.
+                val registerVm: RegisterViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { RegisterViewModel(container.movementRepository) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -249,6 +256,7 @@ class MainActivity : AppCompatActivity() {
                     daiInsightsVm = daiInsightsVm,
                     daiReceiptVm = daiReceiptVm,
                     daiSettingsVm = daiSettingsVm,
+                    registerVm = registerVm,
                 )
             }
         }
