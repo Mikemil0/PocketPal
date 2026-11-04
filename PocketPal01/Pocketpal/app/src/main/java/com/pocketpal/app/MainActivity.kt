@@ -18,6 +18,8 @@ import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.dai.DaiChatViewModel
 import com.pocketpal.app.ui.dai.DaiInsightsViewModel
+import com.pocketpal.app.ui.dai.DaiReceiptViewModel
+import com.pocketpal.app.ui.dai.DaiSettingsViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
@@ -210,6 +212,25 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 )
+                // Módulo 6 · Flujo 3: factura con la cámara (cámara y "Confirmar" comparten este ViewModel).
+                val daiReceiptVm: DaiReceiptViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            DaiReceiptViewModel(
+                                container.daiRepository,
+                                userName = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.fullName.orEmpty() },
+                                currency = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.currency ?: "COP" },
+                                weekStart = { preferencesVm.state.value.weekStart },
+                            )
+                        }
+                    }
+                )
+                // Módulo 6 · Flujo 4: voz de Dai (DataStore) y borrar historial.
+                val daiSettingsVm: DaiSettingsViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer { DaiSettingsViewModel(container.daiRepository, container.daiSettings) }
+                    }
+                )
                 PocketNavHost(
                     vm, profileVm, categoriesVm, exportVm,
                     preferencesVm, notificationsVm, securityVm, phoneVm,
@@ -226,6 +247,8 @@ class MainActivity : AppCompatActivity() {
                     budgetDetailVm = budgetDetailVm,
                     daiChatVm = daiChatVm,
                     daiInsightsVm = daiInsightsVm,
+                    daiReceiptVm = daiReceiptVm,
+                    daiSettingsVm = daiSettingsVm,
                 )
             }
         }

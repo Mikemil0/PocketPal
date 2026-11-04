@@ -7,6 +7,20 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+
+    <!--
+      Módulo 6 · Flujo 4 (modo voz de Dai): desde Android 11 una app solo "ve" los
+      servicios que declara aquí. Sin esto, SpeechRecognizer.isRecognitionAvailable()
+      devuelve false y TextToSpeech no encuentra el motor de voz.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

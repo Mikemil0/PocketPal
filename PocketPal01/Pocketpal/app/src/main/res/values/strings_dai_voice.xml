@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 4 — modo voz, configuración y borrar historial -->
+<resources>
+    <string name="dai_voice_title">Modo voz</string>
+    <string name="dai_voice_listening">Estoy escuchando…</string>
+    <string name="dai_voice_paused">En pausa</string>
+    <string name="dai_voice_hint">Puedes hablarme de forma natural.\nEjemplo: \"¿Por qué este mes no me alcanza?\"</string>
+    <string name="dai_voice_repeat">Disculpa, ¿puedes repetirlo?</string>
+    <string name="dai_voice_connection">Hemos tenido un problema de conexión</string>
+    <string name="dai_voice_unavailable">Este teléfono no tiene reconocimiento de voz. Puedes escribirle a Dai.</string>
+    <string name="dai_voice_retry">Repite de nuevo</string>
+    <string name="dai_voice_keyboard">Escribir</string>
+    <string name="dai_voice_tap_to_end">Toca para terminar</string>
+    <string name="dai_voice_tap_to_talk">Toca para hablar</string>
+    <string name="dai_voice_mic_blocked">Micrófono bloqueado</string>
+    <string name="dai_voice_mic_blocked_body">Actívalo en ajustes del sistema</string>
+    <string name="dai_open_settings_voice">Abrir ajustes</string>
+    <string name="dai_settings_title">Configuración de Dai</string>
+    <string name="dai_settings_voice">Voz</string>
+    <string name="dai_settings_voice_sub">Activar o desactivar la voz de Dai</string>
+    <string name="dai_settings_camera">Cámara</string>
+    <string name="dai_settings_camera_sub">Permitir acceso a la cámara</string>
+    <string name="dai_settings_about">Acerca de Dai</string>
+    <string name="dai_settings_about_sub">Versión y condiciones</string>
+    <string name="dai_settings_clear">Borrar historial</string>
+    <string name="dai_settings_clear_sub">Eliminar conversaciones</string>
+    <string name="dai_settings_footer">Daikoku · Configuración del asistente</string>
+    <string name="dai_about_body">Dai 1.0 · Asistente financiero de PocketPal.\n\nDai responde con reglas sobre tus propios datos (movimientos, presupuestos y metas). Lee tus facturas con ML Kit dentro del teléfono: la foto no se envía a ningún servidor. Antes de guardar un gasto siempre te pide confirmar los datos.\n\nDai no reemplaza la asesoría de un profesional financiero.</string>
+    <string name="dai_ok">Entendido</string>
+    <string name="dai_clear_title">¿Estás seguro de querer eliminar tu historial?</string>
+    <string name="dai_clear_body">Esto borrará todas las conversaciones con tu asistente Daikoku y no podrás recuperarlas.</string>
+    <string name="dai_clear_note_title">Ten en cuenta:</string>
+    <string name="dai_clear_note_1">Se eliminarán todas las conversaciones y recomendaciones.</string>
+    <string name="dai_clear_note_2">No afectará a tus movimientos ni tu información financiera.</string>
+    <string name="dai_clear_note_3">Puedes seguir usando el asistente normalmente después de eliminarlo.</string>
+    <string name="dai_clear_confirm">Eliminar historial</string>
+    <string name="dai_cancel">Cancelar</string>
+</resources>

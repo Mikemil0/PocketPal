@@ -43,6 +43,14 @@ import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.dai.DaiCardActions
 import com.pocketpal.app.ui.dai.DaiChatScreen
 import com.pocketpal.app.ui.dai.DaiChatViewModel
+import com.pocketpal.app.ui.dai.DaiClearHistoryScreen
+import com.pocketpal.app.ui.dai.DaiSettingsScreen
+import com.pocketpal.app.ui.dai.DaiSettingsViewModel
+import com.pocketpal.app.ui.dai.DaiSpeaker
+import com.pocketpal.app.ui.dai.DaiVoiceScreen
+import com.pocketpal.app.ui.dai.DaiCameraScreen
+import com.pocketpal.app.ui.dai.DaiReceiptReviewScreen
+import com.pocketpal.app.ui.dai.DaiReceiptViewModel
 import com.pocketpal.app.ui.dai.DaiAlertsScreen
 import com.pocketpal.app.ui.dai.DaiEducationScreen
 import com.pocketpal.app.ui.dai.DaiGoalsScreen
@@ -182,6 +190,11 @@ object Routes {
     const val DaiGoals = "dai/goals"
     const val DaiLearn = "dai/learn"
     const val DaiMissingData = "dai/missing-data"
+    const val DaiCamera = "dai/receipt"
+    const val DaiReceiptReview = "dai/receipt/review"
+    const val DaiVoice = "dai/voice"
+    const val DaiSettings = "dai/settings"
+    const val DaiClearHistory = "dai/settings/clear-history"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -219,6 +232,8 @@ fun PocketNavHost(
     budgetDetailVm: BudgetDetailViewModel,
     daiChatVm: DaiChatViewModel,
     daiInsightsVm: DaiInsightsViewModel,
+    daiReceiptVm: DaiReceiptViewModel,
+    daiSettingsVm: DaiSettingsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -241,7 +256,7 @@ fun PocketNavHost(
             DaiMenuOption.Alerts -> nav.navigate(Routes.DaiAlerts)
             DaiMenuOption.Goals -> nav.navigate(Routes.DaiGoals)
             DaiMenuOption.Education -> nav.navigate(Routes.DaiLearn)
-            DaiMenuOption.Settings -> Unit
+            DaiMenuOption.Settings -> nav.navigate(Routes.DaiSettings)
         }
     }
 
@@ -415,12 +430,22 @@ fun PocketNavHost(
                     nav.navigate(Routes.DaiChat)
                 },
                 onTalk = { nav.navigate(Routes.DaiChat) },
+                onVoice = { nav.navigate(Routes.DaiVoice) },
             )
         }
         composable(Routes.DaiChat) {
             LaunchedEffect(Unit) { daiChatVm.open() }
             val chatState by daiChatVm.state.collectAsStateWithLifecycle()
             val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val daiSettings by daiSettingsVm.settings.collectAsStateWithLifecycle(initialValue = com.pocketpal.app.data.dai.DaiSettings())
+            // Flujo 4: si "Voz" está activada, Dai lee en voz alta cada respuesta nueva.
+            val lastDai = chatState.messages.lastOrNull { !it.isUser }
+            DaiSpeaker(
+                enabled = daiSettings.voiceReplies,
+                loaded = chatState.loaded,
+                messageId = lastDai?.id,
+                text = lastDai?.text,
+            )
             DaiChatScreen(
                 state = chatState,
                 currency = profileCurrency(profileState),
@@ -431,7 +456,119 @@ fun PocketNavHost(
                     onOpenVideo = { query -> openVideoSearch(context, query) },
                     onCompleteData = { nav.navigate(Routes.DaiMissingData) },
                 ),
-                headerActions = { DaiMenuButton(onSelect = ::openDaiMenu) },
+                headerActions = { DaiMenuButton(onSelect = ::openDaiMenu, options = DaiMenuOption.entries) },
+                onMic = { nav.navigate(Routes.DaiVoice) },
+                onCamera = {
+                    daiReceiptVm.start()
+                    nav.navigate(Routes.DaiCamera)
+                },
+            )
+        }
+
+        // Módulo 6 · Flujo 4: modo voz → lo que se dijo se manda al chat.
+        composable(Routes.DaiVoice) {
+            fun toChat() = nav.navigate(Routes.DaiChat) {
+                popUpTo(Routes.DaiVoice) { inclusive = true }
+                launchSingleTop = true
+            }
+            DaiVoiceScreen(
+                onBack = ::back,
+                onHeard = { text ->
+                    daiChatVm.send(text)
+                    toChat()
+                },
+                onKeyboard = ::toChat,
+            )
+        }
+        // Módulo 6 · Flujo 4: configuración de Dai y borrar historial.
+        composable(Routes.DaiSettings) {
+            val daiSettings by daiSettingsVm.settings.collectAsStateWithLifecycle(initialValue = com.pocketpal.app.data.dai.DaiSettings())
+            DaiSettingsScreen(
+                voiceReplies = daiSettings.voiceReplies,
+                onBack = ::back,
+                onVoiceRepliesChange = daiSettingsVm::setVoiceReplies,
+                onCameraSettings = {
+                    context.startActivity(
+                        android.content.Intent(
+                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            android.net.Uri.fromParts("package", context.packageName, null),
+                        )
+                    )
+                },
+                onClearHistory = { nav.navigate(Routes.DaiClearHistory) },
+            )
+        }
+        composable(Routes.DaiClearHistory) {
+            val deleting by daiSettingsVm.deleting.collectAsStateWithLifecycle()
+            val error by daiSettingsVm.error.collectAsStateWithLifecycle()
+            val event by daiSettingsVm.event.collectAsStateWithLifecycle()
+            LaunchedEffect(event) {
+                if (event is DaiSettingsViewModel.Event.HistoryCleared) {
+                    daiSettingsVm.consumeEvent()
+                    daiChatVm.clearLocal()
+                    // De vuelta al chat, ya vacío ("¿En qué puedo ayudarte hoy?").
+                    if (!nav.popBackStack(Routes.DaiChat, inclusive = false)) nav.popBackStack()
+                }
+            }
+            DaiClearHistoryScreen(
+                deleting = deleting,
+                error = error,
+                onBack = {
+                    daiSettingsVm.consumeError()
+                    nav.popBackStack()
+                },
+                onConfirm = daiSettingsVm::clearHistory,
+            )
+        }
+
+        // Módulo 6 · Flujo 3: factura con la cámara → OCR (ML Kit) → aprobar → guardar.
+        composable(Routes.DaiCamera) {
+            val receipt by daiReceiptVm.state.collectAsStateWithLifecycle()
+            // Cuando ya hay datos (leídos o "Manual"), se abre "Confirmar".
+            LaunchedEffect(receipt.stage) {
+                if (receipt.stage == DaiReceiptViewModel.Stage.Review) nav.navigate(Routes.DaiReceiptReview)
+            }
+            DaiCameraScreen(
+                state = receipt,
+                onBack = ::back,
+                onReading = daiReceiptVm::onReading,
+                onTextRecognized = daiReceiptVm::onTextRecognized,
+                onReadFailed = daiReceiptVm::onReadFailed,
+                onManual = daiReceiptVm::startManual,
+                onRetake = daiReceiptVm::retake,
+            )
+        }
+        composable(Routes.DaiReceiptReview) {
+            val receipt by daiReceiptVm.state.collectAsStateWithLifecycle()
+            val event by daiReceiptVm.event.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            val prefs by preferencesVm.state.collectAsStateWithLifecycle()
+            // Atrás = volver a la cámara para tomar otra foto (sin guardar nada).
+            fun backToCamera() {
+                daiReceiptVm.retake()
+                nav.popBackStack()
+            }
+            androidx.activity.compose.BackHandler(onBack = ::backToCamera)
+            LaunchedEffect(event) {
+                if (event is DaiReceiptViewModel.Event.Saved) {
+                    daiReceiptVm.consumeEvent()
+                    // El chat vuelve a leer el historial: ahí está la respuesta de Dai.
+                    daiChatVm.reload()
+                    movementsVm.refreshRecent()
+                    budgetsVm.refresh()
+                    nav.popBackStack(Routes.DaiChat, inclusive = false)
+                }
+            }
+            DaiReceiptReviewScreen(
+                state = receipt,
+                currency = profileCurrency(profileState),
+                datePreference = prefs.dateFormat,
+                onBack = ::backToCamera,
+                onChange = daiReceiptVm::update,
+                onSave = daiReceiptVm::requestSave,
+                onConfirm = daiReceiptVm::confirmSave,
+                onCancelConfirm = daiReceiptVm::cancelConfirm,
+                onErrorShown = daiReceiptVm::consumeError,
             )
         }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 4 — modo voz, configuración y borrar historial -->
+<resources>
+    <string name="dai_voice_title">Voice mode</string>
+    <string name="dai_voice_listening">I\'m listening…</string>
+    <string name="dai_voice_paused">Paused</string>
+    <string name="dai_voice_hint">You can talk to me naturally.\nExample: \"Why isn\'t my money enough this month?\"</string>
+    <string name="dai_voice_repeat">Sorry, can you repeat that?</string>
+    <string name="dai_voice_connection">We had a connection problem</string>
+    <string name="dai_voice_unavailable">This phone has no speech recognition. You can type to Dai.</string>
+    <string name="dai_voice_retry">Try again</string>
+    <string name="dai_voice_keyboard">Type</string>
+    <string name="dai_voice_tap_to_end">Tap to finish</string>
+    <string name="dai_voice_tap_to_talk">Tap to talk</string>
+    <string name="dai_voice_mic_blocked">Microphone blocked</string>
+    <string name="dai_voice_mic_blocked_body">Turn it on in system settings</string>
+    <string name="dai_open_settings_voice">Open settings</string>
+    <string name="dai_settings_title">Dai settings</string>
+    <string name="dai_settings_voice">Voice</string>
+    <string name="dai_settings_voice_sub">Turn Dai\'s voice on or off</string>
+    <string name="dai_settings_camera">Camera</string>
+    <string name="dai_settings_camera_sub">Allow camera access</string>
+    <string name="dai_settings_about">About Dai</string>
+    <string name="dai_settings_about_sub">Version and terms</string>
+    <string name="dai_settings_clear">Clear history</string>
+    <string name="dai_settings_clear_sub">Delete conversations</string>
+    <string name="dai_settings_footer">Daikoku · Assistant settings</string>
+    <string name="dai_about_body">Dai 1.0 · PocketPal\'s financial assistant.\n\nDai answers with rules based on your own data (transactions, budgets and goals). It reads your receipts with ML Kit on the phone: the photo is never sent to a server. Before saving an expense it always asks you to confirm the data.\n\nDai does not replace advice from a financial professional.</string>
+    <string name="dai_ok">Got it</string>
+    <string name="dai_clear_title">Are you sure you want to delete your history?</string>
+    <string name="dai_clear_body">This will delete all conversations with your Daikoku assistant and you won\'t be able to recover them.</string>
+    <string name="dai_clear_note_title">Keep in mind:</string>
+    <string name="dai_clear_note_1">All conversations and recommendations will be deleted.</string>
+    <string name="dai_clear_note_2">It won\'t affect your transactions or financial information.</string>
+    <string name="dai_clear_note_3">You can keep using the assistant normally afterwards.</string>
+    <string name="dai_clear_confirm">Delete history</string>
+    <string name="dai_cancel">Cancel</string>
+</resources>

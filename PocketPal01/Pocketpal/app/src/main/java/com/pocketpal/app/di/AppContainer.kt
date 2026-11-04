@@ -8,6 +8,8 @@ import com.pocketpal.app.data.budget.SupabaseBudgetRepository
 import com.pocketpal.app.data.category.CategoryRepository
 import com.pocketpal.app.data.category.SupabaseCategoryRepository
 import com.pocketpal.app.data.dai.DaiRepository
+import com.pocketpal.app.data.dai.DaiSettingsRepository
+import com.pocketpal.app.data.dai.DataStoreDaiSettings
 import com.pocketpal.app.data.dai.SupabaseDaiRepository
 import com.pocketpal.app.data.device.DeviceRepository
 import com.pocketpal.app.data.device.SupabaseDeviceRepository
@@ -76,6 +78,9 @@ class AppContainer(context: Context) {
      */
     val daiRepository: DaiRepository =
         SupabaseDaiRepository(supabase, movementRepository, budgetRepository, goalRepository)
+
+    /** Módulo 6 · Flujo 4: preferencias de Dai (voz) guardadas en el teléfono con DataStore. */
+    val daiSettings: DaiSettingsRepository = DataStoreDaiSettings(context.applicationContext)
 
     val settingsRepository: SettingsRepository =
         DataStoreSettingsRepository(UserPreferencesStore(context.applicationContext))
