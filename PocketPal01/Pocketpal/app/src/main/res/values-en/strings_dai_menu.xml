@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Flujo 2 — menú de Dai (acciones, alertas, metas, educación) -->
+<resources>
+    <string name="a11y_dai_menu">Dai options</string>
+    <string name="dai_menu_quick_actions">Quick actions</string>
+    <string name="dai_menu_alerts">Alerts</string>
+    <string name="dai_menu_goals">Goals</string>
+    <string name="dai_menu_education">Education</string>
+    <string name="dai_menu_settings">Settings</string>
+    <string name="dai_quick_title">What do you want to do?</string>
+    <string name="dai_quick_subtitle">Dai can help you understand your finances.</string>
+    <string name="dai_quick_analyze">Analyze my spending</string>
+    <string name="dai_quick_analyze_sub">Find patterns and changes</string>
+    <string name="dai_quick_should_know">Is there anything I should know?</string>
+    <string name="dai_quick_should_know_sub">Check important alerts</string>
+    <string name="dai_quick_goals">Review my goals</string>
+    <string name="dai_quick_goals_sub">See your progress and next steps</string>
+    <string name="dai_quick_advice">Give me a tip</string>
+    <string name="dai_quick_advice_sub">A recommendation for today</string>
+    <string name="dai_quick_learn">I want to learn something</string>
+    <string name="dai_quick_learn_sub">Connect with Education</string>
+    <string name="dai_alerts_title">Dai\'s recommendations</string>
+    <string name="dai_alerts_all_good">All good</string>
+    <string name="dai_alerts_explain">Want me to explain why this might be happening?</string>
+    <string name="dai_alerts_alternatives">See alternatives</string>
+    <string name="dai_alerts_more">You might also like</string>
+    <string name="dai_alerts_tip">Tip of the day</string>
+    <string name="dai_goals_title">Your goals</string>
+    <string name="dai_goals_add">+ Add</string>
+    <string name="dai_goals_empty">You don\'t have active goals yet.</string>
+    <string name="dai_goals_follow">See progress</string>
+    <string name="dai_goals_ask">Ask Dai</string>
+    <string name="dai_learn_title">Learn with Dai</string>
+    <string name="dai_learn_question">Can you explain what %1$s is?</string>
+    <string name="dai_learn_apply">Apply it to my goal</string>
+    <string name="dai_learn_later">Later</string>
+    <string name="dai_learn_more">More topics</string>
+    <string name="dai_topic_compound">compound interest</string>
+    <string name="dai_topic_budget">a budget</string>
+    <string name="dai_topic_saving">saving</string>
+    <string name="dai_topic_emergency">an emergency fund</string>
+    <string name="dai_topic_inflation">inflation</string>
+    <string name="dai_topic_credit">a credit card</string>
+    <string name="dai_topic_503020">the 50/30/20 rule</string>
+    <string name="dai_topic_ant">small daily expenses</string>
+    <string name="dai_missing_title">I don\'t have enough data yet to give you a precise answer.</string>
+    <string name="dai_missing_body">To help you better, I need to know a bit more about your finances.</string>
+    <string name="dai_later">Later</string>
+</resources>

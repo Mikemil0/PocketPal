@@ -43,6 +43,15 @@ import com.pocketpal.app.ui.budgets.BudgetsViewModel
 import com.pocketpal.app.ui.dai.DaiCardActions
 import com.pocketpal.app.ui.dai.DaiChatScreen
 import com.pocketpal.app.ui.dai.DaiChatViewModel
+import com.pocketpal.app.ui.dai.DaiAlertsScreen
+import com.pocketpal.app.ui.dai.DaiEducationScreen
+import com.pocketpal.app.ui.dai.DaiGoalsScreen
+import com.pocketpal.app.ui.dai.DaiInsightsViewModel
+import com.pocketpal.app.ui.dai.DaiMenuButton
+import com.pocketpal.app.ui.dai.DaiMenuOption
+import com.pocketpal.app.ui.dai.DaiMissingDataScreen
+import com.pocketpal.app.ui.dai.DaiQuickAction
+import com.pocketpal.app.ui.dai.DaiQuickActionsScreen
 import com.pocketpal.app.ui.dai.DaiWelcomeScreen
 import com.pocketpal.app.ui.goals.AddContributionScreen
 import com.pocketpal.app.ui.goals.GoalCreatedScreen
@@ -168,6 +177,11 @@ object Routes {
     // Módulo 6 · Dai
     const val Dai = "dai"
     const val DaiChat = "dai/chat"
+    const val DaiQuickActions = "dai/actions"
+    const val DaiAlerts = "dai/alerts"
+    const val DaiGoals = "dai/goals"
+    const val DaiLearn = "dai/learn"
+    const val DaiMissingData = "dai/missing-data"
 
     fun categoryNew(kind: CategoryKind) = "profile/category/new/${kind.wire}"
     fun categoryDetail(id: String) = "profile/category/$id"
@@ -204,6 +218,7 @@ fun PocketNavHost(
     budgetFormVm: BudgetFormViewModel,
     budgetDetailVm: BudgetDetailViewModel,
     daiChatVm: DaiChatViewModel,
+    daiInsightsVm: DaiInsightsViewModel,
     nav: NavHostController = rememberNavController(),
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
@@ -213,6 +228,22 @@ fun PocketNavHost(
     fun back() { vm.consume(); nav.popBackStack() }
     fun go(route: String) { vm.consume(); nav.navigate(route) }
     fun goHome() { vm.consume(); nav.navigate(Routes.Home) { popUpTo(0) } }
+
+    // Módulo 6 · Flujo 2: lo que se escribe o se toca en las pantallas del menú de Dai se
+    // manda al chat y se vuelve a él.
+    fun askDai(text: String) {
+        daiChatVm.send(text)
+        if (!nav.popBackStack(Routes.DaiChat, inclusive = false)) nav.navigate(Routes.DaiChat)
+    }
+    fun openDaiMenu(option: DaiMenuOption) {
+        when (option) {
+            DaiMenuOption.QuickActions -> nav.navigate(Routes.DaiQuickActions)
+            DaiMenuOption.Alerts -> nav.navigate(Routes.DaiAlerts)
+            DaiMenuOption.Goals -> nav.navigate(Routes.DaiGoals)
+            DaiMenuOption.Education -> nav.navigate(Routes.DaiLearn)
+            DaiMenuOption.Settings -> Unit
+        }
+    }
 
     // Permisos: solo se muestra la pantalla de los que todavía NO están concedidos.
     val permissionSteps = listOf(
@@ -398,8 +429,78 @@ fun PocketNavHost(
                 onRetry = daiChatVm::retry,
                 cardActions = DaiCardActions(
                     onOpenVideo = { query -> openVideoSearch(context, query) },
-                    onCompleteData = { nav.navigate(Routes.Budgets) },
+                    onCompleteData = { nav.navigate(Routes.DaiMissingData) },
                 ),
+                headerActions = { DaiMenuButton(onSelect = ::openDaiMenu) },
+            )
+        }
+
+        // Módulo 6 · Flujo 2: menú ⋮ de Dai.
+        composable(Routes.DaiQuickActions) {
+            DaiQuickActionsScreen(
+                onBack = ::back,
+                onAsk = ::askDai,
+                onAction = { action ->
+                    when (action) {
+                        DaiQuickAction.Analyze -> askDai("¿En qué estoy gastando más?")
+                        DaiQuickAction.ShouldKnow -> nav.navigate(Routes.DaiAlerts)
+                        DaiQuickAction.Goals -> nav.navigate(Routes.DaiGoals)
+                        DaiQuickAction.Advice -> askDai("Dame un consejo")
+                        DaiQuickAction.Learn -> nav.navigate(Routes.DaiLearn)
+                    }
+                },
+            )
+        }
+        composable(Routes.DaiAlerts) {
+            LaunchedEffect(Unit) { daiInsightsVm.load() }
+            val insights by daiInsightsVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            DaiAlertsScreen(
+                state = insights,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onAsk = ::askDai,
+                onOpenVideo = { query -> openVideoSearch(context, query) },
+                onCompleteData = { nav.navigate(Routes.Budgets) },
+                onRetry = daiInsightsVm::load,
+            )
+        }
+        composable(Routes.DaiGoals) {
+            LaunchedEffect(Unit) { daiInsightsVm.load() }
+            val insights by daiInsightsVm.state.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            DaiGoalsScreen(
+                state = insights,
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onAsk = ::askDai,
+                onAddGoal = { nav.navigate(Routes.GoalNew) },
+                onSeeGoals = { nav.navigate(Routes.Goals) },
+                onRetry = daiInsightsVm::load,
+            )
+        }
+        composable(Routes.DaiLearn) {
+            val topic by daiInsightsVm.topic.collectAsStateWithLifecycle()
+            val profileState by profileVm.state.collectAsStateWithLifecycle()
+            DaiEducationScreen(
+                topic = topic,
+                lesson = daiInsightsVm.lesson(),
+                currency = profileCurrency(profileState),
+                onBack = ::back,
+                onAsk = ::askDai,
+                onSelectTopic = daiInsightsVm::selectTopic,
+                onOpenVideo = { query -> openVideoSearch(context, query) },
+                onApplyToGoal = { nav.navigate(Routes.Goals) },
+            )
+        }
+        composable(Routes.DaiMissingData) {
+            LaunchedEffect(Unit) { daiInsightsVm.load() }
+            val insights by daiInsightsVm.state.collectAsStateWithLifecycle()
+            DaiMissingDataScreen(
+                missing = (insights as? DaiInsightsViewModel.UiState.Content)?.data?.missing,
+                onBack = ::back,
+                onAsk = ::askDai,
+                onCompleteData = { nav.navigate(Routes.Budgets) },
             )
         }
 

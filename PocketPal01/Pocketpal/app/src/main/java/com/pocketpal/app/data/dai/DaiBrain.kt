@@ -74,7 +74,7 @@ object DaiBrain {
                 has("interes compuesto", "inflacion", "50 30 20", "gastos hormiga", "fondo de emergencia") -> DaiIntent.Learn
             has("consejo*", "recomienda*", "recomendacion*", "tip*", "que hago", "como ahorro", "ayudame a ahorrar") -> DaiIntent.Advice
             has("alerta*", "deberia saber", "advertencia*", "algo raro", "algo importante") -> DaiIntent.Alerts
-            has("patron*", "habito*", "alcanza", "por que gasto", "en que gasto", "gastando mas", "mayor gasto") -> DaiIntent.Patterns
+            has("patron*", "habito*", "alcanza", "por que gasto", "por que estoy gastando", "en que gasto", "gastando mas", "mayor gasto") -> DaiIntent.Patterns
             has("meta*", "ahorr*") -> DaiIntent.Goals
             has("gast*", "presupuest*", "como voy", "resumen", "movimient*", "moviendo", "dinero", "plata", "cuanto llevo", "limite") ->
                 DaiIntent.Spending
