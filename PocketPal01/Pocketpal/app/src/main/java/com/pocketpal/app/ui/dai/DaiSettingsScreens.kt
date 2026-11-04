@@ -157,7 +157,7 @@ private fun SettingRow(
             .fillMaxWidth()
             .padding(vertical = 6.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(pocketColors.Card)
             .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 16.dp),
@@ -216,7 +216,7 @@ fun DaiClearHistoryScreen(
                 Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Color.White)
+                    .background(pocketColors.Card)
                     .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(14.dp))
                     .padding(14.dp),
             ) {

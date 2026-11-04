@@ -268,7 +268,7 @@ fun DaiInputBar(
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(28.dp))
-            .background(Color.White)
+            .background(pocketColors.Card)
             .border(1.dp, pocketColors.RoseBorder, RoundedCornerShape(28.dp))
             .padding(start = 4.dp, end = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -468,7 +468,7 @@ fun CardBox(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(Color.White)
+            .background(pocketColors.Card)
             .border(BorderStroke(1.dp, pocketColors.RoseBorder), RoundedCornerShape(14.dp))
             .padding(14.dp),
     ) { content() }

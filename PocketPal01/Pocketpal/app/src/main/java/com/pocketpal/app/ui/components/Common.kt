@@ -35,13 +35,15 @@ fun AuthScaffold(
     background: Color = Color.Unspecified,
     scrollable: Boolean = true,
     backBackground: Color = Color.Unspecified,
-    backTint: Color = Color.White,
+    backTint: Color = Color.Unspecified,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     // Sentinel Unspecified = color del tema (no se puede leer la paleta en los
     // valores por defecto de los parámetros).
     val bg = if (background == Color.Unspecified) pocketColors.Cream else background
     val backBg = if (backBackground == Color.Unspecified) pocketColors.Ink else backBackground
+    // La flecha contrasta con el fondo del botón (Ink): crema en claro, navy en oscuro.
+    val backFg = if (backTint == Color.Unspecified) pocketColors.Cream else backTint
     val base = modifier.fillMaxSize().background(bg)
         .systemBarsPadding().imePadding()
         .padding(horizontal = 24.dp, vertical = 16.dp)
@@ -56,7 +58,7 @@ fun AuthScaffold(
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     stringResource(R.string.a11y_back),
-                    tint = backTint,
+                    tint = backFg,
                     modifier = Modifier.size(16.dp),
                 )
             }

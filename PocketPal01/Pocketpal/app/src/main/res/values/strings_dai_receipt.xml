@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Dai — factura con la cámara (OCR) -->
+<resources>
+    <string name="dai_receipt_back">Atrás</string>
+    <string name="dai_receipt_shutter">Tomar foto</string>
+    <string name="dai_receipt_hint">Encuadra la factura y toma la foto</string>
+    <string name="dai_receipt_reading">Leyendo la factura…</string>
+    <string name="dai_receipt_read_failed">No pude leer la factura. Intenta con otra foto o ingresa los datos manualmente.</string>
+    <string name="dai_receipt_manual">Ingresar manual</string>
+    <string name="dai_receipt_perm_needed">Necesito acceso a la cámara para leer tu factura.</string>
+    <string name="dai_receipt_perm_denied">La cámara está bloqueada. Actívala en los ajustes del teléfono o ingresa los datos manualmente.</string>
+    <string name="dai_receipt_perm_allow">Permitir cámara</string>
+
+    <string name="dai_receipt_title">Confirmar</string>
+    <string name="dai_receipt_merchant">Comercio</string>
+    <string name="dai_receipt_amount">Monto</string>
+    <string name="dai_receipt_date">Fecha</string>
+    <string name="dai_receipt_category">Categoría</string>
+    <string name="dai_receipt_reason">Nota (opcional)</string>
+    <string name="dai_receipt_save">Guardar</string>
+    <string name="dai_receipt_err_merchant">Escribe el nombre del comercio</string>
+    <string name="dai_receipt_err_amount">Ingresa un monto válido</string>
+    <string name="dai_receipt_err_future">La fecha no puede ser futura</string>
+    <string name="dai_receipt_err_date">Fecha no válida</string>
+    <string name="dai_receipt_no_category">Sin categoría</string>
+
+    <string name="dai_receipt_confirm_title">¿Dónde se guardará?</string>
+    <string name="dai_receipt_confirm_where">Se guardará un gasto de %1$s en %2$s.</string>
+    <string name="dai_receipt_confirm_budget">Presupuesto %1$s: de %2$d%% a %3$d%%.</string>
+    <string name="dai_receipt_confirm_exceeds">Con este gasto superas tu presupuesto.</string>
+    <string name="dai_receipt_confirm_yes">Sí, guardar</string>
+    <string name="dai_receipt_confirm_no">Cancelar</string>
+
+    <string name="dai_receipt_error_title">No se pudo guardar</string>
+    <string name="dai_receipt_error_body">Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="dai_receipt_error_ok">Entendido</string>
+</resources>

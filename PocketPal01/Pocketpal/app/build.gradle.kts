@@ -109,6 +109,11 @@ dependencies {
 // Fase 6: reordenar categorías arrastrando (D-10, §7.6: sh.calvin.reorderable)
     implementation("sh.calvin.reorderable:reorderable:3.1.0")
 
+    implementation("androidx.camera:camera-core:1.4.2")
+    implementation("androidx.camera:camera-camera2:1.4.2")
+    implementation("androidx.camera:camera-lifecycle:1.4.2")
+    implementation("androidx.camera:camera-view:1.4.2")
+    implementation("com.google.mlkit:text-recognition:16.0.1")
 // Íconos
     implementation("androidx.compose.material:material-icons-extended")
 

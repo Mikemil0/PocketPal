@@ -265,7 +265,7 @@ private fun MicBlockedDialog(onOpenSettings: () -> Unit, onKeyboard: () -> Unit)
             Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.White)
+                .background(pocketColors.Card)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

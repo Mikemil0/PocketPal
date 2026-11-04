@@ -245,7 +245,7 @@ fun DaiAlertsScreen(
                     Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(14.dp))
-                        .background(Color.White)
+                        .background(pocketColors.Card)
                         .border(1.dp, pocketColors.Coral, RoundedCornerShape(14.dp))
                         .padding(14.dp),
                 ) {
@@ -351,7 +351,7 @@ fun DaiGoalsScreen(
                         Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(14.dp))
-                            .background(Color.White)
+                            .background(pocketColors.Card)
                             .border(1.dp, pocketColors.Coral, RoundedCornerShape(14.dp))
                             .padding(14.dp),
                     ) {
