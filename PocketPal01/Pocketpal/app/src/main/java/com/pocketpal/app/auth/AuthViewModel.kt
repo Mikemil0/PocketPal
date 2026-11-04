@@ -1,5 +1,6 @@
 package com.pocketpal.app.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocketpal.app.data.settings.SettingsRepository
@@ -183,6 +184,8 @@ class AuthViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                // Diagnóstico: el mensaje de pantalla es genérico; la causa real queda en Logcat (filtro: PocketPalGoogle).
+                Log.e("PocketPalGoogle", "Google sign-in falló: ${e::class.java.name}: ${e.message}", e)
                 AuthState.Error(ErrorType.GoogleFailed)
             }
         }

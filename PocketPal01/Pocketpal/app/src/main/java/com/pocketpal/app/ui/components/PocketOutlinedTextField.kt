@@ -34,6 +34,8 @@ fun PocketOutlinedTextField(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
+    onTrailingIconClick: (() -> Unit)? = null,
+    trailingIconDescription: String? = null,
     placeholder: String? = null,
     isPassword: Boolean = false,
     isError: Boolean = false,
@@ -63,6 +65,13 @@ fun PocketOutlinedTextField(
             shape = shape,
             leadingIcon = leadingIcon?.let { { Icon(it, null) } },
             trailingIcon = when {
+                // Ícono final con acción (p. ej. el calendario de la fecha): tiene prioridad sobre el X de error;
+                // el error se sigue viendo por el borde rojo y el texto de abajo.
+                trailingIcon != null && onTrailingIconClick != null -> ({
+                    IconButton(onClick = onTrailingIconClick) {
+                        Icon(trailingIcon, trailingIconDescription, tint = pocketColors.Coral)
+                    }
+                })
                 isError -> ({ Icon(Icons.Outlined.Cancel, null, tint = pocketColors.ErrorRed) })
                 isPassword -> ({
                     IconButton({ visible = !visible }) {

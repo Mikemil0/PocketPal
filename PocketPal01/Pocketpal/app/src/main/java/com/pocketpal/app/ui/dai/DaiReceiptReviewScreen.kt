@@ -16,9 +16,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,6 +79,8 @@ fun DaiReceiptReviewScreen(
     }
     var dateText by remember { mutableStateOf(GoalFormat.inputDate(draft.date, datePreference)) }
     var dateInvalid by remember { mutableStateOf(false) }
+    var dateComplete by remember { mutableStateOf(true) } // 8 dígitos escritos (el error solo se muestra entonces)
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().background(pocketColors.Cream).systemBarsPadding()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)) {
@@ -112,21 +121,29 @@ fun DaiReceiptReviewScreen(
             )
 
             val futureDate = state.problem == ReceiptProblem.FutureDate
+            // El teclado numérico no tiene "/": se escriben solo los dígitos (12052026) y las
+            // barras se ponen solas. El error solo aparece cuando la fecha está completa.
+            val showDateError = dateInvalid && dateComplete
             PocketOutlinedTextField(
                 value = dateText,
                 onValueChange = { raw ->
-                    dateText = raw
-                    val parsed = parseDate(raw, datePreference)
+                    val digits = raw.filter { it.isDigit() }.take(8)
+                    dateText = formatDateDigits(digits, datePreference)
+                    dateComplete = digits.length == 8
+                    val parsed = if (dateComplete) parseDate(dateText, datePreference) else null
                     dateInvalid = parsed == null
                     if (parsed != null) onChange(draft.copy(date = parsed))
                 },
                 label = stringResource(R.string.dai_receipt_date),
                 placeholder = GoalFormat.placeholder(datePreference, locale),
                 keyboardType = KeyboardType.Number,
-                isError = dateInvalid || futureDate,
+                trailingIcon = Icons.Outlined.CalendarMonth,
+                onTrailingIconClick = { showDatePicker = true },
+                trailingIconDescription = stringResource(R.string.a11y_pick_date),
+                isError = showDateError || futureDate,
                 errorText = when {
                     futureDate -> stringResource(R.string.dai_receipt_err_future)
-                    dateInvalid -> stringResource(R.string.dai_receipt_err_date)
+                    showDateError -> stringResource(R.string.dai_receipt_err_date)
                     else -> null
                 },
             )
@@ -159,6 +176,20 @@ fun DaiReceiptReviewScreen(
             enabled = !dateInvalid,
             loading = state.saving,
             modifier = Modifier.padding(24.dp),
+        )
+    }
+
+    if (showDatePicker) {
+        ReceiptDatePickerDialog(
+            current = draft.date,
+            onPick = { picked ->
+                dateText = GoalFormat.inputDate(picked, datePreference)
+                dateInvalid = false
+                dateComplete = true
+                onChange(draft.copy(date = picked))
+                showDatePicker = false
+            },
+            onDismiss = { showDatePicker = false },
         )
     }
 
@@ -246,5 +277,48 @@ private fun parseDate(text: String, preference: String): LocalDate? {
         LocalDate.parse(text.trim(), DateTimeFormatter.ofPattern(pattern))
     } catch (e: Exception) {
         null
+    }
+}
+
+/** Calendario para elegir la fecha del recibo (no deja escoger días futuros). */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReceiptDatePickerDialog(current: LocalDate, onPick: (LocalDate) -> Unit, onDismiss: () -> Unit) {
+    val today = LocalDate.now()
+    val pickerState = rememberDatePickerState(
+        initialSelectedDateMillis = GoalFormat.toPickerMillis(current),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean =
+                !GoalFormat.fromPickerMillis(utcTimeMillis).isAfter(today)
+        },
+    )
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                pickerState.selectedDateMillis?.let { onPick(GoalFormat.fromPickerMillis(it)) } ?: onDismiss()
+            }) {
+                Text(stringResource(R.string.goal_date_ok), color = pocketColors.Coral, fontWeight = FontWeight.SemiBold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.common_cancel), color = pocketColors.Muted)
+            }
+        },
+    ) {
+        DatePicker(state = pickerState)
+    }
+}
+
+/** "12052026" → "12/05/2026" (o "2026-05-12" según la preferencia); pone el separador solo cuando hay más dígitos. */
+private fun formatDateDigits(digits: String, preference: String): String {
+    val sep = if (preference == "YYYY-MM-DD") "-" else "/"
+    val cuts = if (preference == "YYYY-MM-DD") listOf(4, 6) else listOf(2, 4)
+    return buildString {
+        digits.forEachIndexed { i, c ->
+            if (i in cuts) append(sep)
+            append(c)
+        }
     }
 }
