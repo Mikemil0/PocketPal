@@ -155,9 +155,6 @@
     <string name="perm_not_now">Ahora no</string>
 
     <!-- Home -->
-    <string name="home_welcome">¡Bienvenido!</string>
-    <string name="home_welcome_name">¡Bienvenido, %1$s!</string>
-    <string name="home_subtitle">Pronto habrá más zonas por descubrir.</string>
     <string name="home_sign_out">Cerrar sesión</string>
 
     <!-- Errores: los ViewModels emiten ErrorType; la UI traduce con estos textos (RF-A3) -->
@@ -286,8 +283,6 @@
     <string name="export_custom_from">Desde</string>
     <string name="export_custom_to">Hasta</string>
     <string name="export_custom_apply">Aplicar</string>
-    <string name="export_a11y_range_option">Elegir este rango</string>
-    <string name="export_a11y_format_option">Elegir este formato</string>
 
     <!-- Fase 8: Ayuda y soporte (RF-B10; acordeón pág. 40 + detalle con Anterior/Siguiente pág. 57) -->
     <string name="help_title">Ayuda y soporte</string>

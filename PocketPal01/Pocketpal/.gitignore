@@ -16,3 +16,9 @@ local.properties
 # Keystores: nunca se suben (firmas de la app)
 *.jks
 *.keystore
+
+# Archivos de Android Studio que son de cada computador (dispositivo elegido, emuladores)
+/.idea/deviceManager.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/other.xml

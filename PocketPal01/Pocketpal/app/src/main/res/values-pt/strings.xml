@@ -146,9 +146,6 @@
     <string name="perm_not_now">Agora não</string>
 
     <!-- Home -->
-    <string name="home_welcome">Bem-vindo!</string>
-    <string name="home_welcome_name">Bem-vindo, %1$s!</string>
-    <string name="home_subtitle">Em breve haverá mais áreas para descobrir.</string>
     <string name="home_sign_out">Encerrar sessão</string>
 
     <!-- Errors -->
@@ -270,8 +267,6 @@
     <string name="export_custom_from">De</string>
     <string name="export_custom_to">Até</string>
     <string name="export_custom_apply">Aplicar</string>
-    <string name="export_a11y_range_option">Escolher este período</string>
-    <string name="export_a11y_format_option">Escolher este formato</string>
 
     <!-- Help and support -->
     <string name="help_title">Ajuda e suporte</string>

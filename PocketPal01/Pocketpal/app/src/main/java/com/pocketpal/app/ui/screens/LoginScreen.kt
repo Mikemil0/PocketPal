@@ -21,7 +21,6 @@ import com.pocketpal.app.auth.AuthState
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.errorMessage
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable

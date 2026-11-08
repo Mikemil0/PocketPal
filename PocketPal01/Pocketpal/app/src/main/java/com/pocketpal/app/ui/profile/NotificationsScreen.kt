@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.auth.ErrorType
-import com.pocketpal.app.data.notification.NotificationSettings
 import com.pocketpal.app.ui.components.AuthScaffold
 import com.pocketpal.app.ui.components.ErrorBanner
 import com.pocketpal.app.ui.components.SectionHeader

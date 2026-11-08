@@ -146,9 +146,6 @@
     <string name="perm_not_now">Not now</string>
 
     <!-- Home -->
-    <string name="home_welcome">Welcome!</string>
-    <string name="home_welcome_name">Welcome, %1$s!</string>
-    <string name="home_subtitle">More areas to discover soon.</string>
     <string name="home_sign_out">Sign out</string>
 
     <!-- Errors: ViewModels emit ErrorType; the UI translates it with these texts (RF-A3) -->
@@ -271,8 +268,6 @@
     <string name="export_custom_from">From</string>
     <string name="export_custom_to">To</string>
     <string name="export_custom_apply">Apply</string>
-    <string name="export_a11y_range_option">Choose this date range</string>
-    <string name="export_a11y_format_option">Choose this format</string>
 
     <!-- Phase 8: Help & support (RF-B10; accordion p. 40 + detail with Previous/Next p. 57) -->
     <string name="help_title">Help &amp; support</string>

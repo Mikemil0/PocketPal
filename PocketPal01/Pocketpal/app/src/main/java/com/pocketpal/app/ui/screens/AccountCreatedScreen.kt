@@ -17,7 +17,6 @@ import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.components.StepProgressBar
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 /** "VER - COD" paso final: correo verificado. */

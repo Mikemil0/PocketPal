@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 private data class TutPage(@param:StringRes val title: Int, @param:StringRes val body: Int)

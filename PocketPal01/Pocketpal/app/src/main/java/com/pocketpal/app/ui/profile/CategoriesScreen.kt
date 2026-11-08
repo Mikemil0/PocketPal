@@ -56,7 +56,6 @@ import com.pocketpal.app.ui.components.CategoryColors
 import com.pocketpal.app.ui.components.CategoryIcon
 import com.pocketpal.app.ui.components.ErrorBanner
 import com.pocketpal.app.ui.messageRes
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 import sh.calvin.reorderable.ReorderableItem

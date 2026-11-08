@@ -31,7 +31,6 @@ import com.pocketpal.app.ui.components.AuthScaffold
 import com.pocketpal.app.ui.components.PocketOutlinedTextField
 import com.pocketpal.app.ui.components.SectionHeader
 import com.pocketpal.app.ui.components.SettingsGroup
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 /** Pregunta resuelta en el idioma actual (la búsqueda filtra sobre este texto). */

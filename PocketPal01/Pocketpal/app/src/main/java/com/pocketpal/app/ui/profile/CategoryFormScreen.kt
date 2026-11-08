@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,7 +54,6 @@ import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.SectionHeader
 import com.pocketpal.app.ui.components.ToggleCard
 import com.pocketpal.app.ui.messageRes
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 /**

@@ -25,7 +25,6 @@ import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.auth.isPasswordProblem
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.errorMessage
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable

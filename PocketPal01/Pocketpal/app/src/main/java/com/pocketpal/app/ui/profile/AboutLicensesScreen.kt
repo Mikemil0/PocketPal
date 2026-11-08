@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.AuthScaffold
 import com.pocketpal.app.ui.components.SettingsGroup
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 /**

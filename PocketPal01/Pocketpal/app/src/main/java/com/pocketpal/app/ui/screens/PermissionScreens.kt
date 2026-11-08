@@ -28,7 +28,6 @@ import com.pocketpal.app.navigation.AppPermissions
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.ScrollableScreen
 import com.pocketpal.app.ui.components.StepProgressBar
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 @Composable

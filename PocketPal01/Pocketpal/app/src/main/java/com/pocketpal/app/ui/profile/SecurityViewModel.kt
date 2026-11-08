@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.auth.PasswordRules
 import com.pocketpal.app.data.device.DeviceRepository
-import com.pocketpal.app.data.device.DeviceSession
 import com.pocketpal.app.data.security.SecurityRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow

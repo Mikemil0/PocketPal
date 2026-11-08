@@ -36,7 +36,6 @@ import com.pocketpal.app.ui.components.AuthScaffold
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.SectionHeader
 import com.pocketpal.app.ui.components.SettingsGroup
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 import java.util.Date
 

@@ -15,7 +15,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,7 +25,6 @@ import com.pocketpal.app.R
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.ui.components.*
 import com.pocketpal.app.ui.messageRes
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.delay
 import java.util.Locale

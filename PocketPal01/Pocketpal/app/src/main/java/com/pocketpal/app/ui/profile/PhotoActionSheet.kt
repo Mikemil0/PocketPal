@@ -34,7 +34,6 @@ import com.pocketpal.app.R
 import com.pocketpal.app.data.profile.AvatarImageEncoder
 import com.pocketpal.app.navigation.AppPermissions
 import com.pocketpal.app.ui.components.PocketPrimaryButton
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 import kotlinx.coroutines.launch
 import java.io.File

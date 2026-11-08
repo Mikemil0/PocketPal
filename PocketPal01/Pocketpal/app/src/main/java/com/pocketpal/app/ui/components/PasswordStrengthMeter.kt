@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
 import com.pocketpal.app.auth.PasswordRules
-import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 
 /** Barras: Gris (0 reglas) -> Rojo (1) -> Amarillo (2) -> Verde (3). Cada regla: cumplida = verde, fallida = rojo. */
