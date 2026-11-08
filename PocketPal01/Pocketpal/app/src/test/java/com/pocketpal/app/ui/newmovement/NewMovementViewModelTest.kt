@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.register
+package com.pocketpal.app.ui.newmovement
 
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.data.movement.FakeMovementRepository
@@ -21,7 +21,7 @@ import java.time.LocalDate
 
 /** Módulo 6 · Flujo 5 · Registro manual y por voz desde el + del inicio. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class RegisterViewModelTest {
+class NewMovementViewModelTest {
 
     private val dispatcher = UnconfinedTestDispatcher()
     private val today = LocalDate.of(2026, 11, 4)
@@ -41,7 +41,7 @@ class RegisterViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun newVm() = RegisterViewModel(repository, today = { today }, zone = { FakeMovementRepository.ZONE })
+    private fun newVm() = NewMovementViewModel(repository, today = { today }, zone = { FakeMovementRepository.ZONE })
 
     @Test
     fun `registro manual guarda el gasto en movements con source manual`() = runTest(dispatcher) {
@@ -61,7 +61,7 @@ class RegisterViewModelTest {
         assertEquals(45_000.0, saved.amount, 0.0)
         assertEquals("Mercado de la semana", saved.title)
         assertEquals(NewMovement.SOURCE_MANUAL, saved.source)
-        assertTrue(vm.event.value is RegisterViewModel.Event.Saved)
+        assertTrue(vm.event.value is NewMovementViewModel.Event.Saved)
         assertFalse(vm.state.value.changed)
     }
 
@@ -70,16 +70,16 @@ class RegisterViewModelTest {
         val vm = newVm()
         vm.startManual()
         vm.save()
-        assertEquals(RegisterViewModel.Problem.Amount, vm.state.value.problem)
+        assertEquals(NewMovementViewModel.Problem.Amount, vm.state.value.problem)
 
         vm.setAmount("12000")
         vm.save()
-        assertEquals(RegisterViewModel.Problem.Category, vm.state.value.problem)
+        assertEquals(NewMovementViewModel.Problem.Category, vm.state.value.problem)
 
         vm.setCategory("transporte")
         vm.setDate(today.plusDays(1))
         vm.save()
-        assertEquals(RegisterViewModel.Problem.FutureDate, vm.state.value.problem)
+        assertEquals(NewMovementViewModel.Problem.FutureDate, vm.state.value.problem)
         assertTrue(repository.created.isEmpty())
     }
 
@@ -98,7 +98,7 @@ class RegisterViewModelTest {
         val vm = newVm()
         vm.startVoice("Gasté 45 mil pesos en mercado, mercado de la semana")
         val form = vm.state.value.form
-        assertEquals(RegisterViewModel.Mode.Voice, vm.state.value.mode)
+        assertEquals(NewMovementViewModel.Mode.Voice, vm.state.value.mode)
         assertEquals(MovementKind.Expense, form.kind)
         assertEquals("45000", form.amountDigits)
         assertEquals("comida", form.categoryId)
@@ -134,6 +134,6 @@ class RegisterViewModelTest {
         vm.consumeError()
         vm.save()
         assertEquals(1, repository.created.size)
-        assertTrue(vm.event.value is RegisterViewModel.Event.Saved)
+        assertTrue(vm.event.value is NewMovementViewModel.Event.Saved)
     }
 }

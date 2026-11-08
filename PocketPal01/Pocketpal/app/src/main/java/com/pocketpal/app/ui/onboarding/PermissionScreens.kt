@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.screens
+package com.pocketpal.app.ui.onboarding
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

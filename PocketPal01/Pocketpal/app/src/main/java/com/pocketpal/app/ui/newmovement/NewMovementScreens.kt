@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.register
+package com.pocketpal.app.ui.newmovement
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
@@ -68,7 +68,7 @@ import com.pocketpal.app.ui.theme.pocketColors
 import java.time.LocalDate
 
 /** Las 3 formas de registrar que salen al tocar el + del inicio. */
-enum class RegisterOption(val label: Int, val icon: ImageVector) {
+enum class NewMovementOption(val label: Int, val icon: ImageVector) {
     Scan(R.string.reg_option_scan, Icons.Outlined.CameraAlt),
     Voice(R.string.reg_option_voice, Icons.Outlined.Mic),
     Manual(R.string.reg_option_manual, Icons.Outlined.Edit),
@@ -80,7 +80,7 @@ enum class RegisterOption(val label: Int, val icon: ImageVector) {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeAddSheet(onDismiss: () -> Unit, onSelect: (RegisterOption) -> Unit) {
+fun HomeAddSheet(onDismiss: () -> Unit, onSelect: (NewMovementOption) -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -89,7 +89,7 @@ fun HomeAddSheet(onDismiss: () -> Unit, onSelect: (RegisterOption) -> Unit) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
             Text(stringResource(R.string.reg_add_title), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
             Spacer(Modifier.height(12.dp))
-            RegisterOption.entries.forEach { option ->
+            NewMovementOption.entries.forEach { option ->
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -116,12 +116,12 @@ fun HomeAddSheet(onDismiss: () -> Unit, onSelect: (RegisterOption) -> Unit) {
 /**
  * Figma "REG MANUAL" (formulario vacío) y "CONFI DATOS" (lo que Dai entendió por voz,
  * listo para corregir). Es una pantalla **sin estado**: el formulario vive en
- * [RegisterViewModel] y cada cambio sube con una lambda. Lo único que recuerda ella misma
+ * [NewMovementViewModel] y cada cambio sube con una lambda. Lo único que recuerda ella misma
  * es si están abiertas la hoja de categorías o la pregunta de descartar.
  */
 @Composable
-fun RegisterFormScreen(
-    state: RegisterViewModel.RegisterUi,
+fun NewMovementFormScreen(
+    state: NewMovementViewModel.NewMovementUi,
     currency: String,
     datePreference: String,
     onExit: () -> Unit,
@@ -151,7 +151,7 @@ fun RegisterFormScreen(
     BackHandler(onBack = ::tryExit)
 
     AuthScaffold(onBack = ::tryExit, backBackground = pocketColors.ChipPink, backTint = pocketColors.Coral) {
-        if (state.mode == RegisterViewModel.Mode.Voice) {
+        if (state.mode == NewMovementViewModel.Mode.Voice) {
             Text(stringResource(R.string.reg_confirm_title), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = pocketColors.Ink)
             Spacer(Modifier.height(6.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -188,7 +188,7 @@ fun RegisterFormScreen(
             digits = form.amountDigits,
             onDigitsChange = onAmount,
             currency = currency,
-            isError = state.problem == RegisterViewModel.Problem.Amount,
+            isError = state.problem == NewMovementViewModel.Problem.Amount,
         )
 
         GoalFieldLabel(stringResource(R.string.reg_date))
@@ -205,7 +205,7 @@ fun RegisterFormScreen(
             label = stringResource(R.string.reg_category),
             value = state.selectedCategory?.name ?: stringResource(R.string.reg_category_select),
             hasValue = state.selectedCategory != null,
-            isError = state.problem == RegisterViewModel.Problem.Category,
+            isError = state.problem == NewMovementViewModel.Problem.Category,
             onClick = { showCategories = true },
         )
 
@@ -389,7 +389,7 @@ private fun DiscardDialog(onCancel: () -> Unit, onDiscard: () -> Unit) {
 
 /** Figma "REGISTRO EXITO": "Movimiento registrado correctamente" · Continuar / Ir a inicio. */
 @Composable
-fun RegisterSuccessScreen(onContinue: () -> Unit, onHome: () -> Unit) {
+fun NewMovementSuccessScreen(onContinue: () -> Unit, onHome: () -> Unit) {
     BackHandler(onBack = onHome)
     Column(
         Modifier.fillMaxSize().background(pocketColors.Cream).systemBarsPadding().padding(horizontal = 32.dp),
@@ -423,8 +423,8 @@ fun RegisterSuccessScreen(onContinue: () -> Unit, onHome: () -> Unit) {
     }
 }
 
-private fun problemText(problem: RegisterViewModel.Problem): Int = when (problem) {
-    RegisterViewModel.Problem.Amount -> R.string.reg_problem_amount
-    RegisterViewModel.Problem.Category -> R.string.reg_problem_category
-    RegisterViewModel.Problem.FutureDate -> R.string.reg_problem_date
+private fun problemText(problem: NewMovementViewModel.Problem): Int = when (problem) {
+    NewMovementViewModel.Problem.Amount -> R.string.reg_problem_amount
+    NewMovementViewModel.Problem.Category -> R.string.reg_problem_category
+    NewMovementViewModel.Problem.FutureDate -> R.string.reg_problem_date
 }

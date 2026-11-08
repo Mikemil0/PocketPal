@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.screens
+package com.pocketpal.app.ui.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

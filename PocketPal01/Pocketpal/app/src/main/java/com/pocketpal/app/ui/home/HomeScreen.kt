@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.screens
+package com.pocketpal.app.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,8 +45,8 @@ import com.pocketpal.app.ui.dai.DaiAvatar
 import com.pocketpal.app.ui.dai.DaiMood
 import com.pocketpal.app.ui.goals.HomeGoalsSection
 import com.pocketpal.app.ui.movements.HomeMovementsSection
-import com.pocketpal.app.ui.register.HomeAddSheet
-import com.pocketpal.app.ui.register.RegisterOption
+import com.pocketpal.app.ui.newmovement.HomeAddSheet
+import com.pocketpal.app.ui.newmovement.NewMovementOption
 import com.pocketpal.app.ui.theme.pocketColors
 
 /**
@@ -90,7 +90,7 @@ fun HomeScreen(
     onOpenDai: (() -> Unit)? = null,
     monthIncome: Double = 0.0,
     monthExpense: Double = 0.0,
-    onRegister: ((RegisterOption) -> Unit)? = null,
+    onRegister: ((NewMovementOption) -> Unit)? = null,
 ) {
     val firstName = name.trim().substringBefore(" ")
     // Estado propio y pequeño: si la hoja del + está abierta.

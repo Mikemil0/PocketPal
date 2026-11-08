@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.register
+package com.pocketpal.app.ui.newmovement
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +32,7 @@ import kotlin.math.roundToLong
  * ```
  * El "Registro mediante escáner" usa la cámara y el OCR de Dai (DaiReceiptViewModel, flujo 3).
  */
-class RegisterViewModel(
+class NewMovementViewModel(
     private val repository: MovementRepository,
     private val today: () -> LocalDate = { LocalDate.now() },
     private val zone: () -> ZoneId = { ZoneId.systemDefault() },
@@ -53,7 +53,7 @@ class RegisterViewModel(
         val reason: String = "",
     )
 
-    data class RegisterUi(
+    data class NewMovementUi(
         val mode: Mode = Mode.Manual,
         val form: Form = Form(),
         /** Todas las categorías del usuario (gastos e ingresos). */
@@ -78,8 +78,8 @@ class RegisterViewModel(
         data class Saved(val movement: Movement) : Event
     }
 
-    private val _state = MutableStateFlow(RegisterUi())
-    val state: StateFlow<RegisterUi> = _state.asStateFlow()
+    private val _state = MutableStateFlow(NewMovementUi())
+    val state: StateFlow<NewMovementUi> = _state.asStateFlow()
 
     private val _event = MutableStateFlow<Event?>(null)
     val event: StateFlow<Event?> = _event.asStateFlow()
@@ -91,14 +91,14 @@ class RegisterViewModel(
 
     /** "Registro manual": formulario vacío con la fecha de hoy. */
     fun startManual() {
-        _state.value = RegisterUi(form = Form(date = today()))
+        _state.value = NewMovementUi(form = Form(date = today()))
         _event.value = null
         load(voiceText = null)
     }
 
     /** "Registro por voz": Dai convierte lo que se dijo en un movimiento para confirmar. */
     fun startVoice(text: String) {
-        _state.value = RegisterUi(mode = Mode.Voice, form = Form(date = today()), heard = text.trim())
+        _state.value = NewMovementUi(mode = Mode.Voice, form = Form(date = today()), heard = text.trim())
         _event.value = null
         load(voiceText = text)
     }

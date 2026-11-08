@@ -1,4 +1,4 @@
-package com.pocketpal.app.ui.screens
+package com.pocketpal.app.ui.onboarding
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
