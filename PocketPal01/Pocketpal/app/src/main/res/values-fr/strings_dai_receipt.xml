@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Módulo 6 · Dai — factura con la cámara (OCR) -->
+<resources>
+    <string name="dai_receipt_back">Retour</string>
+    <string name="dai_receipt_shutter">Prendre une photo</string>
+    <string name="dai_receipt_gallery">Choisir dans la galerie</string>
+    <string name="dai_receipt_hint">Cadre le ticket et prends la photo</string>
+    <string name="dai_receipt_reading">Lecture du ticket…</string>
+    <string name="dai_receipt_read_failed">Je n\'ai pas pu lire le ticket. Essaie une autre photo ou saisis les données à la main.</string>
+    <string name="dai_receipt_manual">Saisir à la main</string>
+    <string name="dai_receipt_perm_needed">J\'ai besoin de l\'appareil photo pour lire ton ticket.</string>
+    <string name="dai_receipt_perm_denied">L\'appareil photo est bloqué. Active-le dans les réglages du téléphone ou saisis les données à la main.</string>
+    <string name="dai_receipt_perm_allow">Autoriser l\'appareil photo</string>
+
+    <string name="dai_receipt_title">Confirmer</string>
+    <string name="dai_receipt_merchant">Commerce</string>
+    <string name="dai_receipt_amount">Montant</string>
+    <string name="dai_receipt_date">Date</string>
+    <string name="dai_receipt_category">Catégorie</string>
+    <string name="dai_receipt_reason">Note (facultative)</string>
+    <string name="dai_receipt_save">Enregistrer</string>
+    <string name="dai_receipt_err_merchant">Saisis le nom du commerce</string>
+    <string name="dai_receipt_err_amount">Saisis un montant valide</string>
+    <string name="dai_receipt_err_future">La date ne peut pas être future</string>
+    <string name="dai_receipt_err_date">Date non valide</string>
+    <string name="dai_receipt_no_category">Sans catégorie</string>
+
+    <string name="dai_receipt_confirm_title">Où sera-t-il enregistré ?</string>
+    <string name="dai_receipt_confirm_where">Une dépense de %1$s sera enregistrée dans %2$s.</string>
+    <string name="dai_receipt_confirm_budget">Budget %1$s : de %2$d%% à %3$d%%.</string>
+    <string name="dai_receipt_confirm_exceeds">Avec cette dépense, tu dépasses ton budget.</string>
+    <string name="dai_receipt_confirm_yes">Oui, enregistrer</string>
+    <string name="dai_receipt_confirm_no">Annuler</string>
+
+    <string name="dai_receipt_error_title">Impossible d\'enregistrer</string>
+    <string name="dai_receipt_error_body">Vérifie ta connexion et réessaie.</string>
+    <string name="dai_receipt_error_ok">Compris</string>
+</resources>

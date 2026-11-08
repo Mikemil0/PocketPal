@@ -133,4 +133,64 @@ class ReceiptParserTest {
         assertTrue(reply.text.contains("Registré $17.900 de Tienda Express en Comida"))
         assertTrue(reply.text.contains("queda en el 88 %"))
     }
+
+    // ---------------- Total: casos reales que leían mal ----------------
+
+    @Test
+    fun `si la etiqueta Total quedo sin numero toma el de la fila de abajo, no el NIT`() {
+        val lines = listOf("SUPERMERCADO LA 14", "NIT 900.123.456-7", "Tel 6012345678", "Total", "$48.350", "Efectivo $50.000", "Cambio $1.650")
+        assertEquals(48_350.0, ReceiptParser.findTotal(lines)!!, 0.001)
+    }
+
+    @Test
+    fun `sin etiqueta no toma el NIT, el telefono ni el anio`() {
+        val lines = listOf("DROGUERIA ALEMANA", "NIT 900123456-7", "Cel 3001234567", "12/10/2026 08:15", "Acetaminofen $8.500", "Suero $4.200", "$12.700")
+        assertEquals(12_700.0, ReceiptParser.findTotal(lines)!!, 0.001)
+    }
+
+    @Test
+    fun `efectivo menos cambio cuando no hay total`() {
+        val lines = listOf("PANADERIA", "Pan $3.000", "Cafe $2.500", "Efectivo $10.000", "Cambio $4.500")
+        assertEquals(5_500.0, ReceiptParser.findTotal(lines)!!, 0.001)
+    }
+
+    @Test
+    fun `el efectivo no gana aunque sea mas grande que el total`() {
+        val lines = listOf("TOTAL $17.900", "EFECTIVO $50.000", "CAMBIO $32.100")
+        assertEquals(17_900.0, ReceiptParser.findTotal(lines)!!, 0.001)
+    }
+
+    @Test
+    fun `total de items o de IVA no es el total`() {
+        val lines = listOf("TOTAL ITEMS 4", "TOTAL IVA $2.850", "TOTAL $17.850")
+        assertEquals(17_850.0, ReceiptParser.findTotal(lines)!!, 0.001)
+    }
+
+    @Test
+    fun `corrige letras que el OCR confunde con numeros`() {
+        assertEquals(17_900.0, ReceiptParser.findTotal(listOf("TOTAL $17.9OO"))!!, 0.001)
+        assertEquals(17_900.0, ReceiptParser.findTotal(listOf("TOTAL S17.900"))!!, 0.001)
+        assertEquals(17_900.0, ReceiptParser.findTotal(listOf("TOTAL17.900"))!!, 0.001)
+        assertEquals(17_900.0, ReceiptParser.findTotal(listOf("TOTAL $17. 900"))!!, 0.001)
+    }
+
+    @Test
+    fun `la factura del Figma tal como la entrega ML Kit, por bloques`() {
+        val mlKitBlocks = listOf(
+            OcrLine("TIENDA EXPRESS", 40, 10, 300, 30),
+            OcrLine("NIT 123456789-0", 40, 40, 300, 60),
+            OcrLine("12/04/2026 16:24", 40, 70, 300, 90),
+            OcrLine("Subtotal", 40, 200, 140, 220),
+            OcrLine("IVA", 40, 230, 90, 250),
+            OcrLine("Total", 40, 262, 110, 282),
+            OcrLine("$16.000", 400, 202, 500, 222),
+            OcrLine("$1.900", 410, 231, 500, 251),
+            OcrLine("$17.900", 400, 258, 500, 278),
+        )
+        val text = OcrLayout.rows(mlKitBlocks).joinToString("\n")
+        val draft = ReceiptParser.parse(text, today, categories)
+        assertEquals(17_900.0, draft.amount!!, 0.001)
+        assertEquals("Tienda Express", draft.merchant)
+        assertEquals(LocalDate.of(2026, 4, 12), draft.date)
+    }
 }

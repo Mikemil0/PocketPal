@@ -1,9 +1,9 @@
 package com.pocketpal.app.ui.dai
 
-
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -21,11 +21,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,9 +63,10 @@ import com.pocketpal.app.ui.theme.PocketColors
 /**
  * Flujo 3 · Factura con la cámara.
  *
- * Vista previa (CameraX) → botón de captura → OCR en el teléfono (ML Kit, alfabeto latino)
- * → el TEXTO leído se entrega con [onTextRecognized]. Si no se pudo leer nada, se muestra
- * el aviso con "Tomar otra foto" / "Ingresar manual".
+ * Vista previa (CameraX) → botón de captura (o una foto de la **galería**) → OCR en el
+ * teléfono (ML Kit, alfabeto latino) → [ReceiptOcr] rearma las filas de la factura → el
+ * TEXTO se entrega con [onTextRecognized]. Si no se pudo leer nada, se muestra el aviso con
+ * "Tomar otra foto" / "Ingresar manual".
  */
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 @Composable
@@ -94,7 +98,8 @@ fun DaiCameraScreen(
 
     val imageCapture = remember {
         ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            // Máxima calidad: el OCR lee mejor los números pequeños de la factura.
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
             .build()
     }
     val recognizer = remember { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS) }
@@ -117,7 +122,7 @@ fun DaiCameraScreen(
                     }
                     val input = InputImage.fromMediaImage(media, image.imageInfo.rotationDegrees)
                     recognizer.process(input)
-                        .addOnSuccessListener { onTextRecognized(it.text) }
+                        .addOnSuccessListener { onTextRecognized(ReceiptOcr.toText(it)) }
                         .addOnFailureListener { onReadFailed() }
                         .addOnCompleteListener { image.close() }
                 }
@@ -125,6 +130,19 @@ fun DaiCameraScreen(
                 override fun onError(exception: ImageCaptureException) = onReadFailed()
             },
         )
+    }
+
+    // Elegir una foto de la factura desde la galería (no necesita permisos extra).
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        onReading()
+        try {
+            recognizer.process(InputImage.fromFilePath(context, uri))
+                .addOnSuccessListener { onTextRecognized(ReceiptOcr.toText(it)) }
+                .addOnFailureListener { onReadFailed() }
+        } catch (e: Exception) {
+            onReadFailed()
+        }
     }
 
     Box(Modifier.fillMaxSize().background(Color.Black)) {
@@ -202,16 +220,29 @@ fun DaiCameraScreen(
                             textAlign = TextAlign.Center,
                         )
                     }
-                    Box(
-                        Modifier
-                            .size(72.dp)
-                            .clip(CircleShape)
-                            .background(Color.White)
-                            .clickable(onClickLabel = stringResource(R.string.dai_receipt_shutter)) { takePhoto() }
-                            .padding(6.dp)
-                            .clip(CircleShape)
-                            .background(PocketColors.Coral),
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                galleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            },
+                            modifier = Modifier.size(48.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.4f)),
+                        ) {
+                            Icon(Icons.Outlined.PhotoLibrary, stringResource(R.string.dai_receipt_gallery), tint = Color.White)
+                        }
+                        Spacer(Modifier.width(28.dp))
+                        Box(
+                            Modifier
+                                .size(72.dp)
+                                .clip(CircleShape)
+                                .background(Color.White)
+                                .clickable(onClickLabel = stringResource(R.string.dai_receipt_shutter)) { takePhoto() }
+                                .padding(6.dp)
+                                .clip(CircleShape)
+                                .background(PocketColors.Coral),
+                        )
+                        // Ocupa el mismo espacio que la galería para que el botón quede centrado.
+                        Spacer(Modifier.width(76.dp))
+                    }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                         Text(
                             stringResource(R.string.dai_receipt_manual),

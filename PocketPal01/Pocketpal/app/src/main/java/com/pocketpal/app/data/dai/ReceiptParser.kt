@@ -70,28 +70,128 @@ object ReceiptParser {
 
     // ---------------- Monto ----------------
 
+    /** Etiquetas del total, de la más confiable a la menos (puntaje 100). */
+    private val strongTotal = listOf(
+        "total a pagar", "valor a pagar", "total pagar", "neto a pagar", "total factura", "valor total",
+        "gran total", "total venta", "total compra", "importe total", "total general",
+    )
+
     /**
-     * El total de la factura:
-     * 1. la línea que dice "TOTAL" (pero no "SUBTOTAL"), tomando el último número;
-     * 2. si no hay, el número más grande que parezca dinero.
+     * Palabras de líneas que tienen números pero NO son el total: subtotal, impuestos,
+     * descuentos, lo que el cliente pagó y su cambio, y datos del documento (NIT, teléfono…).
+     */
+    private val notTotalWords = setOf(
+        "subtotal", "iva", "impuesto", "impuestos", "impoconsumo", "inc", "base", "descuento", "descuentos", "dcto",
+        "ahorro", "ahorraste", "efectivo", "recibido", "cambio", "vueltas", "devuelta", "vuelto", "propina",
+        "nit", "tel", "cel", "telefono", "celular", "whatsapp", "cc", "resolucion", "autorizacion", "cufe",
+        "cajero", "caja", "item", "items", "articulo", "articulos", "unidades", "und", "cant", "cantidad",
+        "codigo", "cod", "ref", "plu", "puntos", "saldo", "tarjeta", "pago", "paga", "no",
+    )
+    private val cashWords = setOf("efectivo", "recibido")
+    private val changeWords = setOf("cambio", "vueltas", "devuelta", "vuelto")
+
+    /**
+     * El total de la factura. El OCR se equivoca, así que se buscan **candidatos** y se
+     * escoge el más confiable:
+     * 1. una línea con etiqueta de total ("TOTAL A PAGAR" vale más que "TOTAL"), tomando su
+     *    último monto; si la etiqueta quedó sin número, el número de la fila de abajo;
+     * 2. si no hay etiqueta: lo que el cliente pagó menos el cambio ("Efectivo − Cambio");
+     * 3. si tampoco: el monto más grande **con formato de dinero** ("$", puntos de miles),
+     *    sin contar las líneas de NIT, teléfono, fechas, efectivo, cambio, etc.
      */
     fun findTotal(lines: List<String>): Double? {
-        for (word in totalWords) {
-            val line = lines.lastOrNull { line ->
-                val l = DaiBrain.normalize(line)
-                l.contains(word) && !l.contains("subtotal") && !l.contains("sub total") && amountsIn(line).isNotEmpty()
-            }
-            if (line != null) return amountsIn(line).last()
+        val clean = lines.map(::fixOcr)
+
+        // 1. Etiqueta de total.
+        var best: Pair<Int, Double>? = null
+        clean.forEachIndexed { i, line ->
+            val score = totalScore(line) ?: return@forEachIndexed
+            val amount = moneyIn(line, strict = false).lastOrNull { it >= MIN_AMOUNT }
+                ?: clean.drop(i + 1).take(2)
+                    .firstOrNull { next -> totalScore(next) == null && !isNotTotal(next) && moneyIn(next, strict = false).isNotEmpty() }
+                    ?.let { next -> moneyIn(next, strict = false).last() }
+                ?: return@forEachIndexed
+            // Con el mismo puntaje gana el de más abajo (el total va al final de la factura).
+            if (amount >= MIN_AMOUNT && (best == null || score >= best!!.first)) best = score to amount
         }
-        return lines.flatMap { amountsIn(it) }.filter { it >= MIN_AMOUNT }.maxOrNull()
+        best?.let { return it.second }
+
+        // 2. Efectivo − Cambio.
+        val cash = labeledAmount(clean, cashWords)
+        val change = labeledAmount(clean, changeWords)
+        if (cash != null && change != null && cash > change) return cash - change
+
+        // 3. El monto más grande con formato de dinero.
+        val usable = clean.filterNot(::isNotTotal)
+        val money = usable.flatMap { moneyIn(it, strict = true) }.filter { it >= MIN_AMOUNT }
+        if (money.isNotEmpty()) return money.max()
+        return usable.flatMap { moneyIn(it, strict = false) }.filter { it in MIN_AMOUNT..MAX_PLAIN }.maxOrNull()
+    }
+
+    /** 100 = "TOTAL A PAGAR"…, 60 = "TOTAL" solo; `null` = no es la línea del total. */
+    private fun totalScore(line: String): Int? {
+        val l = DaiBrain.normalize(line)
+        if (l.contains("subtotal") || l.contains("sub total")) return null
+        if (strongTotal.any { l.contains(it) }) return 100
+        val words = l.split(" ")
+        if ("total" !in words) return null
+        return if (words.any { it in notTotalWords }) null else 60
+    }
+
+    private fun isNotTotal(line: String): Boolean =
+        DaiBrain.normalize(line).split(" ").any { it in notTotalWords }
+
+    /** El último monto de la primera línea que tenga una de [words] ("Efectivo $20.000"). */
+    private fun labeledAmount(lines: List<String>, words: Set<String>): Double? =
+        lines.firstOrNull { line -> DaiBrain.normalize(line).split(" ").any { it in words } }
+            ?.let { moneyIn(it, strict = false).lastOrNull() }
+
+    /**
+     * Corrige confusiones típicas del OCR dentro de los números: "$17.9OO" → "$17.900",
+     * "S17.900" → "$17.900" (la S era el signo $), "17. 900" → "17.900".
+     */
+    fun fixOcr(line: String): String {
+        var t = line
+        // "S17.900" → "$17.900": una S suelta pegada a un número era el signo $.
+        t = Regex("""(?<![A-Za-z])S(?=\s?\d)""").replace(t) { "$" }
+        // Letras que el OCR confunde con dígitos, solo DENTRO de un número: "17.9OO", "1l.500".
+        repeat(3) {
+            t = Regex("""(?<=[\d.,$])[Oo](?=[\d.,Oo]|\b)""").replace(t) { "0" }
+            t = Regex("""(?<=[\d.,$])[lI|](?=[\d.,])""").replace(t) { "1" }
+        }
+        // "TOTAL17.900" → "TOTAL 17.900" y "17. 900" → "17.900".
+        t = Regex("""([A-Za-z]{3,})(?=[$]|\d)""").replace(t) { it.value + " " }
+        return Regex("""(\d)([.,])\s(\d{3})(?!\d)""").replace(t) { m ->
+            m.groupValues[1] + m.groupValues[2] + m.groupValues[3]
+        }
     }
 
     /** Todos los montos de una línea ("Agua 1.000 $3.000" → [1000, 3000]). */
-    fun amountsIn(line: String): List<Double> =
-        Regex("""\$?\s?\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?|\$?\s?\d+(?:[.,]\d{1,2})?""")
-            .findAll(line)
-            .mapNotNull { parseAmount(it.value) }
-            .toList()
+    fun amountsIn(line: String): List<Double> = moneyIn(line, strict = false)
+
+    /**
+     * Los montos de la línea, sin contar partes de fechas ("12/04/2026"), horas ("16:24"),
+     * códigos pegados a letras ("A123") ni el NIT ("900123456-7").
+     * Con [strict] solo cuenta lo que tiene **formato de dinero**: "$", puntos de miles o
+     * centavos ("$8.500", "17.900", "45,50"), no un número suelto como "2026".
+     */
+    private fun moneyIn(line: String, strict: Boolean): List<Double> =
+        AMOUNT.findAll(line).filter { m ->
+            // El patrón puede empezar con un espacio (" 17.900"): se mira el carácter antes del número.
+            val start = m.range.first + m.value.indexOfFirst { !it.isWhitespace() }
+            val before = line.getOrNull(start - 1)
+            val after = line.getOrNull(m.range.last + 1)
+            val afterNext = line.getOrNull(m.range.last + 2)
+            val glued = (before != null && (before.isLetter() || before in "-/:#")) ||
+                (after != null && (after.isLetter() || after in "/:%")) ||
+                (after == '-' && afterNext?.isDigit() == true)
+            !glued && (!strict || looksLikeMoney(m.value))
+        }.mapNotNull { parseAmount(it.value) }.toList()
+
+    private fun looksLikeMoney(token: String): Boolean =
+        token.contains('$') || Regex("""\d{1,3}(?:[.,]\d{3})+""").containsMatchIn(token) || Regex("""[.,]\d{2}$""").containsMatchIn(token)
+
+    private val AMOUNT = Regex("""\$?\s?\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?|\$?\s?\d+(?:[.,]\d{1,2})?""")
 
     /**
      * Lee un número con el formato colombiano o el gringo:
@@ -226,6 +326,9 @@ object ReceiptParser {
 
     /** Montos más pequeños que esto no se toman como total (son cantidades o códigos). */
     private const val MIN_AMOUNT = 100.0
+
+    /** Un número suelto (sin "$" ni puntos) más grande que esto es un código, no dinero. */
+    private const val MAX_PLAIN = 9_999_999.0
 }
 
 /** Por qué no se puede guardar todavía la factura. */

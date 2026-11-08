@@ -3,6 +3,7 @@
 <resources>
     <string name="dai_receipt_back">Atrás</string>
     <string name="dai_receipt_shutter">Tomar foto</string>
+    <string name="dai_receipt_gallery">Elegir de la galería</string>
     <string name="dai_receipt_hint">Encuadra la factura y toma la foto</string>
     <string name="dai_receipt_reading">Leyendo la factura…</string>
     <string name="dai_receipt_read_failed">No pude leer la factura. Intenta con otra foto o ingresa los datos manualmente.</string>
