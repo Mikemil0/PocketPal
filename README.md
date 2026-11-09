@@ -139,21 +139,20 @@ flowchart LR
 
 ## Instalación rápida (APK)
 
-La forma más fácil de probar la app es instalar el APK en un celular Android (8.0 o superior).
+La forma más fácil de probar la app es instalar el APK en un celular Android (8.0 o superior). Así se ve el proceso completo en un celular real:
 
-```mermaid
-flowchart LR
-    A[1. Abre el repositorio<br/>en GitHub] --> B[2. Descarga<br/>PocketPal.apk]
-    B --> C[3. Permite instalar<br/>apps de esta fuente]
-    C --> D[4. Instala y abre<br/>PocketPal]
-    D --> E[5. Crea tu cuenta<br/>y verifica el correo]
-```
+<div align="center">
+<img src="assets/readme/instalacion-apk.png" alt="Los 8 pasos para instalar PocketPal desde el APK" width="860"/>
+</div>
 
-1. Desde el celular, descarga **[`PocketPal.apk`](https://github.com/Mikemil0/PocketPal/raw/main/PocketPal.apk)**. Está en la raíz del repositorio: en GitHub, toca el archivo `PocketPal.apk` y luego **Download** (o "View raw").
-2. Abre el archivo descargado. La primera vez Android dice *"Por seguridad, tu teléfono no puede instalar apps desconocidas de esta fuente"*: toca **Configuración → Permitir de esta fuente** y vuelve atrás.
-3. Toca **Instalar** y después **Abrir**.
-4. Toca **Crear cuenta**, escribe tu correo y contraseña, y escribe el **código de 6 dígitos** que llega al correo.
-5. Acepta los permisos de **cámara** y **micrófono**: los usa Dai para leer facturas y escucharte.
+1. **Descargar.** Desde el celular abre [`PocketPal.apk`](https://github.com/Mikemil0/PocketPal/blob/main/PocketPal.apk) en GitHub (está en la raíz del repositorio) y toca **⋯ → Descargar**. También sirve el enlace directo: [descargar PocketPal.apk](https://github.com/Mikemil0/PocketPal/raw/main/PocketPal.apk).
+2. **Descargar de todos modos.** Chrome avisa que *"es posible que el archivo sea dañino"* porque es un APK que no viene de Play Store.
+3. **Configuración.** Al abrir el archivo, Android dice que no tiene permitido instalar apps desconocidas de esta fuente: toca **Configuración**.
+4. **Aceptar el permiso.** Activa **Confiar en esta fuente** (en algunos celulares hay que marcar *"Soy consciente de los posibles riesgos"* y tocar **Aceptar**) y vuelve atrás.
+5. **Instalar.** Toca **Instalar**.
+6. **Play Protect.** Como la app no está publicada en Play Store, Google ofrece analizarla: toca **Analizar app** o **Instalar sin analizar**.
+7. **Abrir.** Cuando termine, toca **Abrir**.
+8. **¡Lista!** Toca **Crear cuenta**, escribe tu correo y contraseña, y el **código de 6 dígitos** que llega al correo. Acepta los permisos de **cámara** y **micrófono**: Dai los usa para leer facturas y escucharte.
 
 > Para ver datos de ejemplo de una vez, el administrador del proyecto puede cargarlos con `seed_demo_movements('tu@correo.com')` y `seed_demo_budgets('tu@correo.com')` en el SQL Editor de Supabase.
 
