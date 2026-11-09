@@ -21,14 +21,15 @@
 1. [Equipo](#equipo)
 2. [Entrega](#entrega)
 3. [¿Qué hace la app?](#qué-hace-la-app)
-4. [Dai, el asistente con IA](#dai-el-asistente-con-ia)
-5. [Instalación rápida (APK)](#instalación-rápida-apk)
-6. [Compilar desde el código](#compilar-desde-el-código)
-7. [Arquitectura](#arquitectura)
-8. [Base de datos](#base-de-datos)
-9. [Pruebas](#pruebas)
-10. [Tecnologías](#tecnologías)
-11. [Seguridad](#seguridad)
+4. [Capturas](#capturas)
+5. [Dai, el asistente con IA](#dai-el-asistente-con-ia)
+6. [Instalación rápida (APK)](#instalación-rápida-apk)
+7. [Compilar desde el código](#compilar-desde-el-código)
+8. [Arquitectura](#arquitectura)
+9. [Base de datos](#base-de-datos)
+10. [Pruebas](#pruebas)
+11. [Tecnologías](#tecnologías)
+12. [Seguridad](#seguridad)
 
 ---
 
@@ -71,12 +72,24 @@ La app se construyó por **módulos**, siguiendo el diseño de Figma:
 
 ---
 
+## Capturas
+
+Tomadas de la app instalada en un celular Android.
+
+<div align="center">
+<img src="assets/readme/capturas-app.png" alt="Capturas de PocketPal: bienvenida, inicio, botón +, movimientos, meta creada, presupuestos, categorías y preferencias" width="860"/>
+</div>
+
+---
+
 ## Dai, el asistente con IA
 
 <div align="center">
 <img src="assets/readme/dai-expresiones.png" alt="Las 10 expresiones de Dai" width="720"/>
 
 *Dai cambia de expresión según lo que te está diciendo.*
+
+<img src="assets/readme/capturas-dai.png" alt="Dai: bienvenida, chat, factura con la cámara, registro por voz, confirmar y movimiento registrado" width="660"/>
 </div>
 
 ### Lo que hace
@@ -109,6 +122,8 @@ flowchart LR
    - si no hay etiqueta, usa "Efectivo − Cambio";
    - descarta el NIT, los teléfonos, las fechas, el IVA, el subtotal y el cambio;
    - corrige errores típicos del OCR: `17.9OO` → `17.900` y `S17.900` → `$17.900`.
+
+   Para la **fecha**, descarta las de la resolución de la DIAN y su vigencia, prefiere la línea que dice "Fecha" o "Fecha creación" y toma la más reciente que no sea futura.
 4. El usuario revisa, ve dónde se guardará y lo **aprueba**.
 
 ### Cómo entiende la voz
@@ -315,7 +330,7 @@ En el celular, las **preferencias** (idioma, tema, "Recordarme", respuestas por 
 
 ## Pruebas
 
-**293 pruebas unitarias** en 32 clases (JUnit + `kotlinx-coroutines-test`). Cubren:
+**298 pruebas unitarias** en 32 clases (JUnit + `kotlinx-coroutines-test`). Cubren:
 - las reglas puras: presupuestos, metas, categorías, movimientos, lo que entiende Dai, la lectura de facturas y la voz;
 - todos los ViewModels: cargar, validar, guardar, sin internet y reintentar.
 
