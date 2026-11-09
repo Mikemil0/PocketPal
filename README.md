@@ -52,7 +52,7 @@ El aporte de cada integrante se ve en el [historial de commits](https://github.c
 |---|---|
 | **Repositorio** | https://github.com/Mikemil0/PocketPal |
 | **Rama con la última versión funcional** | [`main`](https://github.com/Mikemil0/PocketPal/tree/main) |
-| **APK para instalar** | [Releases → PocketPal v1.0](https://github.com/Mikemil0/PocketPal/releases) |
+| **APK para instalar** | [`PocketPal.apk`](https://github.com/Mikemil0/PocketPal/raw/main/PocketPal.apk), en la raíz del repositorio |
 | **Diseño** | Figma "PocketPal" (módulos 1 a 6) |
 
 ---
@@ -143,13 +143,13 @@ La forma más fácil de probar la app es instalar el APK en un celular Android (
 
 ```mermaid
 flowchart LR
-    A[1. Abre Releases<br/>en GitHub] --> B[2. Descarga<br/>PocketPal-v1.0.apk]
+    A[1. Abre el repositorio<br/>en GitHub] --> B[2. Descarga<br/>PocketPal.apk]
     B --> C[3. Permite instalar<br/>apps de esta fuente]
     C --> D[4. Instala y abre<br/>PocketPal]
     D --> E[5. Crea tu cuenta<br/>y verifica el correo]
 ```
 
-1. Desde el celular, entra a **[Releases](https://github.com/Mikemil0/PocketPal/releases)** y descarga **`PocketPal-v1.0.apk`**.
+1. Desde el celular, descarga **[`PocketPal.apk`](https://github.com/Mikemil0/PocketPal/raw/main/PocketPal.apk)**. Está en la raíz del repositorio: en GitHub, toca el archivo `PocketPal.apk` y luego **Download** (o "View raw").
 2. Abre el archivo descargado. La primera vez Android dice *"Por seguridad, tu teléfono no puede instalar apps desconocidas de esta fuente"*: toca **Configuración → Permitir de esta fuente** y vuelve atrás.
 3. Toca **Instalar** y después **Abrir**.
 4. Toca **Crear cuenta**, escribe tu correo y contraseña, y escribe el **código de 6 dígitos** que llega al correo.
