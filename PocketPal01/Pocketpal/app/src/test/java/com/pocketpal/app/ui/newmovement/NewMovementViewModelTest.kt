@@ -136,4 +136,13 @@ class NewMovementViewModelTest {
         assertEquals(1, repository.created.size)
         assertTrue(vm.event.value is NewMovementViewModel.Event.Saved)
     }
+
+    @Test
+    fun `desde un presupuesto el registro manual ya trae su categoria`() = runTest(dispatcher) {
+        val vm = newVm()
+        vm.startManual(categoryId = "transporte")
+        assertEquals("transporte", vm.state.value.form.categoryId)
+        assertEquals(MovementKind.Expense, vm.state.value.form.kind)
+        assertFalse(vm.state.value.hasChanges)
+    }
 }

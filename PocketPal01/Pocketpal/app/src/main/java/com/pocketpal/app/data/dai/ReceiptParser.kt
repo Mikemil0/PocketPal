@@ -221,19 +221,49 @@ object ReceiptParser {
 
     // ---------------- Fecha ----------------
 
-    /** Primera fecha válida que no sea futura: 12/04/2025, 12-04-25, 12.04.2025 o 2025-04-12. */
+    /** Líneas con fechas que NO son la de la compra (la resolución de la DIAN y su vigencia). */
+    private val notPurchaseDate = setOf(
+        "vigencia", "resolucion", "res", "autorizacion", "autoriza", "habilita", "habilitacion", "rango",
+        "desde", "hasta", "vence", "vencimiento", "validez", "prefijo",
+    )
+
+    /** Líneas que dicen de forma explícita que es la fecha de la factura. */
+    private val purchaseDate = setOf("fecha", "creacion", "emision", "expedicion", "generacion", "compra", "venta")
+
+    /**
+     * La fecha de la compra. Se aceptan 12/04/2026, 12-04-26, 12.04.2026 y 2026-04-12. Una
+     * factura electrónica trae varias fechas (la de la compra, la de la resolución de la DIAN
+     * y su vigencia), así que:
+     * 1. se descartan las líneas de resolución, vigencia, "desde/hasta" y vencimiento;
+     * 2. se prefieren las líneas que dicen "Fecha", "Fecha creación", "Emisión"…;
+     * 3. entre las que quedan, la **más reciente que no sea futura** (y de los últimos 2 años).
+     */
     fun findDate(text: String, today: LocalDate): LocalDate? {
-        val candidates = mutableListOf<LocalDate>()
-        Regex("""\b(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\b""").findAll(text).forEach { m ->
-            safeDate(m.groupValues[1].toInt(), m.groupValues[2].toInt(), m.groupValues[3].toInt())?.let(candidates::add)
+        data class Candidate(val date: LocalDate, val labeled: Boolean)
+        val candidates = mutableListOf<Candidate>()
+        for (line in text.lines()) {
+            val words = DaiBrain.normalize(line).split(" ")
+            if (words.any { it in notPurchaseDate }) continue
+            val labeled = words.any { it in purchaseDate }
+            datesIn(line).forEach { candidates.add(Candidate(it, labeled)) }
         }
-        Regex("""\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\b""").findAll(text).forEach { m ->
+        val valid = candidates.filter { !it.date.isAfter(today) && it.date.isAfter(today.minusYears(2)) }
+        return (valid.filter { it.labeled }.ifEmpty { valid }).maxOfOrNull { it.date }
+    }
+
+    /** Todas las fechas de una línea, en cualquiera de los formatos aceptados. */
+    private fun datesIn(line: String): List<LocalDate> {
+        val dates = mutableListOf<LocalDate>()
+        Regex("""\b(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\b""").findAll(line).forEach { m ->
+            safeDate(m.groupValues[1].toInt(), m.groupValues[2].toInt(), m.groupValues[3].toInt())?.let(dates::add)
+        }
+        Regex("""\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\b""").findAll(line).forEach { m ->
             var year = m.groupValues[3].toInt()
             if (year < 100) year += 2000
             // En Colombia la factura dice día/mes/año.
-            safeDate(year, m.groupValues[2].toInt(), m.groupValues[1].toInt())?.let(candidates::add)
+            safeDate(year, m.groupValues[2].toInt(), m.groupValues[1].toInt())?.let(dates::add)
         }
-        return candidates.firstOrNull { !it.isAfter(today) && it.isAfter(today.minusYears(2)) }
+        return dates
     }
 
     private fun safeDate(year: Int, month: Int, day: Int): LocalDate? = try {

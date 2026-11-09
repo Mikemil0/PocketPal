@@ -70,4 +70,20 @@ class VoiceMovementParserTest {
         assertEquals(today.minusDays(3), parse("gaste 45mil en uber hace 3 dias").date)
         assertEquals("Uber", parse("gaste 45mil en uber hace 3 dias").reason)
     }
+
+    @Test
+    fun `la frase del video, con categoria y motivo dichos`() {
+        val d = parse("Me gasté el día de hoy \$50.000 de la categoría comida por motivo y que quería darme un gustico")
+        assertEquals(MovementKind.Expense, d.kind)
+        assertEquals(50_000.0, d.amount!!, 0.0)
+        assertEquals(today, d.date)
+        assertEquals("comida", d.categoryId)
+        assertEquals("Quería darme un gustico", d.reason)
+    }
+
+    @Test
+    fun `el dia de hoy no queda en el motivo`() {
+        assertEquals("Almuerzo", parse("gasté 30 mil el día de hoy en almuerzo").reason)
+        assertEquals("Me antojé", parse("gasté 8 mil en un helado porque me antojé").reason)
+    }
 }

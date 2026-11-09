@@ -30,6 +30,7 @@ import com.pocketpal.app.ui.budgets.BudgetHistoryScreen
 import com.pocketpal.app.ui.budgets.BudgetsErrorState
 import com.pocketpal.app.ui.budgets.BudgetsScreen
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
+import com.pocketpal.app.ui.newmovement.NewMovementViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.theme.pocketColors
 
@@ -45,6 +46,7 @@ internal fun NavGraphBuilder.budgetsGraph(
     budgetsVm: BudgetsViewModel,
     budgetFormVm: BudgetFormViewModel,
     budgetDetailVm: BudgetDetailViewModel,
+    newMovementVm: NewMovementViewModel,
 ) {
     // Atajos para que cada pantalla use los mismos nombres de siempre.
     fun back() = actions.back()
@@ -82,6 +84,10 @@ internal fun NavGraphBuilder.budgetsGraph(
             onOpenMovement = { movementId -> nav.navigate(Routes.movementDetail(movementId)) },
             onRetry = budgetDetailVm::refresh,
             onEdit = { nav.navigate(Routes.budgetEdit(id)) },
+            onRegisterExpense = { categoryId ->
+                newMovementVm.startManual(categoryId)
+                nav.navigate(Routes.NewMovementManual)
+            },
         )
     }
     composable(

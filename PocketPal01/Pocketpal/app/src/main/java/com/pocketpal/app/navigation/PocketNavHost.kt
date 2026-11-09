@@ -154,6 +154,7 @@ fun PocketNavHost(
             budgetsVm = budgetsVm,
             budgetFormVm = budgetFormVm,
             budgetDetailVm = budgetDetailVm,
+            newMovementVm = newMovementVm,
         )
         movementsGraph(
             nav = nav,

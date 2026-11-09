@@ -52,10 +52,10 @@ object VoiceMovementParser {
         "gaste", "pague", "compre", "gasto", "recibi", "gane", "vendi", "ingrese", "registra", "registrar", "anota",
         "me", "pagaron", "pago", "consignaron", "transfirieron", "llego", "dieron",
         "pesos", "peso", "lucas", "luca", "palos", "palo", "k", "cop",
-        "hoy", "ayer", "antier", "anteayer",
+        "hoy", "ayer", "antier", "anteayer", "dia",
     )
 
-    private val leadingFillers = setOf("en", "de", "del", "para", "por", "el", "la", "los", "las", "un", "una", "y", "a", "al")
+    private val leadingFillers = setOf("en", "de", "del", "para", "por", "el", "la", "los", "las", "un", "una", "y", "a", "al", "que", "fue", "es")
 
     private val units = mapOf(
         "cero" to 0, "un" to 1, "uno" to 1, "una" to 1, "dos" to 2, "tres" to 3, "cuatro" to 4, "cinco" to 5,
@@ -193,17 +193,40 @@ object VoiceMovementParser {
         return null
     }
 
-    /** El motivo, con la primera letra en mayúscula ("Mercado de la semana"). */
+    /**
+     * El motivo, con la primera letra en mayúscula ("Mercado de la semana"):
+     * 1. si la persona dice "motivo" o "porque", lo que viene después;
+     * 2. si no, lo que va después de la última coma;
+     * 3. si no, la frase sin el verbo, el monto, la fecha ni "la categoría X".
+     */
     fun findReason(text: String): String {
-        val part = (if (text.contains(',')) text.substringAfterLast(',') else text)
-            .replace(Regex("(?i)hace\\s+\\S+\\s+d[ií]as?"), " ")   // "hace 3 días"
-            .replace(Regex("([0-9])([a-zA-Z])"), "$1 $2")               // "45mil" → "45 mil"
+        var part = text
+        val said = Regex("""(?i)\b(?:por\s+)?motivo\b[:,]?|\bporque\b|\bpor\s+qu[eé]\b""").findAll(part).lastOrNull()
+        part = when {
+            said != null && part.substring(said.range.last + 1).isNotBlank() -> part.substring(said.range.last + 1)
+            part.contains(',') -> part.substringAfterLast(',')
+            else -> part
+        }
+        part = part
+            .replace(Regex("""(?i)\b(?:de|en|a)?\s*(?:la\s+)?categor[ií]a\s+\S+"""), " ")   // "de la categoría gustos"
+            .replace(Regex("""(?i)hace\s+\S+\s+d[ií]as?"""), " ")                          // "hace 3 días"
+            .replace(Regex("""([0-9])([a-zA-Z])"""), "$1 $2")                                // "45mil" → "45 mil"
         val words = part.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
-        val kept = words.filter { word ->
-            val n = normalize(word)
-            n.isNotEmpty() && n !in dropWords && !isNumberWord(n) && !n.matches(Regex("[0-9.,]+"))
+        val norm = words.map(::normalize)
+        val kept = words.filterIndexed { i, _ ->
+            val n = norm[i]
+            val next = norm.getOrNull(i + 1)
+            when {
+                n.isEmpty() || n.matches(Regex("[0-9.,]+")) -> false
+                // "un", "una": son número solo si sigue "mil"/"millón" ("un millón"), no en "un gustico".
+                n in setOf("un", "una", "uno") -> !(next != null && (next in thousands || next in millions))
+                // "me" solo sobra en "me pagaron", "me dieron"…; en "me antojé" se queda.
+                n == "me" -> next !in setOf("pagaron", "pago", "consignaron", "transfirieron", "llego", "dieron")
+                n in dropWords || isNumberWord(n) -> false
+                else -> true
+            }
         }.toMutableList()
-        // Quita "y" sueltas que quedaban dentro del número ("cuarenta y cinco") y rellenos al inicio.
+        // Quita rellenos al principio y al final ("y que", "en", "de").
         while (kept.isNotEmpty() && normalize(kept.first()) in leadingFillers) kept.removeAt(0)
         while (kept.isNotEmpty() && normalize(kept.last()) in leadingFillers) kept.removeAt(kept.lastIndex)
         val reason = kept.joinToString(" ").trim().trimEnd('.', '!', '?').take(REASON_MAX)

@@ -65,6 +65,8 @@ fun BudgetDetailScreen(
     onOpenMovement: (String) -> Unit,
     onRetry: () -> Unit,
     onEdit: () -> Unit = {},
+    // Módulo 6: "Registrar gasto" abre el registro manual con la categoría del presupuesto.
+    onRegisterExpense: ((categoryId: String) -> Unit)? = null,
 ) {
     val title = (state as? BudgetDetailViewModel.UiState.Content)?.data?.status?.budget?.name.orEmpty()
 
@@ -89,6 +91,7 @@ fun BudgetDetailScreen(
                 onOpenHistory = onOpenHistory,
                 onOpenMovement = onOpenMovement,
                 onEdit = onEdit,
+                onRegisterExpense = onRegisterExpense,
             )
         }
         Spacer(Modifier.height(24.dp))
@@ -102,6 +105,7 @@ private fun DetailContent(
     onOpenHistory: () -> Unit,
     onOpenMovement: (String) -> Unit,
     onEdit: () -> Unit,
+    onRegisterExpense: ((categoryId: String) -> Unit)?,
 ) {
     val status = detail.status
     val context = LocalContext.current
@@ -177,8 +181,14 @@ private fun DetailContent(
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         PocketPrimaryButton(
             text = stringResource(R.string.budget_register_expense),
-            // Registrar gastos llega con Dai (fotos de recibos); por ahora se avisa.
-            onClick = { Toast.makeText(context, comingSoon, Toast.LENGTH_SHORT).show() },
+            // Abre el registro manual con la categoría de este presupuesto ya elegida.
+            onClick = {
+                if (onRegisterExpense != null) {
+                    onRegisterExpense(status.budget.categoryId)
+                } else {
+                    Toast.makeText(context, comingSoon, Toast.LENGTH_SHORT).show()
+                }
+            },
             modifier = Modifier.weight(1f),
         )
         PocketPrimaryButton(

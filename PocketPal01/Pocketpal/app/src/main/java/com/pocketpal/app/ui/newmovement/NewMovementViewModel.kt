@@ -89,9 +89,12 @@ class NewMovementViewModel(
     fun consumeEvent() { _event.value = null }
     fun consumeError() { _state.value = _state.value.copy(error = null) }
 
-    /** "Registro manual": formulario vacío con la fecha de hoy. */
-    fun startManual() {
-        _state.value = NewMovementUi(form = Form(date = today()))
+    /**
+     * "Registro manual": formulario vacío con la fecha de hoy. Desde el detalle de un
+     * presupuesto llega [categoryId] para que el gasto ya tenga esa categoría.
+     */
+    fun startManual(categoryId: String? = null) {
+        _state.value = NewMovementUi(form = Form(date = today(), categoryId = categoryId))
         _event.value = null
         load(voiceText = null)
     }

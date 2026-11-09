@@ -193,4 +193,35 @@ class ReceiptParserTest {
         assertEquals("Tienda Express", draft.merchant)
         assertEquals(LocalDate.of(2026, 4, 12), draft.date)
     }
+
+    // ---------------- Fecha: la factura del video (Universidad de Los Andes) ----------------
+
+    @Test
+    fun `toma la fecha de la compra, no la vigencia ni la resolucion de la DIAN`() {
+        val hoy = LocalDate.of(2026, 11, 8)
+        val text = """
+            Universidad de Los Andes
+            Fecha 2O26-10-2b  Hora 17:19:32
+            LCPZ COLOMBIA SAS
+            NIT 901320488-1
+            Resolucion 012220 de 26/12/2022
+            FECHA CREACION: 26/10/2026 05:19:32 PM
+            Subtotal + Impuestos  $ 20.900
+            Total  $ 20.900
+            Tarjeta Debito  $ 20.900
+            Res DIAN 18764 desde 2026-08-28 hasta 2027-08-28
+            VIGENCIA: 2026-08-28
+            FECHA VALIDACION: 2026-10-26 05:19 PM
+        """.trimIndent()
+        val draft = ReceiptParser.parse(text, hoy, categories)
+        assertEquals(LocalDate.of(2026, 10, 26), draft.date)
+        assertEquals(20_900.0, draft.amount!!, 0.001)
+    }
+
+    @Test
+    fun `sin etiqueta toma la fecha mas reciente que no sea futura`() {
+        val hoy = LocalDate.of(2026, 11, 8)
+        assertEquals(LocalDate.of(2026, 11, 2), ReceiptParser.findDate("02/11/2026\nPlazo 01/09/2026", hoy))
+        assertEquals(LocalDate.of(2026, 10, 26), ReceiptParser.findDate("Vigencia 2026-08-28\n26/10/2026", hoy))
+    }
 }
