@@ -29,4 +29,10 @@
     <string name="recurring_repeats_monthly">Se répète chaque mois</string>
     <string name="recurring_repeats_yearly">Se répète chaque année</string>
     <string name="recurring_see_details">Voir plus de détails</string>
+    <string name="detail_delete">Supprimer le mouvement</string>
+    <string name="detail_delete_title">Supprimer ce mouvement ?</string>
+    <string name="detail_delete_body">Il sera supprimé définitivement et ne comptera plus dans votre solde ni vos budgets.</string>
+    <string name="detail_delete_confirm">Supprimer</string>
+    <string name="detail_delete_cancel">Annuler</string>
+    <string name="detail_delete_error">Suppression impossible. Vérifiez votre connexion et réessayez.</string>
 </resources>

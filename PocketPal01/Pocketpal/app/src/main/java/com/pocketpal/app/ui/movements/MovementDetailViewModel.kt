@@ -59,6 +59,18 @@ class MovementDetailViewModel(
 
     private var movementId: String? = null
 
+    private val _deleting = MutableStateFlow(false)
+    /** `true` mientras se borra el movimiento. */
+    val deleting: StateFlow<Boolean> = _deleting.asStateFlow()
+
+    private val _deleted = MutableStateFlow(false)
+    /** `true` = ya se borró: la pantalla vuelve atrás y lo consume. */
+    val deleted: StateFlow<Boolean> = _deleted.asStateFlow()
+
+    private val _deleteError = MutableStateFlow<ErrorType?>(null)
+    /** No se pudo borrar (sin internet u otro error); la pantalla lo muestra y lo consume. */
+    val deleteError: StateFlow<ErrorType?> = _deleteError.asStateFlow()
+
     /** Abre el movimiento [id]. Si es otro distinto al anterior, muestra "cargando". */
     fun load(id: String) {
         if (id != movementId) {
@@ -90,6 +102,32 @@ class MovementDetailViewModel(
     }
 
     fun consumeReceipt() { _receipt.value = null }
+
+    /** "Eliminar movimiento" (después de confirmar en el diálogo). */
+    fun delete() {
+        val id = movementId ?: return
+        if (_deleting.value) return
+        _deleting.value = true
+        viewModelScope.launch {
+            try {
+                repository.delete(id)
+                movementId = null
+                _deleted.value = true
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                _deleteError.value = ErrorType.NoNetwork
+            } catch (e: Exception) {
+                _deleteError.value = ErrorType.Unknown
+            } finally {
+                _deleting.value = false
+            }
+        }
+    }
+
+    fun consumeDeleted() { _deleted.value = false }
+
+    fun consumeDeleteError() { _deleteError.value = null }
 
     private suspend fun build(movement: Movement): DetailUi {
         val zone = zone()

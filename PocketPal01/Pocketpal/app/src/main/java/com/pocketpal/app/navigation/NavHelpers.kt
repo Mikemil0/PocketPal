@@ -34,12 +34,23 @@ internal fun MovementDetailRoute(
     currency: String,
     onBack: () -> Unit,
     onGoHome: () -> Unit,
+    /** Ya se borró el movimiento: volver y recargar las listas. */
+    onDeleted: () -> Unit = onBack,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var downloading by remember { mutableStateOf(false) }
     val state by vm.state.collectAsStateWithLifecycle()
     val receipt by vm.receipt.collectAsStateWithLifecycle()
+    val deleting by vm.deleting.collectAsStateWithLifecycle()
+    val deleted by vm.deleted.collectAsStateWithLifecycle()
+    val deleteError by vm.deleteError.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(deleted) {
+        if (deleted) {
+            vm.consumeDeleted()
+            onDeleted()
+        }
+    }
     val chooserTitle = stringResource(R.string.detail_share_chooser)
     MovementDetailScreen(
         state = state,
@@ -61,6 +72,10 @@ internal fun MovementDetailRoute(
             }
         },
         onReceiptShown = vm::consumeReceipt,
+        deleting = deleting,
+        deleteError = deleteError,
+        onDelete = vm::delete,
+        onDeleteErrorShown = vm::consumeDeleteError,
     )
 }
 

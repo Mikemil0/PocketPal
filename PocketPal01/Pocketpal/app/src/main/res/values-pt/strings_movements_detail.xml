@@ -29,4 +29,10 @@
     <string name="recurring_repeats_monthly">Repete todo mês</string>
     <string name="recurring_repeats_yearly">Repete todo ano</string>
     <string name="recurring_see_details">Ver mais detalhes</string>
+    <string name="detail_delete">Excluir movimentação</string>
+    <string name="detail_delete_title">Excluir esta movimentação?</string>
+    <string name="detail_delete_body">Ela será apagada para sempre e deixará de contar no seu saldo e nos seus orçamentos.</string>
+    <string name="detail_delete_confirm">Excluir</string>
+    <string name="detail_delete_cancel">Cancelar</string>
+    <string name="detail_delete_error">Não foi possível excluir. Verifique sua conexão e tente novamente.</string>
 </resources>

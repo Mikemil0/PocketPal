@@ -17,12 +17,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.SmartToy
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocketpal.app.R
+import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.data.movement.DaiInsight
 import com.pocketpal.app.data.movement.Recurrence
 import com.pocketpal.app.ui.components.ErrorBanner
@@ -61,7 +69,19 @@ fun MovementDetailScreen(
     onShare: (ReceiptContent) -> Unit,
     onDownload: (ReceiptContent) -> Unit,
     onReceiptShown: () -> Unit,
+    deleting: Boolean = false,
+    deleteError: ErrorType? = null,
+    onDelete: () -> Unit = {},
+    onDeleteErrorShown: () -> Unit = {},
 ) {
+    var askDelete by remember { mutableStateOf(false) }
+    LaunchedEffect(deleteError) {
+        if (deleteError != null) {
+            delay(RECEIPT_MESSAGE_MS)
+            onDeleteErrorShown()
+        }
+    }
+
     LaunchedEffect(receiptResult) {
         if (receiptResult != null) {
             delay(RECEIPT_MESSAGE_MS)
@@ -109,9 +129,50 @@ fun MovementDetailScreen(
                         loading = downloading,
                     )
                 }
+
+                // Eliminar: pide confirmación antes de borrar.
+                Spacer(Modifier.height(12.dp))
+                if (deleteError != null) {
+                    ErrorBanner(stringResource(R.string.detail_delete_error))
+                    Spacer(Modifier.height(12.dp))
+                }
+                TextButton(
+                    onClick = { askDelete = true },
+                    enabled = !deleting,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    if (deleting) {
+                        CircularProgressIndicator(color = pocketColors.ErrorRed, modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+                    } else {
+                        Icon(Icons.Outlined.DeleteOutline, null, tint = pocketColors.ErrorRed, modifier = Modifier.size(20.dp))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.detail_delete), color = pocketColors.ErrorRed, fontWeight = FontWeight.SemiBold)
+                }
             }
         }
         Spacer(Modifier.height(24.dp))
+    }
+
+    if (askDelete) {
+        AlertDialog(
+            onDismissRequest = { askDelete = false },
+            title = { Text(stringResource(R.string.detail_delete_title)) },
+            text = { Text(stringResource(R.string.detail_delete_body)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    askDelete = false
+                    onDelete()
+                }) {
+                    Text(stringResource(R.string.detail_delete_confirm), color = pocketColors.ErrorRed, fontWeight = FontWeight.SemiBold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { askDelete = false }) {
+                    Text(stringResource(R.string.detail_delete_cancel), color = pocketColors.Ink)
+                }
+            },
+        )
     }
 }
 

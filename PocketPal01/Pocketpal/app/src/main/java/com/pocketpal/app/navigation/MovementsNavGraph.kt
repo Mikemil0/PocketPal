@@ -106,6 +106,11 @@ internal fun NavGraphBuilder.movementsGraph(
                 currency = profileCurrency(profileState),
                 onBack = ::back,
                 onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+                onDeleted = {
+                    movementsVm.refresh()
+                    movementsVm.refreshRecent()
+                    nav.popBackStack()
+                },
             )
         }
     }
@@ -121,6 +126,12 @@ internal fun NavGraphBuilder.movementsGraph(
             currency = profileCurrency(profileState),
             onBack = ::back,
             onGoHome = { nav.popBackStack(Routes.Home, inclusive = false) },
+            onDeleted = {
+                movementsVm.refresh()
+                movementsVm.refreshRecent()
+                // Viene del resumen del recurrente: se cierran las dos pantallas.
+                if (!nav.popBackStack(Routes.MovementDetail, inclusive = true)) nav.popBackStack()
+            },
         )
     }
 

@@ -152,4 +152,31 @@ class MovementDetailViewModelTest {
         assertEquals(listOf("Supermercado Carulla", "- $86.450", "Categoría: Comida", "Fecha: 12 abr 2025 · 10:24 a. m."), receipt.pdfLines())
         assertEquals("PocketPal_comprobante_8f2c-41abx.pdf", receipt.fileName())
     }
+
+    @Test
+    fun `eliminar borra el movimiento y avisa para volver`() = runTest(dispatcher) {
+        val cine = repository.add("Cine", 32_000.0, today, categoryId = "ocio")
+        val vm = newVm()
+        vm.load(cine.id)
+        advanceUntilIdle()
+        vm.delete()
+        advanceUntilIdle()
+        assertTrue(vm.deleted.value)
+        assertFalse(vm.deleting.value)
+        assertTrue(repository.movements.none { it.id == cine.id })
+    }
+
+    @Test
+    fun `sin internet no borra y muestra el error`() = runTest(dispatcher) {
+        val cine = repository.add("Cine", 32_000.0, today, categoryId = "ocio")
+        val vm = newVm()
+        vm.load(cine.id)
+        advanceUntilIdle()
+        repository.failNextDelete = true
+        vm.delete()
+        advanceUntilIdle()
+        assertFalse(vm.deleted.value)
+        assertEquals(ErrorType.NoNetwork, vm.deleteError.value)
+        assertTrue(repository.movements.any { it.id == cine.id })
+    }
 }

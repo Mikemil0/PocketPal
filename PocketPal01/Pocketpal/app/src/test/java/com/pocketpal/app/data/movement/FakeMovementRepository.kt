@@ -81,6 +81,17 @@ class FakeMovementRepository(private val zone: ZoneId = ZONE) : MovementReposito
         ).take(limit)
     }
 
+    /** `true` = el próximo delete falla como si no hubiera internet. */
+    var failNextDelete = false
+
+    override suspend fun delete(id: String) {
+        if (failNextDelete) {
+            failNextDelete = false
+            throw java.io.IOException("sin internet")
+        }
+        movements.removeAll { it.id == id }
+    }
+
     override suspend fun get(id: String): Movement? {
         checkNetwork()
         return movements.firstOrNull { it.id == id }

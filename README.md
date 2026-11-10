@@ -66,7 +66,7 @@ La app se construyó por **módulos**, siguiendo el diseño de Figma:
 | **1 · Autenticación** | Registro con verificación del correo (código OTP de 6 dígitos), inicio de sesión con correo o con **Google**, "Recordarme", recuperación de contraseña, tutorial de bienvenida y permisos (notificaciones, cámara y micrófono). |
 | **2 · Perfil** | Datos personales y foto, teléfono con verificación por SMS, seguridad y **sesiones activas** (cerrar sesión en otros dispositivos), notificaciones, **categorías** de gastos e ingresos, preferencias (idioma, tema, moneda, formato de fecha), **exportar datos** (PDF/CSV), ayuda y acerca de. La app está en **4 idiomas**: español, inglés, portugués y francés. |
 | **3 · Metas de ahorro** | Crear metas con fecha límite, ver el progreso, agregar aportes, historial, editar, reordenar y eliminar. |
-| **4 · Movimientos** | Lista de ingresos y gastos por día, búsqueda con filtros, detalle (compartir o descargar el comprobante en PDF), movimientos recurrentes, gastos del mes por categoría y calendario para elegir fechas. |
+| **4 · Movimientos** | Lista de ingresos y gastos por día, búsqueda con filtros, detalle (compartir o descargar el comprobante en PDF, o eliminar el movimiento), movimientos recurrentes, gastos del mes por categoría y calendario para elegir fechas. |
 | **5 · Presupuestos** | Límite por categoría (semanal o mensual), cuánto llevas gastado y cuánto queda, historial por período, crear, editar y eliminar. |
 | **6 · Dai** | El asistente con IA: chat sobre tus finanzas, alertas, seguimiento de metas, educación financiera, **lectura de facturas con la cámara**, **registro por voz** y registro manual desde el botón **+** del inicio. |
 

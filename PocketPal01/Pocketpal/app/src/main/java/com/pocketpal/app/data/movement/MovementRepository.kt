@@ -37,6 +37,9 @@ interface MovementRepository {
      */
     suspend fun create(movement: NewMovement, zone: ZoneId): Movement
 
+    /** Borra el movimiento [id] del usuario (`delete from movements`). */
+    suspend fun delete(id: String)
+
     companion object {
         const val SEARCH_LIMIT = 50
         const val RECENT_LIMIT = 3

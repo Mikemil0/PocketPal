@@ -29,4 +29,10 @@
     <string name="recurring_repeats_monthly">Repeats every month</string>
     <string name="recurring_repeats_yearly">Repeats every year</string>
     <string name="recurring_see_details">See more details</string>
+    <string name="detail_delete">Delete transaction</string>
+    <string name="detail_delete_title">Delete this transaction?</string>
+    <string name="detail_delete_body">It will be deleted forever and will no longer count toward your balance and budgets.</string>
+    <string name="detail_delete_confirm">Delete</string>
+    <string name="detail_delete_cancel">Cancel</string>
+    <string name="detail_delete_error">Couldn’t delete it. Check your connection and try again.</string>
 </resources>

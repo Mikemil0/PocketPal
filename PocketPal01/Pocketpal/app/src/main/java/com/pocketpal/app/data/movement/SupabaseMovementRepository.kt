@@ -59,6 +59,11 @@ class SupabaseMovementRepository(private val supabase: SupabaseClient) : Movemen
             .decodeList<Movement>()
     }
 
+    /** Borra el movimiento. La política RLS "own movements" solo deja borrar los propios. */
+    override suspend fun delete(id: String) {
+        supabase.postgrest.from(MOVEMENTS).delete { filter { eq("id", id) } }
+    }
+
     override suspend fun get(id: String): Movement? =
         supabase.postgrest.from(MOVEMENTS)
             .select { filter { eq("id", id) } }
