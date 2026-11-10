@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.Flow
 data class DaiSettings(
     /** "Voz · Activar o desactivar la voz de Dai": Dai lee en voz alta sus respuestas. */
     val voiceReplies: Boolean = false,
+    /**
+     * Dirección del servidor de Dai (proyecto de IA) que lee las facturas con PaddleOCR.
+     * Vacía = las facturas se leen solo en el teléfono (ML Kit).
+     */
+    val serverUrl: String = "",
 )
 
 /**
@@ -15,6 +20,7 @@ data class DaiSettings(
 interface DaiSettingsRepository {
     val settings: Flow<DaiSettings>
     suspend fun setVoiceReplies(enabled: Boolean)
+    suspend fun setServerUrl(url: String)
 }
 
 /** Por qué no se pudo escuchar al usuario en el modo voz. */

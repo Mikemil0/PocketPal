@@ -35,4 +35,8 @@
     <string name="dai_clear_note_3">Vous pourrez continuer à utiliser l\'assistant normalement ensuite.</string>
     <string name="dai_clear_confirm">Effacer l\'historique</string>
     <string name="dai_cancel">Annuler</string>
+    <string name="dai_settings_server">Serveur de Dai</string>
+    <string name="dai_settings_server_off">Non configuré : Dai lit sur le téléphone</string>
+    <string name="dai_settings_server_hint">Adresse du serveur (https://…)</string>
+    <string name="dai_settings_server_save">Enregistrer</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.pocketpal.app.auth.AuthViewModel
 import com.pocketpal.app.data.settings.UserPreferences
 import com.pocketpal.app.di.AppContainer
+import com.pocketpal.app.navigation.PocketNavHost
 import com.pocketpal.app.ui.budgets.BudgetDetailViewModel
 import com.pocketpal.app.ui.budgets.BudgetFormViewModel
 import com.pocketpal.app.ui.budgets.BudgetsViewModel
@@ -20,7 +21,6 @@ import com.pocketpal.app.ui.dai.DaiChatViewModel
 import com.pocketpal.app.ui.dai.DaiInsightsViewModel
 import com.pocketpal.app.ui.dai.DaiReceiptViewModel
 import com.pocketpal.app.ui.dai.DaiSettingsViewModel
-import com.pocketpal.app.ui.newmovement.NewMovementViewModel
 import com.pocketpal.app.ui.goals.GoalDetailViewModel
 import com.pocketpal.app.ui.goals.GoalFormViewModel
 import com.pocketpal.app.ui.goals.GoalsViewModel
@@ -29,7 +29,7 @@ import com.pocketpal.app.ui.movements.MovementCategoriesViewModel
 import com.pocketpal.app.ui.movements.MovementDetailViewModel
 import com.pocketpal.app.ui.movements.MovementSearchViewModel
 import com.pocketpal.app.ui.movements.MovementsViewModel
-import com.pocketpal.app.navigation.PocketNavHost
+import com.pocketpal.app.ui.newmovement.NewMovementViewModel
 import com.pocketpal.app.ui.profile.CategoriesViewModel
 import com.pocketpal.app.ui.profile.ExportViewModel
 import com.pocketpal.app.ui.profile.NotificationSettingsViewModel
@@ -38,6 +38,7 @@ import com.pocketpal.app.ui.profile.PreferencesViewModel
 import com.pocketpal.app.ui.profile.ProfileViewModel
 import com.pocketpal.app.ui.profile.SecurityViewModel
 import com.pocketpal.app.ui.theme.PocketTheme
+import kotlinx.coroutines.flow.first
 
 /**
  * RF-A3: extiende `AppCompatActivity` (que a su vez es `ComponentActivity`, así `setContent`
@@ -222,6 +223,10 @@ class MainActivity : AppCompatActivity() {
                                 userName = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.fullName.orEmpty() },
                                 currency = { (profileVm.state.value as? ProfileViewModel.UiState.Content)?.data?.currency ?: "COP" },
                                 weekStart = { preferencesVm.state.value.weekStart },
+                                // Servidor de Dai (proyecto de IA): la dirección se configura en "Configuración de Dai".
+                                analyzer = com.pocketpal.app.data.dai.HttpDaiServer {
+                                    container.daiSettings.settings.first().serverUrl
+                                },
                             )
                         }
                     }

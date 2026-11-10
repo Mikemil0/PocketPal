@@ -123,8 +123,10 @@ internal fun NavGraphBuilder.daiGraph(
         val daiSettings by daiSettingsVm.settings.collectAsStateWithLifecycle(initialValue = com.pocketpal.app.data.dai.DaiSettings())
         DaiSettingsScreen(
             voiceReplies = daiSettings.voiceReplies,
+            serverUrl = daiSettings.serverUrl,
             onBack = ::back,
             onVoiceRepliesChange = daiSettingsVm::setVoiceReplies,
+            onServerUrlChange = daiSettingsVm::setServerUrl,
             onCameraSettings = {
                 context.startActivity(
                     android.content.Intent(
@@ -174,6 +176,7 @@ internal fun NavGraphBuilder.daiGraph(
             onReadFailed = daiReceiptVm::onReadFailed,
             onManual = daiReceiptVm::startManual,
             onRetake = daiReceiptVm::retake,
+            onPhoto = daiReceiptVm::onPhoto,
         )
     }
     composable(Routes.DaiReceiptReview) {

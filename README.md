@@ -103,18 +103,37 @@ Tomadas de la app instalada en un celular Android.
 
 ### Cómo lee una factura
 
+Dai tiene **dos lectores**. El principal es **PaddleOCR**, el modelo que el equipo escogió en el proyecto de Inteligencia Artificial tras comparar 4 OCR (Tesseract, EasyOCR, docTR y PaddleOCR) con 143 facturas reales. Corre en el **servidor de Dai**. Si el servidor no está configurado o no responde, la app usa el lector del celular, **ML Kit**, y nunca se queda sin leer.
+
 ```mermaid
 flowchart LR
-    A[📷 Foto de la factura<br/>CameraX o galería] --> B[ML Kit Text Recognition<br/>red neuronal en el celular]
-    B --> C[OcrLayout<br/>rearma las filas por posición]
-    C --> D[ReceiptParser<br/>comercio · total · fecha · categoría]
-    D --> E[Confirmar<br/>el usuario corrige]
+    A[📷 Foto de la factura<br/>CameraX o galería] --> P[ReceiptPhoto<br/>endereza y reduce a 1600 px]
+    A --> B[ML Kit en el celular<br/>OcrLayout + ReceiptParser]
+    P --> S[Servidor de Dai<br/>PaddleOCR · reglas · Regresión logística · k-NN]
+    S -- responde --> M[DaiServerMapping<br/>ajusta a las categorías del usuario]
+    B --> M
+    M --> E[Confirmar<br/>el usuario corrige]
     E --> F{¿Los datos están<br/>correctos?}
     F -- Sí, guardar --> G[(Supabase<br/>movements)]
     F -- Revisar --> E
 ```
 
-1. **ML Kit Text Recognition** (Google) lee el texto de la foto **dentro del celular**: no necesita internet, es gratis y la foto no sale del teléfono.
+**Servidor de Dai (modelo del proyecto de IA)**
+1. La app envía la foto (`POST /analizar`) mientras ML Kit lee en el celular.
+2. El servidor responde los 4 campos:
+
+   | Campo | Modelo |
+   |---|---|
+   | Texto de la foto | **PaddleOCR** (versión *mobile*) |
+   | Monto y fecha | Reglas de extracción |
+   | Categoría | TF-IDF por caracteres + **Regresión logística** |
+   | Motivo | **k-NN** (k = 1, distancia coseno) |
+
+3. **`DaiServerMapping`** pasa la categoría del dataset a la del usuario (Supermercado y Restaurantes → Comida, Servicios → Hogar, Ropa → Compras). Además descarta una fecha futura, como la fecha límite de un recibo.
+4. La dirección del servidor se pega en **Dai → Configuración de Dai → Servidor de Dai**. Si se deja vacía, solo se usa ML Kit.
+
+**Lector del celular (respaldo, sin internet)**
+1. **ML Kit Text Recognition** (Google) lee el texto **dentro del celular**.
 2. ML Kit entrega el texto **por bloques** (columnas), así que la palabra "TOTAL" y el valor "$17.900" llegan separados. **`OcrLayout`** usa la posición de cada línea en la foto para volver a armar las **filas** de la factura.
 3. **`ReceiptParser`** elige el total con un **puntaje**:
    - "TOTAL A PAGAR" vale más que "TOTAL";
@@ -124,7 +143,8 @@ flowchart LR
    - corrige errores típicos del OCR: `17.9OO` → `17.900` y `S17.900` → `$17.900`.
 
    Para la **fecha**, descarta las de la resolución de la DIAN y su vigencia, prefiere la línea que dice "Fecha" o "Fecha creación" y toma la más reciente que no sea futura.
-4. El usuario revisa, ve dónde se guardará y lo **aprueba**.
+
+En los dos casos, el usuario revisa los datos en **Confirmar**, ve dónde se guardará el gasto y lo **aprueba**. Dai nunca guarda solo.
 
 ### Cómo entiende la voz
 
@@ -351,7 +371,8 @@ En Android Studio: clic derecho en la carpeta `app/src/test` → **Run 'Tests in
 | Lenguaje | Kotlin 2.2 · corrutinas y `StateFlow` |
 | Interfaz | Jetpack Compose · Material 3 · Navigation Compose |
 | Backend | Supabase (Auth, PostgREST, Storage, Edge Functions) con `supabase-kt` 3.5 |
-| IA en el celular | ML Kit Text Recognition (OCR) · `SpeechRecognizer` y `TextToSpeech` de Android |
+| IA en el servidor de Dai | PaddleOCR · scikit-learn (Regresión logística, k-NN) · FastAPI |
+| IA en el celular | ML Kit Text Recognition (OCR, respaldo) · `SpeechRecognizer` y `TextToSpeech` de Android |
 | Cámara | CameraX 1.4 |
 | Datos locales | Preferences DataStore |
 | Imágenes | Coil |

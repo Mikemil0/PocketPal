@@ -60,6 +60,7 @@ internal fun NavGraphBuilder.newMovementGraph(
                 nav.navigate(Routes.NewMovementManual) { popUpTo(Routes.NewMovementScan) { inclusive = true } }
             },
             onRetake = daiReceiptVm::retake,
+            onPhoto = daiReceiptVm::onPhoto,
         )
     }
     composable(Routes.NewMovementScanReview) {

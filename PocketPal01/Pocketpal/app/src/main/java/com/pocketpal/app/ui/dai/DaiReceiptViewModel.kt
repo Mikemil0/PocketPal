@@ -4,21 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.data.dai.DaiRepository
+import com.pocketpal.app.data.dai.DaiServerMapping
 import com.pocketpal.app.data.dai.DaiRole
 import com.pocketpal.app.data.dai.FinanceSnapshot
 import com.pocketpal.app.data.dai.ReceiptDraft
 import com.pocketpal.app.data.dai.ReceiptImpact
 import com.pocketpal.app.data.dai.ReceiptParser
 import com.pocketpal.app.data.dai.ReceiptProblem
+import com.pocketpal.app.data.dai.ReceiptAnalyzer
 import com.pocketpal.app.data.movement.MovementCategory
 import com.pocketpal.app.data.movement.MovementKind
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.IOException
 import java.time.LocalDate
 import java.time.ZoneId
@@ -40,6 +44,11 @@ class DaiReceiptViewModel(
     private val weekStart: () -> Int = { 1 },
     private val today: () -> LocalDate = { LocalDate.now() },
     private val zone: () -> ZoneId = { ZoneId.systemDefault() },
+    /**
+     * Servidor de Dai (proyecto de IA, PaddleOCR + modelos entrenados). `null` o sin
+     * dirección configurada = solo se usa el OCR del teléfono.
+     */
+    private val analyzer: ReceiptAnalyzer? = null,
 ) : ViewModel() {
 
     /** En qué paso va el usuario. */
@@ -89,6 +98,9 @@ class DaiReceiptViewModel(
     val event: StateFlow<Event?> = _event.asStateFlow()
 
     private var finance: FinanceSnapshot? = null
+
+    /** La foto de la factura que se está leyendo (para enviarla al servidor de Dai). */
+    private var photo: CompletableDeferred<ByteArray?>? = null
     private var financeJob: Job? = null
 
     fun consumeEvent() { _event.value = null }
@@ -103,7 +115,13 @@ class DaiReceiptViewModel(
 
     /** El usuario tomó la foto y el OCR empezó a leer. */
     fun onReading() {
+        photo = CompletableDeferred()
         _state.update { it.copy(stage = Stage.Reading, readFailed = false) }
+    }
+
+    /** La foto ya preparada (enderezada y reducida) para el servidor de Dai; `null` si no se pudo. */
+    fun onPhoto(jpeg: ByteArray?) {
+        photo?.complete(jpeg)
     }
 
     /** ML Kit terminó: [text] es todo lo que leyó de la factura. */
@@ -111,9 +129,13 @@ class DaiReceiptViewModel(
         viewModelScope.launch {
             // Las categorías vienen del mismo snapshot: se espera a que termine de cargar.
             financeJob?.join()
-            val draft = ReceiptParser.parse(text, today(), _state.value.categories)
+            val categories = _state.value.categories
+            var draft = ReceiptParser.parse(text, today(), categories)
+            // Si hay servidor de Dai, sus resultados (PaddleOCR + modelos) reemplazan a los del teléfono.
+            val server = askServer()
+            if (server != null) draft = DaiServerMapping.merge(draft, server, categories, today())
             val foundSomething = draft.amount != null || draft.merchant.isNotBlank()
-            if (text.isBlank() || !foundSomething) {
+            if ((server == null && text.isBlank()) || !foundSomething) {
                 onReadFailed()
                 return@launch
             }
@@ -127,6 +149,21 @@ class DaiReceiptViewModel(
                     impact = null,
                 )
             }
+        }
+    }
+
+    /** Envía la foto al servidor de Dai. Cualquier problema = `null` y sigue la lectura del teléfono. */
+    private suspend fun askServer(): com.pocketpal.app.data.dai.ServerReceipt? {
+        val api = analyzer ?: return null
+        val pending = photo ?: return null
+        photo = null
+        val jpeg = withTimeoutOrNull(PHOTO_WAIT_MS) { pending.await() } ?: return null
+        return try {
+            withTimeoutOrNull(SERVER_WAIT_MS) { api.analyze(jpeg) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -151,6 +188,7 @@ class DaiReceiptViewModel(
 
     /** "Tomar otra foto" (o atrás desde "Confirmar"): vuelve a la cámara sin guardar nada. */
     fun retake() {
+        photo = null
         _state.update {
             it.copy(
                 stage = Stage.Camera,
@@ -255,5 +293,13 @@ class DaiReceiptViewModel(
                 finance = null
             }
         }
+    }
+
+    private companion object {
+        /** Lo máximo que se espera a que la foto quede lista. */
+        const val PHOTO_WAIT_MS = 5_000L
+
+        /** Lo máximo que se espera al servidor de Dai antes de usar la lectura del teléfono. */
+        const val SERVER_WAIT_MS = 90_000L
     }
 }

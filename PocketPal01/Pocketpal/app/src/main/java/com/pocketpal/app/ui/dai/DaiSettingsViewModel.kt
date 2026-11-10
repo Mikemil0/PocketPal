@@ -53,6 +53,11 @@ class DaiSettingsViewModel(
         viewModelScope.launch { settingsRepository.setVoiceReplies(enabled) }
     }
 
+    /** "Servidor de Dai": la dirección que muestra el cuaderno de Colab al prender el servidor. */
+    fun setServerUrl(url: String) {
+        viewModelScope.launch { settingsRepository.setServerUrl(url) }
+    }
+
     /** "Eliminar historial". */
     fun clearHistory() {
         if (_deleting.value) return

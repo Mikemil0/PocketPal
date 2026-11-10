@@ -35,4 +35,8 @@
     <string name="dai_clear_note_3">Puedes seguir usando el asistente normalmente después de eliminarlo.</string>
     <string name="dai_clear_confirm">Eliminar historial</string>
     <string name="dai_cancel">Cancelar</string>
+    <string name="dai_settings_server">Servidor de Dai</string>
+    <string name="dai_settings_server_off">Sin configurar: Dai lee en el teléfono</string>
+    <string name="dai_settings_server_hint">Dirección del servidor (https://…)</string>
+    <string name="dai_settings_server_save">Guardar</string>
 </resources>

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.RecordVoiceOver
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -78,8 +80,11 @@ fun DaiSettingsScreen(
     onVoiceRepliesChange: (Boolean) -> Unit,
     onCameraSettings: () -> Unit,
     onClearHistory: () -> Unit,
+    serverUrl: String = "",
+    onServerUrlChange: (String) -> Unit = {},
 ) {
     var showAbout by remember { mutableStateOf(false) }
+    var editingServer by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(pocketColors.Navy).systemBarsPadding()) {
         SettingsHeader(stringResource(R.string.dai_settings_title), onBack)
         Column(
@@ -117,6 +122,13 @@ fun DaiSettingsScreen(
             }
             SettingRow(Icons.Outlined.CameraAlt, pocketColors.Teal, stringResource(R.string.dai_settings_camera),
                 stringResource(R.string.dai_settings_camera_sub), onCameraSettings)
+            SettingRow(
+                Icons.Outlined.Cloud,
+                pocketColors.BlueIcon,
+                stringResource(R.string.dai_settings_server),
+                serverUrl.ifBlank { stringResource(R.string.dai_settings_server_off) },
+                onClick = { editingServer = true },
+            )
             SettingRow(Icons.Outlined.Info, pocketColors.BlueIcon, stringResource(R.string.dai_settings_about),
                 stringResource(R.string.dai_settings_about_sub), onClick = { showAbout = true })
             SettingRow(Icons.Outlined.DeleteOutline, pocketColors.Coral, stringResource(R.string.dai_settings_clear),
@@ -125,6 +137,35 @@ fun DaiSettingsScreen(
             Spacer(Modifier.height(24.dp))
             Text(stringResource(R.string.dai_settings_footer), fontSize = 10.sp, color = pocketColors.Muted)
         }
+    }
+
+    if (editingServer) {
+        var url by remember { mutableStateOf(serverUrl.ifBlank { "https://" }) }
+        AlertDialog(
+            onDismissRequest = { editingServer = false },
+            title = { Text(stringResource(R.string.dai_settings_server)) },
+            text = {
+                OutlinedTextField(
+                    value = url,
+                    onValueChange = { url = it },
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.dai_settings_server_hint)) },
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onServerUrlChange(if (url.trim() == "https://") "" else url)
+                    editingServer = false
+                }) {
+                    Text(stringResource(R.string.dai_settings_server_save), color = pocketColors.Coral)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { editingServer = false }) {
+                    Text(stringResource(R.string.dai_cancel))
+                }
+            },
+        )
     }
 
     if (showAbout) {

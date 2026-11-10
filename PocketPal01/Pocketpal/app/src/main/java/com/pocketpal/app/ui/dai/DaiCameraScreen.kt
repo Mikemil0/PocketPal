@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +60,9 @@ import com.pocketpal.app.R
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.components.PocketSecondaryButton
 import com.pocketpal.app.ui.theme.PocketColors
+import android.graphics.ImageFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Flujo 3 · Factura con la cámara.
@@ -78,8 +82,11 @@ fun DaiCameraScreen(
     onReadFailed: () -> Unit,
     onManual: () -> Unit,
     onRetake: () -> Unit,
+    /** La foto preparada para el servidor de Dai (o `null`); se envía mientras ML Kit lee. */
+    onPhoto: (ByteArray?) -> Unit = {},
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
     var hasPermission by remember {
         mutableStateOf(
@@ -120,6 +127,19 @@ fun DaiCameraScreen(
                         onReadFailed()
                         return
                     }
+                    // Copia de la foto para el servidor de Dai (antes de cerrar la imagen).
+                    val rotation = image.imageInfo.rotationDegrees
+                    val jpeg = if (image.format == ImageFormat.JPEG) {
+                        image.planes.firstOrNull()?.buffer?.let { buffer ->
+                            buffer.rewind()
+                            ByteArray(buffer.remaining()).also { buffer.get(it); buffer.rewind() }
+                        }
+                    } else {
+                        null
+                    }
+                    scope.launch(Dispatchers.Default) {
+                        onPhoto(jpeg?.let { ReceiptPhoto.fromJpeg(it, rotation) })
+                    }
                     val input = InputImage.fromMediaImage(media, image.imageInfo.rotationDegrees)
                     recognizer.process(input)
                         .addOnSuccessListener { onTextRecognized(ReceiptOcr.toText(it)) }
@@ -136,6 +156,7 @@ fun DaiCameraScreen(
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
         onReading()
+        scope.launch(Dispatchers.IO) { onPhoto(ReceiptPhoto.fromUri(context, uri)) }
         try {
             recognizer.process(InputImage.fromFilePath(context, uri))
                 .addOnSuccessListener { onTextRecognized(ReceiptOcr.toText(it)) }

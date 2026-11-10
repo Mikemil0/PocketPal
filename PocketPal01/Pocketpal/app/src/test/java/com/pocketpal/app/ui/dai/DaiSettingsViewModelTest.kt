@@ -36,6 +36,9 @@ class DaiSettingsViewModelTest {
         override suspend fun setVoiceReplies(enabled: Boolean) {
             state.value = state.value.copy(voiceReplies = enabled)
         }
+        override suspend fun setServerUrl(url: String) {
+            state.value = state.value.copy(serverUrl = url)
+        }
     }
 
     private val dispatcher = UnconfinedTestDispatcher()

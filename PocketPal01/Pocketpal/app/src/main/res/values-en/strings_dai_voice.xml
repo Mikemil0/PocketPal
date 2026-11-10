@@ -35,4 +35,8 @@
     <string name="dai_clear_note_3">You can keep using the assistant normally afterwards.</string>
     <string name="dai_clear_confirm">Delete history</string>
     <string name="dai_cancel">Cancel</string>
+    <string name="dai_settings_server">Dai server</string>
+    <string name="dai_settings_server_off">Not set: Dai reads on the phone</string>
+    <string name="dai_settings_server_hint">Server address (https://…)</string>
+    <string name="dai_settings_server_save">Save</string>
 </resources>
