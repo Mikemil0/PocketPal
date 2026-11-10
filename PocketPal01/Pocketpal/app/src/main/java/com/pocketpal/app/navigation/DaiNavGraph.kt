@@ -121,9 +121,12 @@ internal fun NavGraphBuilder.daiGraph(
     // Módulo 6 · Flujo 4: configuración de Dai y borrar historial.
     composable(Routes.DaiSettings) {
         val daiSettings by daiSettingsVm.settings.collectAsStateWithLifecycle(initialValue = com.pocketpal.app.data.dai.DaiSettings())
+        val serverStatus by daiSettingsVm.serverStatus.collectAsStateWithLifecycle()
         DaiSettingsScreen(
             voiceReplies = daiSettings.voiceReplies,
             serverUrl = daiSettings.serverUrl,
+            serverStatus = serverStatus,
+            onCheckServer = daiSettingsVm::checkServerUrl,
             onBack = ::back,
             onVoiceRepliesChange = daiSettingsVm::setVoiceReplies,
             onServerUrlChange = daiSettingsVm::setServerUrl,

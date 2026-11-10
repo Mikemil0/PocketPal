@@ -82,7 +82,11 @@ fun DaiSettingsScreen(
     onClearHistory: () -> Unit,
     serverUrl: String = "",
     onServerUrlChange: (String) -> Unit = {},
+    serverStatus: DaiSettingsViewModel.ServerStatus? = null,
+    onCheckServer: (String) -> Unit = {},
 ) {
+    // Al abrir la pantalla se revisa si el servidor de Dai (PaddleOCR) responde.
+    androidx.compose.runtime.LaunchedEffect(serverUrl) { onCheckServer(serverUrl) }
     var showAbout by remember { mutableStateOf(false) }
     var editingServer by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(pocketColors.Navy).systemBarsPadding()) {
@@ -126,7 +130,16 @@ fun DaiSettingsScreen(
                 Icons.Outlined.Cloud,
                 pocketColors.BlueIcon,
                 stringResource(R.string.dai_settings_server),
-                serverUrl.ifBlank { stringResource(R.string.dai_settings_server_off) },
+                if (serverUrl.isBlank()) {
+                    stringResource(R.string.dai_settings_server_off)
+                } else {
+                    when (serverStatus) {
+                        DaiSettingsViewModel.ServerStatus.Checking -> stringResource(R.string.dai_settings_server_checking)
+                        DaiSettingsViewModel.ServerStatus.Connected -> stringResource(R.string.dai_settings_server_connected)
+                        DaiSettingsViewModel.ServerStatus.Unreachable -> stringResource(R.string.dai_settings_server_unreachable)
+                        null -> serverUrl
+                    }
+                },
                 onClick = { editingServer = true },
             )
             SettingRow(Icons.Outlined.Info, pocketColors.BlueIcon, stringResource(R.string.dai_settings_about),

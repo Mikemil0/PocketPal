@@ -109,8 +109,10 @@ class ReceiptParserTest {
     @Test
     fun `titulo del gasto sin comercio`() {
         val draft = ReceiptDraft("", 17_900.0, today, "comida", "Mercado")
-        assertEquals("Tienda", ReceiptParser.titleFor(draft.copy(merchant = "Tienda"), "Comida"))
+        // El título es el motivo (aunque Dai haya leído un comercio).
+        assertEquals("Mercado", ReceiptParser.titleFor(draft.copy(merchant = "Tienda"), "Comida"))
         assertEquals("Mercado", ReceiptParser.titleFor(draft, "Comida"))
+        assertEquals("Tienda", ReceiptParser.titleFor(draft.copy(merchant = "Tienda", reason = ""), "Comida"))
         assertEquals("Comida", ReceiptParser.titleFor(draft.copy(reason = ""), "Comida"))
         assertEquals("Dai", ReceiptParser.titleFor(draft.copy(reason = ""), null))
     }

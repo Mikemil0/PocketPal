@@ -73,6 +73,29 @@ class HttpDaiServer(private val baseUrl: suspend () -> String) : ReceiptAnalyzer
     }
 
     companion object {
+        /**
+         * ¿Está prendido el servidor de Dai en [url]? Llama a `GET /`, que responde
+         * `{"estado": "listo", ...}` cuando PaddleOCR y los modelos ya cargaron.
+         */
+        suspend fun check(url: String): Boolean = withContext(Dispatchers.IO) {
+            val base = url.trim().trimEnd('/')
+            if (!base.startsWith("http")) return@withContext false
+            try {
+                val connection = (URL("$base/").openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10_000
+                    readTimeout = 15_000
+                }
+                try {
+                    connection.responseCode in 200..299 &&
+                        connection.inputStream.bufferedReader().use { it.readText() }.contains("listo")
+                } finally {
+                    connection.disconnect()
+                }
+            } catch (e: Exception) {
+                false
+            }
+        }
+
         fun parse(json: String): ServerReceipt {
             val j = JSONObject(json)
             return ServerReceipt(

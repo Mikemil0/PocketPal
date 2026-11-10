@@ -24,7 +24,27 @@ import java.io.IOException
 class DaiSettingsViewModel(
     private val repository: DaiRepository,
     private val settingsRepository: DaiSettingsRepository,
+    /** Comprueba si el servidor de Dai responde (en las pruebas se reemplaza). */
+    private val checkServer: suspend (String) -> Boolean = { com.pocketpal.app.data.dai.HttpDaiServer.check(it) },
 ) : ViewModel() {
+
+    /** Estado del servidor de Dai que se muestra en "Servidor de Dai". */
+    enum class ServerStatus { Checking, Connected, Unreachable }
+
+    private val _serverStatus = MutableStateFlow<ServerStatus?>(null)
+    val serverStatus: StateFlow<ServerStatus?> = _serverStatus.asStateFlow()
+
+    /** Revisa si PaddleOCR responde en [url] (al abrir la configuración y al guardar). */
+    fun checkServerUrl(url: String) {
+        if (url.isBlank()) {
+            _serverStatus.value = null
+            return
+        }
+        _serverStatus.value = ServerStatus.Checking
+        viewModelScope.launch {
+            _serverStatus.value = if (checkServer(url)) ServerStatus.Connected else ServerStatus.Unreachable
+        }
+    }
 
     /**
      * Las preferencias tal como las entrega DataStore (un `Flow`: cada cambio llega solo).
@@ -56,6 +76,7 @@ class DaiSettingsViewModel(
     /** "Servidor de Dai": la dirección que muestra el cuaderno de Colab al prender el servidor. */
     fun setServerUrl(url: String) {
         viewModelScope.launch { settingsRepository.setServerUrl(url) }
+        checkServerUrl(url.trim().trimEnd('/'))
     }
 
     /** "Eliminar historial". */

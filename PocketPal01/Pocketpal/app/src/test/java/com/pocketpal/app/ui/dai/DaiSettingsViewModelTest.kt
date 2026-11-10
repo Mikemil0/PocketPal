@@ -61,6 +61,20 @@ class DaiSettingsViewModelTest {
     }
 
     @Test
+    fun `guardar la direccion del servidor comprueba si PaddleOCR responde`() = runTest(dispatcher) {
+        val vm = DaiSettingsViewModel(repository, settings, checkServer = { it == "https://dai.ngrok-free.app" })
+        vm.setServerUrl("https://dai.ngrok-free.app/")
+        advanceUntilIdle()
+        assertEquals("https://dai.ngrok-free.app/", settings.state.value.serverUrl)
+        assertEquals(DaiSettingsViewModel.ServerStatus.Connected, vm.serverStatus.value)
+        vm.checkServerUrl("https://otra.trycloudflare.com")
+        advanceUntilIdle()
+        assertEquals(DaiSettingsViewModel.ServerStatus.Unreachable, vm.serverStatus.value)
+        vm.checkServerUrl("")
+        assertNull(vm.serverStatus.value)
+    }
+
+    @Test
     fun `la voz de Dai se guarda en las preferencias`() = runTest(dispatcher) {
         val vm = DaiSettingsViewModel(repository, settings)
         assertFalse(settings.state.value.voiceReplies)

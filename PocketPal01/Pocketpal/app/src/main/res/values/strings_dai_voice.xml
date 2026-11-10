@@ -39,4 +39,7 @@
     <string name="dai_settings_server_off">Sin configurar: Dai lee en el teléfono</string>
     <string name="dai_settings_server_hint">Dirección del servidor (https://…)</string>
     <string name="dai_settings_server_save">Guardar</string>
+    <string name="dai_settings_server_checking">Comprobando el servidor…</string>
+    <string name="dai_settings_server_connected">Conectado: Dai lee con PaddleOCR</string>
+    <string name="dai_settings_server_unreachable">No responde: revisa que Colab esté prendido y la dirección</string>
 </resources>
