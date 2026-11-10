@@ -16,6 +16,8 @@ import com.pocketpal.app.data.movement.MovementCategory
 import com.pocketpal.app.data.movement.MovementKind
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -108,6 +110,9 @@ class DaiReceiptViewModel(
 
     /** La foto de la factura que se está leyendo (para enviarla al servidor de Dai). */
     private var photo: CompletableDeferred<ByteArray?>? = null
+
+    /** La consulta al servidor de Dai que ya va en camino (empieza al tomar la foto). */
+    private var serverCall: Deferred<Pair<com.pocketpal.app.data.dai.ServerReceipt?, ReadBy>>? = null
     private var financeJob: Job? = null
 
     fun consumeEvent() { _event.value = null }
@@ -122,7 +127,12 @@ class DaiReceiptViewModel(
 
     /** El usuario tomó la foto y el OCR empezó a leer. */
     fun onReading() {
-        photo = CompletableDeferred()
+        serverCall?.cancel()
+        val pending = CompletableDeferred<ByteArray?>()
+        photo = pending
+        // La foto va al servidor apenas está lista, mientras ML Kit lee en paralelo
+        // (antes se esperaba a ML Kit para enviarla: la lectura tardaba más).
+        serverCall = analyzer?.let { viewModelScope.async { askServer(pending) } }
         _state.update { it.copy(stage = Stage.Reading, readFailed = false) }
     }
 
@@ -139,7 +149,9 @@ class DaiReceiptViewModel(
             val categories = _state.value.categories
             var draft = ReceiptParser.parse(text, today(), categories)
             // Si hay servidor de Dai, sus resultados (PaddleOCR + modelos) reemplazan a los del teléfono.
-            val (server, readBy) = askServer()
+            val call = serverCall
+            serverCall = null
+            val (server, readBy) = call?.await() ?: (null to ReadBy.Phone)
             if (server != null) draft = DaiServerMapping.merge(draft, server, categories, today())
             // Montos en pesos enteros, como en el registro manual y en el Excel ($242.574,31 → $242.574).
             draft = draft.copy(amount = draft.amount?.let { Math.round(it).toDouble() })
@@ -164,10 +176,8 @@ class DaiReceiptViewModel(
     }
 
     /** Envía la foto al servidor de Dai. Cualquier problema = `null` y sigue la lectura del teléfono. */
-    private suspend fun askServer(): Pair<com.pocketpal.app.data.dai.ServerReceipt?, ReadBy> {
+    private suspend fun askServer(pending: CompletableDeferred<ByteArray?>): Pair<com.pocketpal.app.data.dai.ServerReceipt?, ReadBy> {
         val api = analyzer ?: return null to ReadBy.Phone
-        val pending = photo ?: return null to ReadBy.Phone
-        photo = null
         val jpeg = withTimeoutOrNull(PHOTO_WAIT_MS) { pending.await() } ?: return null to ReadBy.ServerFailed
         return try {
             val result = withTimeoutOrNull(SERVER_WAIT_MS) { api.analyze(jpeg) to true }
@@ -185,6 +195,11 @@ class DaiReceiptViewModel(
 
     /** El OCR falló o no encontró texto: se vuelve a la cámara con un aviso. */
     fun onReadFailed() {
+        // Si ML Kit falló pero la foto ya va al servidor, se espera la respuesta de PaddleOCR.
+        if (serverCall != null) {
+            onTextRecognized("")
+            return
+        }
         _state.update { it.copy(stage = Stage.Camera, readFailed = true) }
     }
 
@@ -207,6 +222,8 @@ class DaiReceiptViewModel(
     /** "Tomar otra foto" (o atrás desde "Confirmar"): vuelve a la cámara sin guardar nada. */
     fun retake() {
         photo = null
+        serverCall?.cancel()
+        serverCall = null
         _state.update {
             it.copy(
                 stage = Stage.Camera,

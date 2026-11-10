@@ -107,7 +107,7 @@ Dai tiene **dos lectores**. El principal es **PaddleOCR**, el modelo que el equi
 
 ```mermaid
 flowchart LR
-    A[📷 Foto de la factura<br/>CameraX o galería] --> P[ReceiptPhoto<br/>endereza y reduce a 1600 px]
+    A[📷 Foto de la factura<br/>CameraX o galería] --> P[ReceiptPhoto<br/>endereza y reduce a 1280 px]
     A --> B[ML Kit en el celular<br/>OcrLayout + ReceiptParser]
     P --> S[Servidor de Dai<br/>PaddleOCR · reglas · Regresión logística · k-NN]
     S -- responde --> M[DaiServerMapping<br/>ajusta a las categorías del usuario]

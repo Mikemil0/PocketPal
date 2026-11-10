@@ -99,6 +99,20 @@ class DaiReceiptViewModelTest {
     }
 
     @Test
+    fun `si ML Kit no lee nada pero PaddleOCR si, abre Confirmar`() = runTest(dispatcher) {
+        val vm = vmWithServer(object : ReceiptAnalyzer {
+            override suspend fun analyze(jpeg: ByteArray) =
+                ServerReceipt(85_300.0, LocalDate.of(2026, 10, 20), "Servicios", "Pago de agua", "", 0.9)
+        })
+        vm.onReading()
+        vm.onPhoto(byteArrayOf(1, 2, 3))
+        vm.onReadFailed()
+        assertEquals(DaiReceiptViewModel.Stage.Review, vm.state.value.stage)
+        assertEquals(85_300.0, vm.state.value.draft.amount!!, 0.001)
+        assertEquals("Pago de agua", vm.state.value.draft.reason)
+    }
+
+    @Test
     fun `si el servidor falla avisa y usa la lectura del celular`() = runTest(dispatcher) {
         val vm = vmWithServer(object : ReceiptAnalyzer {
             override suspend fun analyze(jpeg: ByteArray): ServerReceipt? = throw java.io.IOException("caido")

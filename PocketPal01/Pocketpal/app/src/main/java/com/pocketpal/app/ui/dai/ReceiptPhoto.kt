@@ -10,12 +10,13 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 /**
- * Prepara la foto de la factura para el servidor de Dai: la endereza y la reduce a 1600 px
- * de lado (sube más rápido y es el mismo tamaño que usa el servidor).
+ * Prepara la foto de la factura para el servidor de Dai: la endereza y la reduce a 1280 px
+ * de lado (sube y se lee más rápido).
  * Se llama fuera del hilo principal.
  */
 object ReceiptPhoto {
-    private const val MAX_SIDE = 1600
+    /** 1280 px: los números de la factura se siguen leyendo y sube y se lee más rápido. */
+    private const val MAX_SIDE = 1280
 
     /** [jpeg] = los bytes que entrega CameraX; [rotationDegrees] = lo que hay que girarla. */
     fun fromJpeg(jpeg: ByteArray, rotationDegrees: Int): ByteArray? {
