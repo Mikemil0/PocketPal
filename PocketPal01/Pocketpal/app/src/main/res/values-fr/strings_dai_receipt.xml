@@ -33,4 +33,8 @@
     <string name="dai_receipt_error_title">Impossible d\'enregistrer</string>
     <string name="dai_receipt_error_body">Vérifie ta connexion et réessaie.</string>
     <string name="dai_receipt_error_ok">Compris</string>
+    <string name="dai_receipt_read_server">Lu par Dai avec PaddleOCR</string>
+    <string name="dai_receipt_read_server_confidence">Lu par Dai avec PaddleOCR · catégorie sûre à %1$d %%</string>
+    <string name="dai_receipt_read_server_failed">Le serveur de Dai n’a pas répondu : lu sur le téléphone</string>
+    <string name="dai_receipt_read_phone">Lu sur le téléphone (ML Kit)</string>
 </resources>

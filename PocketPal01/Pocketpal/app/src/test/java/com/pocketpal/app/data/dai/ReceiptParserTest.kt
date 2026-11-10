@@ -272,4 +272,41 @@ class ReceiptParserTest {
         assertEquals(LocalDate.of(2026, 9, 18), ReceiptParser.findDate("Fecha de emisión 18 de septiembre de 2026", day))
         assertEquals(LocalDate.of(2026, 7, 12), ReceiptParser.findDate("Fecha 12-Jul-2026", day))
     }
+
+    /** Las categorías por defecto de PocketPal más Salud. */
+    private val userCategories = listOf(
+        MovementCategory("comida", MovementKind.Expense.wire, "Comida", "restaurant", "#FF9B9B"),
+        MovementCategory("transporte", MovementKind.Expense.wire, "Transporte", "dashboard", "#55A5EF"),
+        MovementCategory("entretenimiento", MovementKind.Expense.wire, "Entretenimiento", "star", "#EAB760"),
+        MovementCategory("hogar", MovementKind.Expense.wire, "Hogar", "home", "#D194E5"),
+        MovementCategory("salud", MovementKind.Expense.wire, "Salud", "favorite", "#C90E0E"),
+    )
+
+    @Test
+    fun `recibo del acueducto - no queda en Salud ni en Comida`() {
+        val agua = """
+            EMPRESA DE ACUEDUCTO Y ALCANTARILLADO DE BOGOTA
+            Barrio Floralia  Medidor 12345  Lectura y medición
+            Consumo de agua 18 m3
+            Total a pagar  ${'$'}85.300
+        """.trimIndent()
+        val draft = ReceiptParser.parse(agua, LocalDate.of(2026, 11, 10), userCategories)
+        assertEquals("hogar", draft.categoryId)
+        assertEquals("Pago de agua", draft.reason)
+    }
+
+    @Test
+    fun `recibo de Claro - comercio, motivo y categoria`() {
+        val draft = ReceiptParser.parse(claro, LocalDate.of(2026, 11, 10), userCategories)
+        assertEquals("Claro", draft.merchant)
+        assertEquals("Pago de celular", draft.reason)
+        assertEquals("hogar", draft.categoryId)
+    }
+
+    @Test
+    fun `una drogueria sigue siendo Salud`() {
+        val draft = ReceiptParser.parse("DROGUERIA LA REBAJA\nAcetaminofen\nTotal ${'$'}12.500", LocalDate.of(2026, 11, 10), userCategories)
+        assertEquals("salud", draft.categoryId)
+        assertEquals("Compra en Drogueria La Rebaja", draft.reason)
+    }
 }

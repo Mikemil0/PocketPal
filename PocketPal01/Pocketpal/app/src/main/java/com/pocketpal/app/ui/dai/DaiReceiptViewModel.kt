@@ -84,7 +84,14 @@ class DaiReceiptViewModel(
         val impact: ReceiptImpact? = null,
         val saving: Boolean = false,
         val error: ErrorType? = null,
+        /** Quién leyó la factura: se muestra en "Confirmar" (`null` = registro manual). */
+        val readBy: ReadBy? = null,
+        /** Seguridad de la categoría que dio el servidor, en % (`null` = no aplica). */
+        val categoryConfidence: Int? = null,
     )
+
+    /** Phone = ML Kit en el celular · Server = PaddleOCR en el servidor · ServerFailed = el servidor no respondió. */
+    enum class ReadBy { Phone, Server, ServerFailed }
 
     sealed interface Event {
         /** La factura se guardó: se vuelve al chat. */
@@ -132,7 +139,7 @@ class DaiReceiptViewModel(
             val categories = _state.value.categories
             var draft = ReceiptParser.parse(text, today(), categories)
             // Si hay servidor de Dai, sus resultados (PaddleOCR + modelos) reemplazan a los del teléfono.
-            val server = askServer()
+            val (server, readBy) = askServer()
             if (server != null) draft = DaiServerMapping.merge(draft, server, categories, today())
             // Montos en pesos enteros, como en el registro manual y en el Excel ($242.574,31 → $242.574).
             draft = draft.copy(amount = draft.amount?.let { Math.round(it).toDouble() })
@@ -149,23 +156,30 @@ class DaiReceiptViewModel(
                     problem = null,
                     confirming = false,
                     impact = null,
+                    readBy = readBy,
+                    categoryConfidence = server?.categoryConfidence?.let { c -> Math.round(c * 100).toInt() },
                 )
             }
         }
     }
 
     /** Envía la foto al servidor de Dai. Cualquier problema = `null` y sigue la lectura del teléfono. */
-    private suspend fun askServer(): com.pocketpal.app.data.dai.ServerReceipt? {
-        val api = analyzer ?: return null
-        val pending = photo ?: return null
+    private suspend fun askServer(): Pair<com.pocketpal.app.data.dai.ServerReceipt?, ReadBy> {
+        val api = analyzer ?: return null to ReadBy.Phone
+        val pending = photo ?: return null to ReadBy.Phone
         photo = null
-        val jpeg = withTimeoutOrNull(PHOTO_WAIT_MS) { pending.await() } ?: return null
+        val jpeg = withTimeoutOrNull(PHOTO_WAIT_MS) { pending.await() } ?: return null to ReadBy.ServerFailed
         return try {
-            withTimeoutOrNull(SERVER_WAIT_MS) { api.analyze(jpeg) }
+            val result = withTimeoutOrNull(SERVER_WAIT_MS) { api.analyze(jpeg) to true }
+            when {
+                result == null -> null to ReadBy.ServerFailed          // se demoró demasiado
+                result.first == null -> null to ReadBy.Phone           // no hay dirección configurada
+                else -> result.first to ReadBy.Server
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            null
+            null to ReadBy.ServerFailed
         }
     }
 
@@ -183,6 +197,8 @@ class DaiReceiptViewModel(
                 readFailed = false,
                 problem = null,
                 confirming = false,
+                readBy = null,
+                categoryConfidence = null,
                 impact = null,
             )
         }
@@ -198,6 +214,8 @@ class DaiReceiptViewModel(
                 readFailed = false,
                 problem = null,
                 confirming = false,
+                readBy = null,
+                categoryConfidence = null,
                 impact = null,
                 saving = false,
             )

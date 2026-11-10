@@ -98,6 +98,21 @@ fun DaiReceiptReviewScreen(
                 fontWeight = FontWeight.Bold,
                 color = pocketColors.Ink,
             )
+            // Quién leyó la factura: PaddleOCR en el servidor de Dai o ML Kit en el celular.
+            state.readBy?.let { readBy ->
+                val text = when (readBy) {
+                    DaiReceiptViewModel.ReadBy.Server -> state.categoryConfidence
+                        ?.let { stringResource(R.string.dai_receipt_read_server_confidence, it) }
+                        ?: stringResource(R.string.dai_receipt_read_server)
+                    DaiReceiptViewModel.ReadBy.ServerFailed -> stringResource(R.string.dai_receipt_read_server_failed)
+                    DaiReceiptViewModel.ReadBy.Phone -> stringResource(R.string.dai_receipt_read_phone)
+                }
+                Text(
+                    text,
+                    fontSize = 13.sp,
+                    color = if (readBy == DaiReceiptViewModel.ReadBy.ServerFailed) pocketColors.ErrorRed else pocketColors.Muted,
+                )
+            }
 
             Text(
                 stringResource(R.string.dai_receipt_amount),

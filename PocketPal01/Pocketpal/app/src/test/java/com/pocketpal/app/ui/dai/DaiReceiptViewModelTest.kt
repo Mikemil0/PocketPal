@@ -3,7 +3,9 @@ package com.pocketpal.app.ui.dai
 import com.pocketpal.app.auth.ErrorType
 import com.pocketpal.app.data.dai.DaiRole
 import com.pocketpal.app.data.dai.FakeDaiRepository
+import com.pocketpal.app.data.dai.ReceiptAnalyzer
 import com.pocketpal.app.data.dai.ReceiptProblem
+import com.pocketpal.app.data.dai.ServerReceipt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -71,6 +73,41 @@ class DaiReceiptViewModelTest {
         assertEquals(17_900.0, state.draft.amount!!, 0.001)
         assertEquals("Tienda Express", state.draft.merchant)
         assertEquals("comida", state.draft.categoryId)
+    }
+
+    private fun vmWithServer(analyzer: ReceiptAnalyzer) = DaiReceiptViewModel(
+        repository,
+        today = { today },
+        zone = { FakeDaiRepository.ZONE },
+        analyzer = analyzer,
+    ).also { it.start() }
+
+    @Test
+    fun `con servidor usa PaddleOCR y muestra la seguridad de la categoria`() = runTest(dispatcher) {
+        val vm = vmWithServer(object : ReceiptAnalyzer {
+            override suspend fun analyze(jpeg: ByteArray) =
+                ServerReceipt(242_574.31, LocalDate.of(2026, 10, 20), "Supermercado", "Mercado", "EXITO", 0.87)
+        })
+        vm.onReading()
+        vm.onPhoto(byteArrayOf(1, 2, 3))
+        vm.onTextRecognized(receipt)
+        val state = vm.state.value
+        assertEquals(DaiReceiptViewModel.ReadBy.Server, state.readBy)
+        assertEquals(87, state.categoryConfidence)
+        assertEquals(242_574.0, state.draft.amount!!, 0.001)   // pesos enteros
+        assertEquals("Mercado", state.draft.reason)
+    }
+
+    @Test
+    fun `si el servidor falla avisa y usa la lectura del celular`() = runTest(dispatcher) {
+        val vm = vmWithServer(object : ReceiptAnalyzer {
+            override suspend fun analyze(jpeg: ByteArray): ServerReceipt? = throw java.io.IOException("caido")
+        })
+        vm.onReading()
+        vm.onPhoto(byteArrayOf(1, 2, 3))
+        vm.onTextRecognized(receipt)
+        assertEquals(DaiReceiptViewModel.ReadBy.ServerFailed, vm.state.value.readBy)
+        assertEquals(17_900.0, vm.state.value.draft.amount!!, 0.001)
     }
 
     @Test

@@ -18,7 +18,10 @@ import java.time.LocalDate
  * el OCR del teléfono (ML Kit + [ReceiptParser]).
  */
 interface ReceiptAnalyzer {
-    /** `null` = no hay servidor o no respondió: se usa la lectura del teléfono. */
+    /**
+     * `null` = no hay dirección configurada (se usa la lectura del teléfono).
+     * Lanza una excepción si el servidor no responde o responde con error.
+     */
     suspend fun analyze(jpeg: ByteArray): ServerReceipt?
 }
 
@@ -30,6 +33,8 @@ data class ServerReceipt(
     val category: String?,
     val reason: String,
     val merchant: String,
+    /** Qué tan segura está la Regresión logística de la categoría (0 a 1). */
+    val categoryConfidence: Double? = null,
 )
 
 /** Cliente HTTP del servidor de Dai (sin librerías extra: `HttpURLConnection`). */
@@ -57,7 +62,9 @@ class HttpDaiServer(private val baseUrl: suspend () -> String) : ReceiptAnalyzer
                     out.write(jpeg)
                     out.write("\r\n--$boundary--\r\n".toByteArray())
                 }
-                if (connection.responseCode !in 200..299) return@withContext null
+                if (connection.responseCode !in 200..299) {
+                    throw java.io.IOException("El servidor de Dai respondió ${connection.responseCode}")
+                }
                 parse(connection.inputStream.bufferedReader().use { it.readText() })
             } finally {
                 connection.disconnect()
@@ -74,6 +81,7 @@ class HttpDaiServer(private val baseUrl: suspend () -> String) : ReceiptAnalyzer
                 category = j.optString("categoria").takeIf { it.isNotBlank() },
                 reason = j.optString("motivo"),
                 merchant = j.optString("comercio"),
+                categoryConfidence = if (j.has("confianza_categoria")) j.optDouble("confianza_categoria") else null,
             )
         }
     }

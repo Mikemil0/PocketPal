@@ -35,20 +35,45 @@ object ReceiptParser {
     private val totalWords = listOf("total a pagar", "valor a pagar", "total pagar", "neto a pagar", "total", "valor total", "a pagar")
 
     /** Palabra clave en la factura → nombre de categoría que se busca en las del usuario. */
-    private val categoryHints: List<Pair<List<String>, List<String>>> = listOf(
+    /**
+     * Palabras clave → nombres de categoría del usuario. Se comparan **palabras completas**
+     * (antes "medic" coincidía con "medición" y "medidor" de los recibos y los mandaba a Salud).
+     * Los recibos de servicios van primero: traen palabras como "agua" o "barrio" que no
+     * deben llevarlos a Comida ni a Entretenimiento.
+     */
+    private val categoryHints: List<Pair<List<String>, List<String>>> by lazy { listOf(
+        serviceWords to listOf("servicios", "servicios publicos", "hogar", "vivienda", "casa"),
         listOf("supermercado", "mercado", "tienda", "carulla", "exito", "d1", "ara", "olimpica", "jumbo", "panaderia",
-            "restaurante", "cafe", "comida", "pan", "leche", "galletas", "agua", "frutas", "domicilio", "rappi") to
+            "restaurante", "cafe", "comida", "pan", "leche", "galletas", "frutas", "domicilio", "rappi") to
             listOf("comida", "alimentacion", "alimentos", "mercado", "supermercado"),
         listOf("uber", "didi", "taxi", "transmilenio", "gasolina", "terpel", "primax", "peaje", "parqueadero", "bus") to
             listOf("transporte", "movilidad", "gasolina"),
         listOf("cine", "netflix", "spotify", "teatro", "concierto", "juego", "bar") to
             listOf("entretenimiento", "ocio", "diversion"),
-        listOf("farmacia", "drogueria", "medic", "clinica", "eps") to
+        listOf("farmacia", "drogueria", "medicamento", "medicamentos", "medico", "clinica", "eps", "odontologia", "laboratorio") to
             listOf("salud", "farmacia"),
         listOf("ropa", "zara", "falabella", "tenis", "almacen", "centro comercial") to
             listOf("compras", "ropa"),
-        listOf("arriendo", "energia", "acueducto", "gas natural", "internet", "claro", "movistar", "tigo", "etb") to
-            listOf("hogar", "servicios", "vivienda"),
+        listOf("arriendo") to listOf("hogar", "vivienda", "casa"),
+    ) }
+
+    /** Palabras que solo salen en recibos de servicios públicos, celular o internet. */
+    private val serviceWords
+        get() = serviceKinds.flatMap { it.first }
+
+    /** Tipo de recibo de servicios → motivo que se sugiere. */
+    private val serviceKinds: List<Pair<List<String>, String>> = listOf(
+        listOf("claro", "movistar", "tigo", "wom", "comcel", "servicios moviles") to "Pago de celular",
+        listOf("internet", "etb", "fibra", "banda ancha") to "Pago de internet",
+        listOf("energia", "enel", "codensa", "kwh", "electrificadora", "air e", "celsia") to "Pago de luz",
+        listOf("acueducto", "alcantarillado", "m3") to "Pago de agua",
+        listOf("gas natural", "vanti", "gases") to "Pago de gas",
+        listOf("epm", "servicios publicos") to "Pago de servicios públicos",
+    )
+
+    /** Empresas de servicios: si aparece una, ese es el comercio (la primera línea suele ser basura). */
+    private val providers = listOf(
+        "claro", "movistar", "tigo", "wom", "etb", "enel", "codensa", "vanti", "epm", "celsia", "air e", "acueducto",
     )
 
     /**
@@ -57,14 +82,15 @@ object ReceiptParser {
      */
     fun parse(rawText: String, today: LocalDate, categories: List<MovementCategory>): ReceiptDraft {
         val lines = rawText.lines().map { it.trim() }.filter { it.isNotEmpty() }
-        val merchant = findMerchant(lines)
+        val service = serviceReason(rawText)
+        val merchant = provider(rawText) ?: findMerchant(lines)
         val category = suggestCategory(rawText, categories)
         return ReceiptDraft(
             merchant = merchant,
             amount = findTotal(lines),
             date = findDate(rawText, today) ?: today,
             categoryId = category?.id,
-            reason = if (merchant.isBlank()) "" else "Compra en $merchant",
+            reason = service ?: if (merchant.isBlank()) "" else "Compra en $merchant",
             rawText = rawText,
         )
     }
@@ -336,11 +362,24 @@ object ReceiptParser {
         val expenses = categories.filter { it.kind == MovementKind.Expense.wire }
         expenses.firstOrNull { t.contains(" ${DaiBrain.normalize(it.name)} ") }?.let { return it }
         for ((hints, names) in categoryHints) {
-            if (hints.any { t.contains(" $it") }) {
+            if (hints.any { t.contains(" $it ") }) {
                 expenses.firstOrNull { c -> DaiBrain.normalize(c.name) in names }?.let { return it }
             }
         }
         return null
+    }
+
+    /** "Pago de luz", "Pago de celular"… si es un recibo de servicios; `null` si no. */
+    fun serviceReason(text: String): String? {
+        val t = " ${DaiBrain.normalize(text)} "
+        return serviceKinds.firstOrNull { (words, _) -> words.any { t.contains(" $it ") } }?.second
+    }
+
+    /** La empresa de servicios del recibo ("Claro", "Enel"…), o `null`. */
+    private fun provider(text: String): String? {
+        val t = " ${DaiBrain.normalize(text)} "
+        val name = providers.firstOrNull { t.contains(" $it ") } ?: return null
+        return name.split(" ").joinToString(" ") { w -> if (w.length <= 3 && w != "air") w.uppercase() else w.replaceFirstChar(Char::titlecase) }
     }
 
     // ---------------- Aprobación ----------------
