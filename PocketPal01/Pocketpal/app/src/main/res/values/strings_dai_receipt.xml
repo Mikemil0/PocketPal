@@ -32,4 +32,5 @@
     <string name="dai_receipt_error_title">No se pudo guardar</string>
     <string name="dai_receipt_error_body">Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="dai_receipt_error_ok">Entendido</string>
+    <string name="dai_receipt_read_failed">No pude leer la factura. Intenta con otra foto o ingresa los datos manualmente.</string>
 </resources>

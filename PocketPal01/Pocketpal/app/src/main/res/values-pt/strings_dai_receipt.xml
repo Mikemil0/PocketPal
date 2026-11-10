@@ -32,4 +32,5 @@
     <string name="dai_receipt_error_title">Não foi possível salvar</string>
     <string name="dai_receipt_error_body">Verifique sua conexão e tente novamente.</string>
     <string name="dai_receipt_error_ok">Entendi</string>
+    <string name="dai_receipt_read_failed">Não consegui ler o recibo. Tente outra foto ou insira os dados manualmente.</string>
 </resources>
