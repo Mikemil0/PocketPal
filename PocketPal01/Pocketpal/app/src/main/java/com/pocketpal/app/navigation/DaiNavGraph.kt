@@ -193,9 +193,10 @@ internal fun NavGraphBuilder.daiGraph(
         LaunchedEffect(event) {
             if (event is DaiReceiptViewModel.Event.Saved) {
                 daiReceiptVm.consumeEvent()
+                // Movimientos se abre en el mes de la factura (puede ser de otro mes).
+                movementsVm.showDate(receipt.draft.date)
                 // El chat vuelve a leer el historial: ahí está la respuesta de Dai.
                 daiChatVm.reload()
-                movementsVm.refreshRecent()
                 budgetsVm.refresh()
                 nav.popBackStack(Routes.DaiChat, inclusive = false)
             }

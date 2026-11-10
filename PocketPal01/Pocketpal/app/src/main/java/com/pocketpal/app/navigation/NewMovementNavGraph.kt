@@ -76,8 +76,9 @@ internal fun NavGraphBuilder.newMovementGraph(
         LaunchedEffect(event) {
             if (event is DaiReceiptViewModel.Event.Saved) {
                 daiReceiptVm.consumeEvent()
+                // Movimientos se abre en el mes de la factura (puede ser de otro mes).
+                movementsVm.showDate(receipt.draft.date)
                 daiChatVm.reload()
-                movementsVm.refreshRecent()
                 budgetsVm.refresh()
                 nav.navigate(Routes.NewMovementSuccess) { popUpTo(Routes.Home) }
             }

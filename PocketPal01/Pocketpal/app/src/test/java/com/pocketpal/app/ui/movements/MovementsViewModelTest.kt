@@ -69,6 +69,30 @@ class MovementsViewModelTest {
     }
 
     @Test
+    fun `una factura de otro mes guardada con Dai se ve en Movimientos`() = runTest(dispatcher) {
+        val vm = newVm()
+        vm.refresh()
+        advanceUntilIdle()
+        repository.add("Factura vieja", 30_000.0, LocalDate.of(2026, 9, 3))
+        vm.showDate(LocalDate.of(2026, 9, 3))
+        advanceUntilIdle()
+        val ui = vm.ui()
+        assertEquals(LocalDate.of(2026, 9, 1), ui.range.start)
+        assertEquals(LocalDate.of(2026, 9, 30), ui.range.end)
+        assertTrue(ui.groups.flatMap { it.movements }.any { it.title == "Factura vieja" })
+    }
+
+    @Test
+    fun `una factura de este mes deja el filtro en este mes`() = runTest(dispatcher) {
+        val vm = newVm()
+        vm.selectFilter(QuickFilter.Today)
+        advanceUntilIdle()
+        vm.showDate(today.minusDays(5))
+        advanceUntilIdle()
+        assertEquals(MovementsViewModel.Period.Quick(QuickFilter.ThisMonth), vm.ui().period)
+    }
+
+    @Test
     fun `compara el balance del mes con el del mes anterior`() = runTest(dispatcher) {
         val vm = newVm()
         vm.refresh()

@@ -109,6 +109,24 @@ class MovementsViewModel(
         refresh()
     }
 
+    /**
+     * Después de guardar un gasto con Dai: Movimientos se abre en un período donde se vea.
+     * Una factura puede tener la fecha de otro mes (por ejemplo, de octubre): con "Este mes"
+     * el gasto quedaba guardado pero no aparecía en la lista.
+     */
+    fun showDate(date: LocalDate) {
+        if (date !in rangeOf(period)) {
+            val month = YearMonth.from(date)
+            period = if (month == YearMonth.from(today())) {
+                Period.Quick(QuickFilter.ThisMonth)
+            } else {
+                Period.Custom(MovementRules.monthRange(month))
+            }
+        }
+        refresh()
+        refreshRecent()
+    }
+
     /** Rango de días del período actual. */
     fun currentRange(): DateRange = rangeOf(period)
 
