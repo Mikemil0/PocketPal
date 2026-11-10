@@ -48,6 +48,7 @@ import com.pocketpal.app.ui.components.ConfirmSheet
 import com.pocketpal.app.ui.components.PocketOutlinedTextField
 import com.pocketpal.app.ui.components.PocketPrimaryButton
 import com.pocketpal.app.ui.goals.GoalFormat
+import com.pocketpal.app.ui.goals.MoneyField
 import com.pocketpal.app.ui.theme.PocketColors
 import com.pocketpal.app.ui.theme.pocketColors
 import java.time.LocalDate
@@ -74,9 +75,8 @@ fun DaiReceiptReviewScreen(
     val locale = Locale.getDefault()
 
     // Texto de los campos: se editan como texto y se convierten al borrador al escribir.
-    var amountText by remember {
-        mutableStateOf(draft.amount?.let { if (it % 1.0 == 0.0) it.toLong().toString() else it.toString() } ?: "")
-    }
+    // El monto se escribe y se muestra igual que en el registro manual: "$242.574".
+    var amountDigits by remember { mutableStateOf(draft.amount?.let { Math.round(it).toString() } ?: "") }
     var dateText by remember { mutableStateOf(GoalFormat.inputDate(draft.date, datePreference)) }
     var dateInvalid by remember { mutableStateOf(false) }
     var dateComplete by remember { mutableStateOf(true) } // 8 dígitos escritos (el error solo se muestra entonces)
@@ -99,18 +99,28 @@ fun DaiReceiptReviewScreen(
                 color = pocketColors.Ink,
             )
 
-            PocketOutlinedTextField(
-                value = amountText,
-                onValueChange = { raw ->
-                    val clean = raw.filter { it.isDigit() || it == '.' }
-                    amountText = clean
-                    onChange(draft.copy(amount = clean.toDoubleOrNull()))
-                },
-                label = stringResource(R.string.dai_receipt_amount),
-                keyboardType = KeyboardType.Decimal,
-                isError = state.problem == ReceiptProblem.Amount,
-                errorText = if (state.problem == ReceiptProblem.Amount) stringResource(R.string.dai_receipt_err_amount) else null,
+            Text(
+                stringResource(R.string.dai_receipt_amount),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = pocketColors.Ink,
             )
+            MoneyField(
+                digits = amountDigits,
+                onDigitsChange = { digits ->
+                    amountDigits = digits
+                    onChange(draft.copy(amount = digits.toDoubleOrNull()))
+                },
+                currency = currency,
+                isError = state.problem == ReceiptProblem.Amount,
+            )
+            if (state.problem == ReceiptProblem.Amount) {
+                Text(
+                    stringResource(R.string.dai_receipt_err_amount),
+                    fontSize = 12.sp,
+                    color = pocketColors.ErrorRed,
+                )
+            }
 
             val futureDate = state.problem == ReceiptProblem.FutureDate
             // El teclado numérico no tiene "/": se escriben solo los dígitos (12052026) y las

@@ -231,24 +231,45 @@ object ReceiptParser {
     /** Líneas que dicen de forma explícita que es la fecha de la factura. */
     private val purchaseDate = setOf("fecha", "creacion", "emision", "expedicion", "generacion", "compra", "venta")
 
+    /** Recibos de servicios (luz, agua, celular…): la fecha que cuenta es la límite de pago. */
+    private val dueDate = setOf("limite", "oportuno")
+
+    /** Meses escritos con letras ("26-Ago-2026", "8 oct, 2026", "OCT/02/2026"). */
+    private val months = mapOf(
+        "ene" to 1, "jan" to 1, "feb" to 2, "mar" to 3, "abr" to 4, "apr" to 4, "may" to 5, "jun" to 6,
+        "jul" to 7, "ago" to 8, "aug" to 8, "sep" to 9, "set" to 9, "oct" to 10, "nov" to 11,
+        "dic" to 12, "dec" to 12,
+    )
+
     /**
-     * La fecha de la compra. Se aceptan 12/04/2026, 12-04-26, 12.04.2026 y 2026-04-12. Una
-     * factura electrónica trae varias fechas (la de la compra, la de la resolución de la DIAN
-     * y su vigencia), así que:
-     * 1. se descartan las líneas de resolución, vigencia, "desde/hasta" y vencimiento;
-     * 2. se prefieren las líneas que dicen "Fecha", "Fecha creación", "Emisión"…;
-     * 3. entre las que quedan, la **más reciente que no sea futura** (y de los últimos 2 años).
+     * La fecha de la factura, con la misma regla del proyecto de IA:
+     * - **recibos de servicios:** la **fecha límite de pago** ("Fecha límite de pago",
+     *   "Pago oportuno"), si no es futura;
+     * - **las demás facturas:** la fecha de emisión. Una factura electrónica trae varias
+     *   fechas (la de la compra, la de la resolución de la DIAN y su vigencia), así que:
+     *   1. se descartan las líneas de resolución, vigencia, "desde/hasta" y vencimiento;
+     *   2. se prefieren las líneas que dicen "Fecha", "Fecha creación", "Emisión"…;
+     *   3. entre las que quedan, la **más reciente que no sea futura** (y de los últimos 2 años).
+     *
+     * Si la etiqueta quedó sola en su fila ("FECHA LÍMITE DE PAGO:"), la fecha se busca en la
+     * fila de abajo, igual que con el total. Se aceptan 12/04/2026, 12-04-26, 2026-04-12,
+     * 26-Ago-2026, 26 de agosto de 2026 y OCT/02/2026.
      */
     fun findDate(text: String, today: LocalDate): LocalDate? {
-        data class Candidate(val date: LocalDate, val labeled: Boolean)
+        data class Candidate(val date: LocalDate, val labeled: Boolean, val due: Boolean)
         val candidates = mutableListOf<Candidate>()
-        for (line in text.lines()) {
+        val lines = text.lines()
+        for ((i, line) in lines.withIndex()) {
             val words = DaiBrain.normalize(line).split(" ")
-            if (words.any { it in notPurchaseDate }) continue
-            val labeled = words.any { it in purchaseDate }
-            datesIn(line).forEach { candidates.add(Candidate(it, labeled)) }
+            val due = words.any { it in dueDate }
+            if (!due && words.any { it in notPurchaseDate }) continue
+            val labeled = due || words.any { it in purchaseDate }
+            var dates = datesIn(line)
+            if (dates.isEmpty() && labeled && i + 1 < lines.size) dates = datesIn(lines[i + 1])
+            dates.forEach { candidates.add(Candidate(it, labeled, due)) }
         }
         val valid = candidates.filter { !it.date.isAfter(today) && it.date.isAfter(today.minusYears(2)) }
+        valid.filter { it.due }.maxOfOrNull { it.date }?.let { return it }
         return (valid.filter { it.labeled }.ifEmpty { valid }).maxOfOrNull { it.date }
     }
 
@@ -264,6 +285,21 @@ object ReceiptParser {
             // En Colombia la factura dice día/mes/año.
             safeDate(year, m.groupValues[2].toInt(), m.groupValues[1].toInt())?.let(dates::add)
         }
+        // Mes con letras: se busca sin tildes y en minúscula.
+        val plain = java.text.Normalizer.normalize(line.lowercase(), java.text.Normalizer.Form.NFD)
+            .replace(Regex("\\p{M}+"), "")
+        // 26-Ago-2026 · 26 ago 2026 · 26 de agosto de 2026 · 8 oct, 2026
+        Regex("""(?<!\d)(\d{1,2})[\s./-]*(?:de\s+)?([a-z]{3,10})\.?,?[\s./-]*(?:del?\s+)?(\d{4})(?!\d)""")
+            .findAll(plain).forEach { m ->
+                val month = months[m.groupValues[2].take(3)] ?: return@forEach
+                safeDate(m.groupValues[3].toInt(), month, m.groupValues[1].toInt())?.let(dates::add)
+            }
+        // OCT/02/2026 · ago 26, 2026
+        Regex("""(?<![a-z])([a-z]{3,10})\.?[\s/-]*(\d{1,2}),?[\s/-]+(\d{4})(?!\d)""")
+            .findAll(plain).forEach { m ->
+                val month = months[m.groupValues[1].take(3)] ?: return@forEach
+                safeDate(m.groupValues[3].toInt(), month, m.groupValues[2].toInt())?.let(dates::add)
+            }
         return dates
     }
 

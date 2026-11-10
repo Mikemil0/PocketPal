@@ -134,6 +134,8 @@ class DaiReceiptViewModel(
             // Si hay servidor de Dai, sus resultados (PaddleOCR + modelos) reemplazan a los del teléfono.
             val server = askServer()
             if (server != null) draft = DaiServerMapping.merge(draft, server, categories, today())
+            // Montos en pesos enteros, como en el registro manual y en el Excel ($242.574,31 → $242.574).
+            draft = draft.copy(amount = draft.amount?.let { Math.round(it).toDouble() })
             val foundSomething = draft.amount != null || draft.merchant.isNotBlank()
             if ((server == null && text.isBlank()) || !foundSomething) {
                 onReadFailed()

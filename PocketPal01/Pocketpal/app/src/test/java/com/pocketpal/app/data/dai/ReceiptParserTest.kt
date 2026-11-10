@@ -234,4 +234,42 @@ class ReceiptParserTest {
         assertEquals(LocalDate.of(2026, 11, 2), ReceiptParser.findDate("02/11/2026\nPlazo 01/09/2026", hoy))
         assertEquals(LocalDate.of(2026, 10, 26), ReceiptParser.findDate("Vigencia 2026-08-28\n26/10/2026", hoy))
     }
+
+    /** Recibo de Claro (servicios), como lo arma OcrLayout: la fecha límite va en la fila de abajo. */
+    private val claro = """
+        Claro  COMCEL S.A.  NIT 800.153.993-7  DISTRICONFECCIONES F Y G SAS -
+        SERVICIOS MÓVILES  FECHA LÍMITE DE PAGO:  REFERENCIA DE PAGO:  TOTAL A PAGAR:
+        Código Interno: 8.224466416  26-Ago-2026  6224664165  ${'$'}242,574.31
+        Cargos anteriores  ${'$'}242,575.15
+        FECHA DE CARGA DE MINUTOS:  12-Ago-2026  TOTAL A PAGAR  ${'$'}242,574.31
+        PERIODO DE FACTURACIÓN:  12-Jul-2026 a 11-Ago-2026
+        FECHA DE FACTURACIÓN:  12-Ago-2026
+        SUSPENSIÓN A PARTIR DE:  28-Ago-2026
+    """.trimIndent()
+
+    @Test
+    fun `recibo de servicios - usa la fecha limite de pago aunque este en la fila de abajo`() {
+        assertEquals(LocalDate.of(2026, 8, 26), ReceiptParser.findDate(claro, LocalDate.of(2026, 11, 10)))
+    }
+
+    @Test
+    fun `recibo de servicios - lee el total a pagar`() {
+        val draft = ReceiptParser.parse(claro, LocalDate.of(2026, 11, 10), emptyList())
+        assertEquals(242_574.31, draft.amount!!, 0.001)
+        assertEquals(LocalDate.of(2026, 8, 26), draft.date)
+    }
+
+    @Test
+    fun `recibo de servicios - si la fecha limite es futura usa la de facturacion`() {
+        assertEquals(LocalDate.of(2026, 8, 12), ReceiptParser.findDate(claro, LocalDate.of(2026, 8, 20)))
+    }
+
+    @Test
+    fun `fechas con el mes en letras`() {
+        val day = LocalDate.of(2026, 11, 10)
+        assertEquals(LocalDate.of(2026, 10, 8), ReceiptParser.findDate("Fecha: jue, 8 oct, 2026", day))
+        assertEquals(LocalDate.of(2026, 10, 2), ReceiptParser.findDate("FECHA OCT/02/2026", day))
+        assertEquals(LocalDate.of(2026, 9, 18), ReceiptParser.findDate("Fecha de emisión 18 de septiembre de 2026", day))
+        assertEquals(LocalDate.of(2026, 7, 12), ReceiptParser.findDate("Fecha 12-Jul-2026", day))
+    }
 }
