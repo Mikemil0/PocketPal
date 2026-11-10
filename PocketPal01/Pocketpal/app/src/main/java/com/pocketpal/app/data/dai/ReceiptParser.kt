@@ -23,6 +23,7 @@ import java.time.LocalDate
 object ReceiptParser {
 
     const val MERCHANT_MAX = 60
+    const val DEFAULT_TITLE = "Dai"
 
     /** Palabras que NO son el nombre del comercio (encabezados típicos de una factura). */
     private val notMerchant = setOf(
@@ -309,10 +310,20 @@ object ReceiptParser {
     // ---------------- Aprobación ----------------
 
     /** Primer problema del borrador antes de guardar (`null` = se puede guardar). */
+    /**
+     * El título con el que se guarda el gasto. "Confirmar" ya no muestra el comercio
+     * (solo monto, fecha, categoría y motivo), así que se usa el comercio leído; si no hay,
+     * el motivo; si no, la categoría; y si tampoco, "Dai".
+     */
+    fun titleFor(draft: ReceiptDraft, categoryName: String?): String =
+        listOf(draft.merchant, draft.reason, categoryName.orEmpty(), DEFAULT_TITLE)
+            .first { it.isNotBlank() }
+            .trim()
+            .take(MERCHANT_MAX)
+
     fun validate(draft: ReceiptDraft, today: LocalDate): ReceiptProblem? = when {
         draft.amount == null || draft.amount <= 0.0 || draft.amount > BudgetRules.MAX_AMOUNT -> ReceiptProblem.Amount
         draft.date.isAfter(today) -> ReceiptProblem.FutureDate
-        draft.merchant.isBlank() -> ReceiptProblem.Merchant
         else -> null
     }
 
@@ -362,4 +373,4 @@ object ReceiptParser {
 }
 
 /** Por qué no se puede guardar todavía la factura. */
-enum class ReceiptProblem { Amount, FutureDate, Merchant }
+enum class ReceiptProblem { Amount, FutureDate }

@@ -13,13 +13,11 @@
     <string name="dai_receipt_perm_allow">Allow camera</string>
 
     <string name="dai_receipt_title">Confirm</string>
-    <string name="dai_receipt_merchant">Store</string>
     <string name="dai_receipt_amount">Amount</string>
     <string name="dai_receipt_date">Date</string>
     <string name="dai_receipt_category">Category</string>
     <string name="dai_receipt_reason">Note (optional)</string>
     <string name="dai_receipt_save">Save</string>
-    <string name="dai_receipt_err_merchant">Enter the store name</string>
     <string name="dai_receipt_err_amount">Enter a valid amount</string>
     <string name="dai_receipt_err_future">The date can\'t be in the future</string>
     <string name="dai_receipt_err_date">Invalid date</string>

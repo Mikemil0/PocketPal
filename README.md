@@ -97,7 +97,7 @@ Tomadas de la app instalada en un celular Android.
 - **Conversa con tus datos reales.** "¿Cómo voy con mi presupuesto?", "¿en qué gasto más?", "¿cuándo llego a mi meta?". Responde con tarjetas: gastos por categoría, metas y alertas.
 - **Te avisa.** Si en los últimos días gastaste mucho en una categoría, calcula cuánto gastarías al final del mes a ese ritmo.
 - **Te enseña.** Explica conceptos como el interés compuesto o la regla 50/30/20, con un video recomendado.
-- **Lee facturas.** Le tomas una foto (o la eliges de la galería) y saca el **comercio, el total, la fecha y la categoría**.
+- **Lee facturas.** Le tomas una foto (o la eliges de la galería) y saca el **monto, la fecha, la categoría y el motivo**.
 - **Entiende tu voz.** Dices *"Gasté 45 mil pesos en mercado"* y queda listo un gasto de $45.000 en Comida.
 - **Nunca guarda nada sin tu permiso.** Siempre te muestra los datos y **dónde se van a guardar** (por ejemplo, *"Presupuesto Comida: de 84 % a 88 %"*) y espera a que digas **"Sí, guardar"**.
 

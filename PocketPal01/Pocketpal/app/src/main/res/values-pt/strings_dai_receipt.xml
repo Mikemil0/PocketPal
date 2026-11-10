@@ -13,13 +13,11 @@
     <string name="dai_receipt_perm_allow">Permitir câmera</string>
 
     <string name="dai_receipt_title">Confirmar</string>
-    <string name="dai_receipt_merchant">Estabelecimento</string>
     <string name="dai_receipt_amount">Valor</string>
     <string name="dai_receipt_date">Data</string>
     <string name="dai_receipt_category">Categoria</string>
     <string name="dai_receipt_reason">Nota (opcional)</string>
     <string name="dai_receipt_save">Salvar</string>
-    <string name="dai_receipt_err_merchant">Digite o nome do estabelecimento</string>
     <string name="dai_receipt_err_amount">Insira um valor válido</string>
     <string name="dai_receipt_err_future">A data não pode ser futura</string>
     <string name="dai_receipt_err_date">Data inválida</string>

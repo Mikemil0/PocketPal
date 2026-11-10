@@ -13,13 +13,11 @@
     <string name="dai_receipt_perm_allow">Autoriser l\'appareil photo</string>
 
     <string name="dai_receipt_title">Confirmer</string>
-    <string name="dai_receipt_merchant">Commerce</string>
     <string name="dai_receipt_amount">Montant</string>
     <string name="dai_receipt_date">Date</string>
     <string name="dai_receipt_category">Catégorie</string>
     <string name="dai_receipt_reason">Note (facultative)</string>
     <string name="dai_receipt_save">Enregistrer</string>
-    <string name="dai_receipt_err_merchant">Saisis le nom du commerce</string>
     <string name="dai_receipt_err_amount">Saisis un montant valide</string>
     <string name="dai_receipt_err_future">La date ne peut pas être future</string>
     <string name="dai_receipt_err_date">Date non valide</string>

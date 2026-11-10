@@ -102,7 +102,17 @@ class ReceiptParserTest {
         assertEquals(ReceiptProblem.Amount, ReceiptParser.validate(ok.copy(amount = null), today))
         assertEquals(ReceiptProblem.Amount, ReceiptParser.validate(ok.copy(amount = 0.0), today))
         assertEquals(ReceiptProblem.FutureDate, ReceiptParser.validate(ok.copy(date = today.plusDays(1)), today))
-        assertEquals(ReceiptProblem.Merchant, ReceiptParser.validate(ok.copy(merchant = " "), today))
+        // El comercio ya no se pide en "Confirmar": sin comercio también se puede guardar.
+        assertNull(ReceiptParser.validate(ok.copy(merchant = " "), today))
+    }
+
+    @Test
+    fun `titulo del gasto sin comercio`() {
+        val draft = ReceiptDraft("", 17_900.0, today, "comida", "Mercado")
+        assertEquals("Tienda", ReceiptParser.titleFor(draft.copy(merchant = "Tienda"), "Comida"))
+        assertEquals("Mercado", ReceiptParser.titleFor(draft, "Comida"))
+        assertEquals("Comida", ReceiptParser.titleFor(draft.copy(reason = ""), "Comida"))
+        assertEquals("Dai", ReceiptParser.titleFor(draft.copy(reason = ""), null))
     }
 
     @Test

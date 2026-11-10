@@ -100,14 +100,6 @@ fun DaiReceiptReviewScreen(
             )
 
             PocketOutlinedTextField(
-                value = draft.merchant,
-                onValueChange = { onChange(draft.copy(merchant = it)) },
-                label = stringResource(R.string.dai_receipt_merchant),
-                isError = state.problem == ReceiptProblem.Merchant,
-                errorText = if (state.problem == ReceiptProblem.Merchant) stringResource(R.string.dai_receipt_err_merchant) else null,
-            )
-
-            PocketOutlinedTextField(
                 value = amountText,
                 onValueChange = { raw ->
                     val clean = raw.filter { it.isDigit() || it == '.' }

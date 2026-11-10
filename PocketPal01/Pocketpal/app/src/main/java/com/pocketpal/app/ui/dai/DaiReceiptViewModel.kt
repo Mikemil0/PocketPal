@@ -244,10 +244,11 @@ class DaiReceiptViewModel(
         _state.update { it.copy(saving = true) }
         viewModelScope.launch {
             try {
-                repository.saveReceipt(current.draft, zone())
+                val draft = current.draft.copy(merchant = ReceiptParser.titleFor(current.draft, impact.categoryName))
+                repository.saveReceipt(draft, zone())
                 // El gasto ya quedó guardado; si falla el mensaje del chat no se pierde nada.
                 try {
-                    val reply = ReceiptParser.savedReply(current.draft, impact, currency())
+                    val reply = ReceiptParser.savedReply(draft, impact, currency())
                     repository.save(DaiRole.Dai, reply.text, reply.card)
                 } catch (e: CancellationException) {
                     throw e
